@@ -12,6 +12,12 @@ Official FRP mint address: **NONE**
 
 This file is a pre-deployment checklist and a future public record. Completing documentation does not authorize token creation. The planned settings below must be checked again immediately before any separately authorized deployment.
 
+## Finalized creator beneficial-ownership rule
+
+The creator beneficial-ownership cap is a finalized project rule, permanently locked at exactly 2% of total FRP supply. Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements must never exceed 2% of total FRP supply.
+
+This specific cap does not need to be re-decided before deployment. Compliance must still be verified before deployment and after launch. No other launch setting is finalized by this decision.
+
 ## Pre-deployment checklist
 
 - [ ] Obtain explicit deployment authorization.
@@ -28,7 +34,7 @@ This file is a pre-deployment checklist and a future public record. Completing d
 - [ ] Confirm no presale.
 - [ ] Confirm no reserved creator allocation.
 - [ ] Confirm no private team allocation.
-- [ ] Reconfirm the 2% cap: total creator beneficial ownership must never exceed 2% of total FRP supply.
+- [ ] Verify pre-deployment compliance with the finalized 2% cap across all wallets, custodians, nominees, accounts, or other arrangements.
 - [ ] Confirm the deployer is not used for normal creator trading.
 - [ ] Reconfirm that the creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.
 - [ ] Reconfirm that creator FRP activity is intended to occur through the published creator trading wallet.
@@ -51,7 +57,7 @@ This file is a pre-deployment checklist and a future public record. Completing d
 | Role | Address | Rule |
 | --- | --- | --- |
 | Deployer | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token; no normal creator trading |
-| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; total creator beneficial ownership must never exceed 2% of total FRP supply |
+| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; the finalized 2% cap applies across all wallets, custodians, nominees, accounts, or other arrangements |
 
 ## Post-deployment record — leave blank until deployment
 
@@ -60,5 +66,6 @@ This file is a pre-deployment checklist and a future public record. Completing d
 - Creation transaction: Not deployed
 - Independent verifier: Not assigned
 - Verification result: Pending deployment
+- Post-launch creator beneficial-ownership cap verification: Pending deployment
 
 Never insert a proposed, draft, or placeholder address in the official mint field.

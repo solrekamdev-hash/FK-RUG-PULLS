@@ -2,7 +2,13 @@
 
 Status: **PRE-LAUNCH — NOT DEPLOYED**
 
-There is no official FRP mint address yet. This pledge describes how project-controlled wallets are intended to be used if deployment is later authorized. It does not guarantee profit, safety, liquidity, price stability, or continued value.
+There is no official FRP mint address yet. Except for the finalized creator beneficial-ownership cap stated below, this pledge describes how project-controlled wallets are intended to be used if deployment is later authorized. It does not guarantee profit, safety, liquidity, price stability, or continued value.
+
+## Finalized creator beneficial-ownership cap
+
+The creator beneficial-ownership cap is a finalized project rule, permanently locked at exactly 2% of total FRP supply. Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements must never exceed 2% of total FRP supply.
+
+This specific cap does not need to be re-decided before deployment. Compliance must still be verified before deployment and after launch. This decision does not finalize any other launch setting.
 
 ## Two wallets, two jobs
 

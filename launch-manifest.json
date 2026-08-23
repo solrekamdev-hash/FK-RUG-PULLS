@@ -7,6 +7,16 @@
   },
   "deploymentStatus": "NOT_DEPLOYED",
   "officialMintAddress": null,
+  "creatorBeneficialOwnershipCap": {
+    "maximumPercentOfTotalFrpSupply": 2,
+    "status": "FINALIZED_LOCKED",
+    "scope": "Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements.",
+    "requiresRedecisionBeforeDeployment": false,
+    "complianceVerificationRequired": [
+      "BEFORE_LAUNCH",
+      "AFTER_LAUNCH"
+    ]
+  },
   "socialLinks": {
     "tokenX": "https://x.com/FKRUGPULLS",
     "developerX": "https://x.com/SolRDev",

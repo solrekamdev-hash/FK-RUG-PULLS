@@ -28,7 +28,13 @@ Open `index.html` directly, or serve the folder with any static web server. All 
 
 The same addresses and rules are recorded in [`wallets.json`](wallets.json) and [`launch-manifest.json`](launch-manifest.json).
 
-The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through the published creator trading wallet, and total creator beneficial ownership must never exceed 2% of total FRP supply.
+The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through the published creator trading wallet.
+
+### Finalized creator beneficial-ownership cap
+
+The creator beneficial-ownership cap is a finalized project rule, permanently locked at exactly 2% of total FRP supply. Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements must never exceed 2% of total FRP supply.
+
+This specific cap does not need to be re-decided before deployment. Compliance must still be verified before deployment and after launch. Only this rule is finalized; the other launch settings below remain planned.
 
 ## Planned launch settings
 
