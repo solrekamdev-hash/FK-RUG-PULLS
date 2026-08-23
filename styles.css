@@ -139,41 +139,18 @@ h1 span { display: block; }
 .text-link { font: 700 .75rem/1.2 "Courier New", monospace; text-transform: uppercase; text-underline-offset: .3rem; }
 
 .evidence-board {
-  position: relative;
-  min-height: 500px;
+  width: min(100%, 620px);
+  margin: 0;
   border: 1px solid #4a4a4a;
-  background:
-    linear-gradient(90deg, transparent 51px, rgba(211,19,19,.34) 52px, transparent 53px),
-    repeating-linear-gradient(0deg, #d9d5ca 0, #d9d5ca 27px, #aaa69d 28px);
-  color: var(--ink);
-  transform: rotate(1.2deg);
-  box-shadow: 22px 22px 0 rgba(0,0,0,.42);
+  transform: rotate(1deg);
+  box-shadow: 16px 18px 0 rgba(0,0,0,.38);
 }
-.scribble {
-  position: absolute;
-  margin: 0;
-  font: 700 clamp(1.5rem, 3vw, 2.7rem)/1.08 "Segoe Print", "Comic Sans MS", cursive;
-  letter-spacing: -.06em;
-  text-decoration: underline 3px var(--red);
-  text-underline-offset: .15em;
+.evidence-board img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
-.scribble-one { top: 16%; left: 18%; transform: rotate(-5deg); }
-.scribble-two { right: 8%; bottom: 17%; transform: rotate(3deg); }
-.circled-note {
-  position: absolute;
-  top: 48%; right: 8%;
-  margin: 0;
-  padding: 1rem 1.4rem;
-  color: var(--red);
-  border: 5px solid var(--red);
-  border-radius: 47% 53% 44% 56%;
-  font: 900 1rem/1.05 "Arial Black", sans-serif;
-  text-align: center;
-  transform: rotate(-12deg);
-}
-.tape { position: absolute; width: 105px; height: 30px; background: rgba(215,205,168,.76); }
-.tape-a { top: -7px; left: 20%; transform: rotate(-8deg); }
-.tape-b { right: -22px; bottom: 10%; transform: rotate(83deg); }
 
 .hero-footer {
   display: grid;
@@ -472,7 +449,7 @@ h1 span { display: block; }
 @media (max-width: 900px) {
   .desktop-nav { display: none; }
   .hero-grid { grid-template-columns: 1fr; }
-  .evidence-board { min-height: 390px; width: min(100%, 540px); margin-inline: auto; }
+  .evidence-board { width: min(100%, 540px); margin-inline: auto; }
   .hero-footer { grid-template-columns: 1fr; }
   .quick-facts { flex-wrap: wrap; }
   .story-grid, .rules-intro, .wallets-head, .launch-grid { grid-template-columns: 1fr; }
@@ -489,8 +466,6 @@ h1 span { display: block; }
   .hero { padding-top: 7.2rem; }
   h1 { font-size: clamp(4.2rem, 24vw, 7rem); }
   .hero-actions { align-items: flex-start; flex-direction: column; }
-  .evidence-board { min-height: 330px; }
-  .scribble { font-size: 1.45rem; }
   .hero-footer { margin-top: 4rem; }
   .quick-facts { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
   .quote-strip { grid-template-columns: 1fr; }
