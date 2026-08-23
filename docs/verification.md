@@ -45,8 +45,10 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 
 - Inspect `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V`.
 - Record its FRP balance and percentage of total supply.
-- Confirm creator beneficial ownership does not exceed 2%.
-- Review buys, sells, transfers, and any linked accounts that may indicate undeclared control.
+- Confirm the creator has not used or controlled any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.
+- Confirm creator FRP activity occurred through the published creator trading wallet.
+- Confirm total creator beneficial ownership across all arrangements never exceeds 2% of total FRP supply.
+- Review buys, holdings, receipts, sells, transfers, and linked accounts for evidence of undeclared control.
 
 ## 8. Pump.fun configuration
 

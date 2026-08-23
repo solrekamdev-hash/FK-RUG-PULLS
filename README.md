@@ -24,9 +24,11 @@ Open `index.html` directly, or serve the folder with any static web server. All 
 | Role | Address | Permission |
 | --- | --- | --- |
 | Deployer | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token; not used for normal creator trading |
-| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Public creator buys and sells; maximum 2% beneficial ownership |
+| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; total creator beneficial ownership must never exceed 2% of total FRP supply |
 
 The same addresses and rules are recorded in [`wallets.json`](wallets.json) and [`launch-manifest.json`](launch-manifest.json).
+
+The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through the published creator trading wallet, and total creator beneficial ownership must never exceed 2% of total FRP supply.
 
 ## Planned launch settings
 

@@ -16,17 +16,17 @@ This wallet creates the token. It is not used for normal creator buying or selli
 
 `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V`
 
-This is the only wallet the creator uses to buy and sell FRP. The creator may buy and may sell. Those trades are public, so anyone can inspect them. The creator's maximum beneficial ownership is 2% of total supply.
+This is the published wallet for creator FRP activity. The creator may buy and may sell. Those trades are public, so anyone can inspect them. Total creator beneficial ownership must never exceed 2% of total FRP supply.
 
 ## The plain-language rules
 
-- No secret creator wallets.
+- The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.
 - No presale.
 - No reserved creator allocation.
 - No private team allocation.
 - The deployer wallet does not perform normal creator trading.
-- Creator trades happen only through the public creator trading wallet.
-- Creator beneficial ownership must not exceed 2% of total supply.
+- Creator FRP activity is intended to occur through the published creator trading wallet.
+- Total creator beneficial ownership must never exceed 2% of total FRP supply.
 - The public should verify these rules on-chain instead of relying on statements from the creator.
 
 ## What this pledge does not mean

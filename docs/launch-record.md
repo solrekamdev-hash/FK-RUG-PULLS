@@ -28,9 +28,10 @@ This file is a pre-deployment checklist and a future public record. Completing d
 - [ ] Confirm no presale.
 - [ ] Confirm no reserved creator allocation.
 - [ ] Confirm no private team allocation.
-- [ ] Confirm creator maximum beneficial ownership is 2% of total supply.
+- [ ] Reconfirm the 2% cap: total creator beneficial ownership must never exceed 2% of total FRP supply.
 - [ ] Confirm the deployer is not used for normal creator trading.
-- [ ] Confirm the creator uses no secret creator wallets.
+- [ ] Reconfirm that the creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.
+- [ ] Reconfirm that creator FRP activity is intended to occur through the published creator trading wallet.
 - [ ] Prepare an independent review of all settings before signing anything.
 
 ## Planned launch settings — recheck before deployment
@@ -50,7 +51,7 @@ This file is a pre-deployment checklist and a future public record. Completing d
 | Role | Address | Rule |
 | --- | --- | --- |
 | Deployer | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token; no normal creator trading |
-| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Public creator buys and sells; 2% maximum beneficial ownership |
+| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; total creator beneficial ownership must never exceed 2% of total FRP supply |
 
 ## Post-deployment record — leave blank until deployment
 

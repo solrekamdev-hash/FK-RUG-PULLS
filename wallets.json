@@ -17,18 +17,18 @@
     {
       "label": "Creator trading wallet",
       "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
-      "purpose": "The only declared wallet for creator buys and sells.",
+      "purpose": "The published wallet intended for creator FRP buying, holding, receiving, selling, transferring, and other beneficial control.",
       "tradingPermissions": {
         "mayCreateToken": false,
         "mayBuy": true,
         "maySell": true,
-        "maximumBeneficialOwnershipPercent": 2,
-        "notes": "Creator trading is permitted only through this public wallet."
+        "maximumCreatorBeneficialOwnershipPercentOfTotalFrpSupply": 2,
+        "notes": "The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through this published wallet."
       }
     }
   ],
   "rules": {
-    "secretCreatorWallets": false,
+    "creatorUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false,
     "presale": false,
     "reservedCreatorAllocation": false,
     "privateTeamAllocation": false

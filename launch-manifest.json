@@ -33,14 +33,14 @@
     },
     "creatorTrading": {
       "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
-      "purpose": "Public creator buys and sells only.",
-      "maximumBeneficialOwnershipPercent": 2
+      "purpose": "The published wallet intended for creator FRP buying, holding, receiving, selling, transferring, and other beneficial control. The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement for this activity.",
+      "maximumCreatorBeneficialOwnershipPercentOfTotalFrpSupply": 2
     }
   },
   "allocationRules": {
     "presale": false,
     "reservedCreatorAllocation": false,
     "privateTeamAllocation": false,
-    "secretCreatorWallets": false
+    "creatorUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false
   }
 }
