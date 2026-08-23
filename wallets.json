@@ -1,0 +1,36 @@
+{
+  "project": "FK RUG PULLS",
+  "ticker": "FRP",
+  "network": "Solana",
+  "deploymentStatus": "NOT_DEPLOYED",
+  "wallets": [
+    {
+      "label": "Deployer wallet",
+      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
+      "purpose": "Creates the token at an authorized launch and provides a public record of deployment activity.",
+      "tradingPermissions": {
+        "mayCreateToken": true,
+        "mayPerformNormalCreatorTrading": false,
+        "notes": "This wallet is reserved for deployment activity and is not used for normal creator buys or sells."
+      }
+    },
+    {
+      "label": "Creator trading wallet",
+      "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
+      "purpose": "The only declared wallet for creator buys and sells.",
+      "tradingPermissions": {
+        "mayCreateToken": false,
+        "mayBuy": true,
+        "maySell": true,
+        "maximumBeneficialOwnershipPercent": 2,
+        "notes": "Creator trading is permitted only through this public wallet."
+      }
+    }
+  ],
+  "rules": {
+    "secretCreatorWallets": false,
+    "presale": false,
+    "reservedCreatorAllocation": false,
+    "privateTeamAllocation": false
+  }
+}

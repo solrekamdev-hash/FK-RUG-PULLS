@@ -1,0 +1,46 @@
+{
+  "project": {
+    "name": "FK RUG PULLS",
+    "ticker": "FRP",
+    "status": "PRE-LAUNCH",
+    "description": "A transparency-first Solana memecoin project built around public creator wallets and visible launch records."
+  },
+  "deploymentStatus": "NOT_DEPLOYED",
+  "officialMintAddress": null,
+  "socialLinks": {
+    "tokenX": "https://x.com/FKRUGPULLS",
+    "developerX": "https://x.com/SolRDev",
+    "github": "https://github.com/solrekamdev-hash/FK-RUG-PULLS"
+  },
+  "plannedLaunchSettings": {
+    "mustBeRecheckedBeforeDeployment": true,
+    "blockchain": "Solana",
+    "platform": "Pump.fun",
+    "pair": "SOL",
+    "cashBack": "ON",
+    "mayhemMode": "OFF",
+    "standardSupplyTarget": {
+      "amount": 1000000000,
+      "ticker": "FRP",
+      "approximate": true
+    },
+    "mining": false
+  },
+  "wallets": {
+    "deployer": {
+      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
+      "purpose": "Token creation only; not for normal creator trading."
+    },
+    "creatorTrading": {
+      "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
+      "purpose": "Public creator buys and sells only.",
+      "maximumBeneficialOwnershipPercent": 2
+    }
+  },
+  "allocationRules": {
+    "presale": false,
+    "reservedCreatorAllocation": false,
+    "privateTeamAllocation": false,
+    "secretCreatorWallets": false
+  }
+}
