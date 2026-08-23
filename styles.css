@@ -83,9 +83,9 @@ a { color: inherit; }
 }
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(310px, .65fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(440px, .95fr);
   align-items: center;
-  gap: clamp(2rem, 6vw, 7rem);
+  gap: clamp(1.5rem, 3vw, 3.5rem);
 }
 .eyebrow, .alert-label {
   margin: 0 0 1.5rem;
@@ -139,8 +139,9 @@ h1 span { display: block; }
 .text-link { font: 700 .75rem/1.2 "Courier New", monospace; text-transform: uppercase; text-underline-offset: .3rem; }
 
 .evidence-board {
-  width: min(100%, 620px);
+  width: min(100%, 720px);
   margin: 0;
+  justify-self: center;
   border: 0;
   background: transparent;
   transform: rotate(1deg);
@@ -451,7 +452,7 @@ h1 span { display: block; }
 @media (max-width: 900px) {
   .desktop-nav { display: none; }
   .hero-grid { grid-template-columns: 1fr; }
-  .evidence-board { width: min(100%, 540px); margin-inline: auto; }
+  .evidence-board { width: min(100%, 620px); margin-inline: auto; }
   .hero-footer { grid-template-columns: 1fr; }
   .quick-facts { flex-wrap: wrap; }
   .story-grid, .rules-intro, .wallets-head, .launch-grid { grid-template-columns: 1fr; }
