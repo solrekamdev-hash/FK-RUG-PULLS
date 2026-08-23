@@ -141,15 +141,17 @@ h1 span { display: block; }
 .evidence-board {
   width: min(100%, 620px);
   margin: 0;
-  border: 1px solid #4a4a4a;
+  border: 0;
+  background: transparent;
   transform: rotate(1deg);
-  box-shadow: 16px 18px 0 rgba(0,0,0,.38);
+  box-shadow: none;
 }
 .evidence-board img {
   display: block;
   width: 100%;
   height: auto;
   object-fit: contain;
+  filter: drop-shadow(10px 14px 12px rgba(0,0,0,.36));
 }
 
 .hero-footer {
