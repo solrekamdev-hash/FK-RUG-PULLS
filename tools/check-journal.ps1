@@ -76,6 +76,15 @@ if (-not (Test-Path -LiteralPath $viewerScriptPath)) {
   if ($viewerScript -notmatch 'prefers-reduced-motion: reduce' -or $viewerScript -notmatch 'isAnimating') {
     $failures.Add("Journal viewer is missing reduced-motion or navigation-lock handling")
   }
+  if ($viewerScript -notmatch 'bookGeometry' -or $viewerScript -notmatch 'animateWholeBook' -or $viewerScript -notmatch 'physicalEase') {
+    $failures.Add("Journal viewer is missing continuous physical notebook geometry")
+  }
+  if ($viewerScript -match 'support\.js|window\.React|createElement\(\s*["'']canvas') {
+    $failures.Add("Journal viewer introduced a prototype runtime, React, or Canvas dependency")
+  }
+  if ($viewerScript -match 'POCKET NOTEBOOK / 001|PROPERTY OF:|192 PAGES / BLACK') {
+    $failures.Add("Entry 001 closed covers must contain no decorative text")
+  }
   if ($viewerScript -notmatch 'index\.html\$\{targetHash\}') {
     $failures.Add("Journal viewer entry-boundary navigation is not using explicit index.html routes")
   }
@@ -94,8 +103,8 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   if ($viewerStyles -notmatch '@media \(prefers-reduced-motion: reduce\)') {
     $failures.Add("Journal styles do not respect prefers-reduced-motion")
   }
-  if ($viewerStyles -notmatch '@keyframes journal-cover-open-forward' -or $viewerStyles -notmatch '\.journal-closed-cover') {
-    $failures.Add("Journal viewer is missing its physical closed-cover presentation")
+  if ($viewerStyles -notmatch '\.journal-book-position' -or $viewerStyles -notmatch '\.journal-leaf' -or $viewerStyles -notmatch '\.journal-physical-shadow' -or $viewerStyles -notmatch '\.journal-page-edge') {
+    $failures.Add("Journal viewer is missing its shared physical notebook structure")
   }
   if ($viewerStyles -notmatch '\.journal-inside-design') {
     $failures.Add("Journal viewer is missing code-rendered inside-page fallbacks")
@@ -131,6 +140,9 @@ foreach ($fileName in $expectedFiles) {
   }
   if ($page -notmatch 'data-journal-closed-cover' -or $page -notmatch 'data-journal-cover-image' -or $page -notmatch 'data-journal-markdown-stage') {
     $failures.Add("Entry $number is missing its closed-cover or integrated Markdown stage")
+  }
+  if ($page -notmatch 'data-journal-left-leaf' -or $page -notmatch 'data-journal-right-leaf' -or $page -notmatch 'data-journal-physical-shadow') {
+    $failures.Add("Entry $number is missing the shared spine-hinged notebook leaves or physical shadow")
   }
   if ($page -notmatch 'data-journal-fallback') {
     $failures.Add("Entry $number is missing its Markdown fallback container")

@@ -57,4 +57,28 @@ assert.equal(logic.transitionMode(true, true), "immediate", "Reduced motion must
 assert.equal(logic.transitionMode(false, false), "desktop");
 assert.equal(logic.transitionMode(false, true), "mobile");
 
-console.log("Journal viewer logic checks passed: closed covers, designed inside pages, desktop spreads, Markdown flow, entry boundaries, reduced motion, and sequential mobile paging.");
+const desktopFront = logic.bookGeometry(0, false, 340, 15);
+const desktopOpen = logic.bookGeometry(1, false, 340, 15);
+const desktopBack = logic.bookGeometry(2, false, 340, 15);
+assert.equal(desktopFront.leftAngle, 180, "Front cover must fold around the left leaf's spine edge");
+assert.equal(desktopFront.offsetX, -170, "Closed front geometry must recenter one cover width without scaling");
+assert.equal(desktopOpen.leftAngle, 0);
+assert.equal(Math.abs(desktopOpen.rightAngle), 0);
+assert.equal(desktopOpen.offsetX, 0);
+assert.equal(desktopBack.rightAngle, -180, "Back cover must fold around the right leaf's spine edge");
+assert.equal(desktopBack.offsetX, 170, "Closed back geometry must recenter one cover width without scaling");
+assert.equal(desktopFront.leftRise, 15, "Folded cover must retain the page-block thickness");
+assert.equal(desktopBack.rightRise, 15, "Folded back cover must retain the page-block thickness");
+assert.ok(logic.bookGeometry(.5, false, 340, 15).lift > 0, "Opening must lift between resting states");
+assert.ok(logic.bookGeometry(1.5, false, 340, 15).shadowOpacity < desktopOpen.shadowOpacity, "Lift must soften the physical shadow");
+
+const mobileFront = logic.bookGeometry(0, true, 340, 15);
+const mobileBack = logic.bookGeometry(2, true, 340, 15);
+assert.equal(mobileFront.leftAngle, -180, "Mobile front cover must hinge away from its left edge");
+assert.equal(mobileBack.rightAngle, 180, "Mobile back cover must hinge over from its right edge");
+assert.equal(mobileFront.offsetX, 340, "Mobile front cover must recenter over one readable page width");
+assert.equal(mobileBack.offsetX, -340, "Mobile back cover must recenter over one readable page width");
+assert.ok(Math.abs(logic.physicalEase(0)) < .0001);
+assert.ok(Math.abs(logic.physicalEase(1) - 1) < .0001);
+
+console.log("Journal viewer logic checks passed: continuous spine geometry, closed covers, designed inside pages, desktop spreads, Markdown flow, entry boundaries, reduced motion, and sequential mobile paging.");

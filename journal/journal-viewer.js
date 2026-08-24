@@ -119,6 +119,54 @@
     transitionMode(reducedMotion, mobile) {
       if (reducedMotion) return "immediate";
       return mobile ? "mobile" : "desktop";
+    },
+
+    physicalEase(t) {
+      const progress = Math.max(0, Math.min(1, t));
+      let low = 0;
+      let high = 1;
+      let curve = progress;
+      for (let index = 0; index < 18; index += 1) {
+        curve = (low + high) / 2;
+        const x = (3 * curve * (1 - curve) * (1 - curve) * .36)
+          + (3 * curve * curve * (1 - curve) * .18)
+          + (curve * curve * curve);
+        if (x < progress) low = curve;
+        else high = curve;
+      }
+      return (3 * curve * (1 - curve) * (1 - curve) * .02)
+        + (3 * curve * curve * (1 - curve))
+        + (curve * curve * curve);
+    },
+
+    bookGeometry(position, mobile = false, pageWidth = 340, thickness = 15) {
+      const pos = Math.max(0, Math.min(2, position));
+      const clamp01 = (value) => Math.max(0, Math.min(1, value));
+      const closedLeft = clamp01(1 - pos);
+      const closedRight = clamp01(pos - 1);
+      const segmentProgress = pos <= 1 ? pos : pos - 1;
+      const direction = pos <= 1 ? -1 : 1;
+      let lift = Math.sin(Math.PI * Math.pow(segmentProgress, .92));
+      if (segmentProgress > .78) {
+        lift -= .17 * Math.sin(Math.PI * (segmentProgress - .78) / .22);
+      }
+      const shadowBase = mobile ? .92 : 1 - (.44 * Math.abs(pos - 1));
+      return {
+        position: pos,
+        leftAngle: (mobile ? -180 : 180) * closedLeft,
+        rightAngle: (mobile ? 180 : -180) * closedRight,
+        leftRise: thickness * closedLeft,
+        rightRise: thickness * closedRight,
+        offsetX: mobile ? pageWidth * (1 - pos) : (pageWidth / 2) * (pos - 1),
+        lift,
+        tiltX: (mobile ? 4 : 5.5) + ((mobile ? 3.2 : 4.6) * lift),
+        tiltY: (mobile ? 1.6 : 2.4) * lift * direction,
+        scale: 1 + (.014 * lift),
+        shadowScaleX: shadowBase * (1 + (.07 * lift)),
+        shadowScaleY: 1 + (.1 * lift),
+        shadowOpacity: .94 - (.34 * lift),
+        shadowBlur: (mobile ? 18 : 24) + (22 * lift)
+      };
     }
   });
 
@@ -136,8 +184,8 @@
 
   const designs = {
     "001": {
-      coverFront: ["POCKET NOTEBOOK / 001", "NOTES", "PROPERTY OF: __________"],
-      coverBack: ["POCKET NOTEBOOK / 001", "", "192 PAGES / BLACK"],
+      coverFront: [],
+      coverBack: [],
       insideFront: ["ENTRY 001 / START", "JUST LOOKING.", "RENT / PHONE / FUEL / FOOD", "NO STUPID SHIT."],
       insideBack: ["ENTRY 001 / END", "ONE CLEAN WIN.", "DON'T CHASE. DON'T PANIC.", "CLOSE THE BOOK."]
     },
@@ -173,9 +221,19 @@
   const markdownStage = viewer.querySelector("[data-journal-markdown-stage]");
   const bookFigure = viewer.querySelector("[data-journal-book-stage]");
   const book = viewer.querySelector("[data-journal-book]");
-  const closedCover = viewer.querySelector("[data-journal-closed-cover]");
-  const coverImage = viewer.querySelector("[data-journal-cover-image]");
-  const coverDesign = viewer.querySelector("[data-journal-cover-design]");
+  const bookPosition = viewer.querySelector("[data-journal-book-position]");
+  const bookRig = viewer.querySelector("[data-journal-book-rig]");
+  const physicalShadow = viewer.querySelector("[data-journal-physical-shadow]");
+  const leftLeaf = viewer.querySelector("[data-journal-left-leaf]");
+  const rightLeaf = viewer.querySelector("[data-journal-right-leaf]");
+  const leftInside = viewer.querySelector(".journal-leaf-inside-left");
+  const rightInside = viewer.querySelector(".journal-leaf-inside-right");
+  const frontCover = viewer.querySelector("[data-journal-cover-front]");
+  const backCover = viewer.querySelector("[data-journal-cover-back]");
+  const coverFaces = [
+    { side: "front", element: frontCover, image: frontCover.querySelector("[data-journal-cover-image]"), design: frontCover.querySelector("[data-journal-cover-design]") },
+    { side: "back", element: backCover, image: backCover.querySelector("[data-journal-cover-image]"), design: backCover.querySelector("[data-journal-cover-design]") }
+  ];
   const leftSurface = viewer.querySelector("[data-journal-left-page]");
   const rightSurface = viewer.querySelector("[data-journal-right-page]");
   const mobileSurface = viewer.querySelector("[data-journal-mobile-page]");
@@ -221,14 +279,31 @@
     root.append(element);
   }
 
-  function renderCoverDesign(side) {
+  function renderCoverDesign(coverDesign, side) {
     const design = designs[entry.id]?.[side === "front" ? "coverFront" : "coverBack"] || [entry.id, "NOTES", ""];
     coverDesign.replaceChildren();
     coverDesign.dataset.coverSide = side;
+    if (entry.id === "001") return;
     addDesignElement(coverDesign, "span", "journal-design-label", design[0]);
     if (design[1]) addDesignElement(coverDesign, "strong", "journal-design-title", design[1]);
     addDesignElement(coverDesign, "span", "journal-design-detail", design[2]);
     for (let index = 0; index < 4; index += 1) addDesignElement(coverDesign, "i", `journal-cover-scratch journal-cover-scratch-${index + 1}`, "");
+  }
+
+  function renderCoverFace(face) {
+    renderCoverDesign(face.design, face.side);
+    const role = face.side === "front" ? "cover-front" : "cover-back";
+    const source = assetFor(role);
+    face.image.hidden = true;
+    face.image.alt = "";
+    face.image.removeAttribute("src");
+    face.design.hidden = false;
+    if (source) {
+      face.design.hidden = true;
+      face.image.hidden = false;
+      face.image.alt = `Entry ${entry.id}, ${face.side} cover artwork`;
+      face.image.src = source;
+    }
   }
 
   function createInsideDesign(descriptor) {
@@ -321,24 +396,17 @@
   }
 
   function renderClosedCover(side) {
-    renderCoverDesign(side);
-    const role = side === "front" ? "cover-front" : "cover-back";
-    const source = assetFor(role);
-    book.dataset.bookState = role;
-    closedCover.dataset.coverSide = side;
-    closedCover.removeAttribute("aria-hidden");
-    closedCover.setAttribute("role", "img");
-    closedCover.setAttribute("aria-label", `Entry ${entry.id}, closed ${side} cover`);
-    coverImage.hidden = true;
-    coverImage.alt = "";
-    coverImage.removeAttribute("src");
-    coverDesign.hidden = false;
-    if (source) {
-      coverDesign.hidden = true;
-      coverImage.hidden = false;
-      coverImage.alt = `Entry ${entry.id}, ${side} cover artwork`;
-      coverImage.src = source;
-    }
+    book.dataset.bookState = side === "front" ? "cover-front" : "cover-back";
+    coverFaces.forEach((face) => {
+      const active = face.side === side;
+      face.element.setAttribute("aria-hidden", String(!active));
+      face.element.removeAttribute("role");
+      face.element.removeAttribute("aria-label");
+      if (active) {
+        face.element.setAttribute("role", "img");
+        face.element.setAttribute("aria-label", `Entry ${entry.id}, closed ${side} cover`);
+      }
+    });
   }
 
   function stateDescription(state) {
@@ -353,7 +421,52 @@
       : `Entry ${entry.id}, page ${numbers[0]} of ${entry.pages.length}.`;
   }
 
-  function renderState(stateIndex, announce = false) {
+  function statePhysicalPosition(state) {
+    if (state.kind !== "cover") return 1;
+    return state.side === "front" ? 0 : 2;
+  }
+
+  function faceIsVisible(angle) {
+    const normalized = ((((angle + 180) % 360) + 360) % 360) - 180;
+    return Math.abs(normalized) <= 90.05;
+  }
+
+  function applyPhysicalBook(position) {
+    const mobile = mobileQuery.matches;
+    const pageWidth = mobile ? book.clientWidth : book.clientWidth / 2;
+    const thickness = Math.max(8, Math.min(15, pageWidth * .044));
+    const geometry = logic.bookGeometry(position, mobile, pageWidth, thickness);
+    book.style.setProperty("--journal-thickness", `${thickness.toFixed(2)}px`);
+    bookPosition.style.transform = `translate3d(${geometry.offsetX.toFixed(2)}px, ${(-16 * geometry.lift).toFixed(2)}px, 0)`;
+    bookRig.style.transform = `rotateX(${geometry.tiltX.toFixed(2)}deg) rotateY(${geometry.tiltY.toFixed(2)}deg) scale3d(${geometry.scale.toFixed(4)}, ${geometry.scale.toFixed(4)}, 1)`;
+    leftLeaf.style.transform = `translateZ(${geometry.leftRise.toFixed(2)}px) rotateY(${geometry.leftAngle.toFixed(2)}deg)`;
+    rightLeaf.style.transform = `translateZ(${geometry.rightRise.toFixed(2)}px) rotateY(${geometry.rightAngle.toFixed(2)}deg)`;
+    const leftOnTop = geometry.position <= 1;
+    leftLeaf.style.zIndex = leftOnTop ? "5" : "2";
+    rightLeaf.style.zIndex = leftOnTop ? "2" : "5";
+    leftInside.style.visibility = faceIsVisible(geometry.leftAngle) ? "visible" : "hidden";
+    frontCover.style.visibility = faceIsVisible(geometry.leftAngle + 180) ? "visible" : "hidden";
+    rightInside.style.visibility = faceIsVisible(geometry.rightAngle) ? "visible" : "hidden";
+    backCover.style.visibility = faceIsVisible(geometry.rightAngle + 180) ? "visible" : "hidden";
+    const shadowOffsetX = mobile ? 0 : geometry.offsetX * .92;
+    physicalShadow.style.transform = `translate3d(${shadowOffsetX.toFixed(2)}px, ${(10 * geometry.lift).toFixed(2)}px, 0) scale(${geometry.shadowScaleX.toFixed(3)}, ${geometry.shadowScaleY.toFixed(3)})`;
+    physicalShadow.style.filter = `blur(${geometry.shadowBlur.toFixed(1)}px)`;
+    physicalShadow.style.opacity = geometry.shadowOpacity.toFixed(3);
+    const nearest = Math.round(geometry.position);
+    book.dataset.bookPosition = Math.abs(geometry.position - nearest) < .002
+      ? ["front", "open", "back"][nearest]
+      : "folding";
+  }
+
+  function hideCoverAccessibility() {
+    coverFaces.forEach((face) => {
+      face.element.setAttribute("aria-hidden", "true");
+      face.element.removeAttribute("role");
+      face.element.removeAttribute("aria-label");
+    });
+  }
+
+  function renderState(stateIndex, announce = false, preserveSurfaces = false) {
     if (imageFailure) return;
     states = statesForMode();
     currentStateIndex = Math.min(Math.max(stateIndex, 0), states.length - 1);
@@ -368,24 +481,23 @@
     if (state.kind === "markdown") {
       indicator.textContent = "Journal transcript";
     } else if (state.kind === "cover") {
-      resetSurface(leftSurface);
-      resetSurface(rightSurface);
-      resetSurface(mobileSurface);
       renderClosedCover(state.side);
+      applyPhysicalBook(statePhysicalPosition(state));
       indicator.textContent = `${state.side === "front" ? "Front" : "Back"} cover`;
     } else {
       book.dataset.bookState = "open";
-      closedCover.setAttribute("aria-hidden", "true");
-      closedCover.removeAttribute("role");
-      closedCover.removeAttribute("aria-label");
-      if (state.kind === "surface") {
-        resetSurface(leftSurface);
-        resetSurface(rightSurface);
-        setSurface(mobileSurface, state.surface);
-      } else {
-        resetSurface(mobileSurface);
-        setSurface(leftSurface, state.surfaces.left);
-        setSurface(rightSurface, state.surfaces.right);
+      hideCoverAccessibility();
+      applyPhysicalBook(1);
+      if (!preserveSurfaces) {
+        if (state.kind === "surface") {
+          resetSurface(leftSurface);
+          resetSurface(rightSurface);
+          setSurface(mobileSurface, state.surface);
+        } else {
+          resetSurface(mobileSurface);
+          setSurface(leftSurface, state.surfaces.left);
+          setSurface(rightSurface, state.surfaces.right);
+        }
       }
       indicator.textContent = stateDescription(state).replace(`Entry ${entry.id}, `, "");
     }
@@ -517,22 +629,53 @@
     renderState(states.indexOf(targetState), true);
   }
 
-  async function animateBookTransition(targetState, direction) {
+  function prepareOpenState(state) {
+    book.dataset.bookState = "folding";
+    if (state.kind === "surface") {
+      resetSurface(leftSurface);
+      resetSurface(rightSurface);
+      setSurface(mobileSurface, state.surface);
+    } else if (state.kind === "spread") {
+      resetSurface(mobileSurface);
+      setSurface(leftSurface, state.surfaces.left);
+      setSurface(rightSurface, state.surfaces.right);
+    }
+  }
+
+  function animatePhysicalPosition(from, to) {
+    const duration = mobileQuery.matches ? 760 : 980;
+    return new Promise((resolve) => {
+      const started = performance.now();
+      const tick = (now) => {
+        const elapsed = Math.min(1, (now - started) / duration);
+        const eased = logic.physicalEase(elapsed);
+        applyPhysicalBook(from + ((to - from) * eased));
+        if (elapsed < 1) window.requestAnimationFrame(tick);
+        else {
+          applyPhysicalBook(to);
+          resolve();
+        }
+      };
+      window.requestAnimationFrame(tick);
+    });
+  }
+
+  async function animateWholeBook(targetState) {
     const currentState = states[currentStateIndex];
-    let element = readerStage;
-    let className = "is-switching-content";
-    if (currentState.kind === "cover") {
-      element = closedCover;
-      className = direction > 0 ? "is-opening-cover-forward" : "is-opening-cover-backward";
-      book.classList.add(className);
-    } else if (targetState.kind === "cover") {
-      element = book;
-      className = direction > 0 ? "is-closing-cover-forward" : "is-closing-cover-backward";
-      book.classList.add(className);
-    } else readerStage.classList.add(className);
+    const from = statePhysicalPosition(currentState);
+    const to = statePhysicalPosition(targetState);
+    if (targetState.kind !== "cover") prepareOpenState(targetState);
+    book.dataset.bookState = "folding";
+    await animatePhysicalPosition(from, to);
+    renderState(states.indexOf(targetState), true, targetState.kind !== "cover");
+  }
+
+  async function animateContentTransition(targetState) {
+    const element = readerStage;
+    const className = "is-switching-content";
+    readerStage.classList.add(className);
     void element.offsetWidth;
     await waitForAnimation(element);
-    book.classList.remove(className);
     readerStage.classList.remove(className);
     renderState(states.indexOf(targetState), true);
   }
@@ -557,9 +700,10 @@
     try {
       const transitionMode = logic.transitionMode(reducedMotionQuery.matches, mobileQuery.matches);
       if (transitionMode === "immediate") renderState(targetStateIndex, true);
+      else if (currentState.kind === "cover" || targetState.kind === "cover") await animateWholeBook(targetState);
       else if (transitionMode === "desktop" && currentState.kind === "spread" && targetState.kind === "spread") await animateDesktop(targetState, direction);
       else if (transitionMode === "mobile" && currentState.kind === "surface" && targetState.kind === "surface") await animateMobile(targetState, direction);
-      else await animateBookTransition(targetState, direction);
+      else await animateContentTransition(targetState);
       writeStateHash(targetState);
     } finally {
       isAnimating = false;
@@ -615,13 +759,15 @@
     });
   });
 
-  coverImage.addEventListener("load", () => {
-    coverDesign.hidden = true;
-    coverImage.hidden = false;
-  });
-  coverImage.addEventListener("error", () => {
-    coverImage.hidden = true;
-    coverDesign.hidden = false;
+  coverFaces.forEach((face) => {
+    face.image.addEventListener("load", () => {
+      face.design.hidden = true;
+      face.image.hidden = false;
+    });
+    face.image.addEventListener("error", () => {
+      face.image.hidden = true;
+      face.design.hidden = false;
+    });
   });
 
   previousButton.addEventListener("click", () => turn(-1));
@@ -647,6 +793,11 @@
   };
   if (typeof mobileQuery.addEventListener === "function") mobileQuery.addEventListener("change", handleModeChange);
   else mobileQuery.addListener(handleModeChange);
+  window.addEventListener("resize", () => {
+    if (!isAnimating && states[currentStateIndex]?.kind !== "markdown") {
+      applyPhysicalBook(statePhysicalPosition(states[currentStateIndex]));
+    }
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
@@ -668,5 +819,6 @@
   viewer.hidden = false;
   document.body.classList.add("has-journal-viewer");
   if (entry.pages.length > 0) document.body.classList.add("has-image-pages");
+  coverFaces.forEach(renderCoverFace);
   renderState(currentStateIndex);
 })();
