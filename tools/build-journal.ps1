@@ -73,11 +73,11 @@ function Get-EntryPagePaths([string]$Number) {
 
 function Get-Decorations([string]$Number) {
   switch ($Number) {
-    "001" { return '<p class="margin-note margin-note-one" aria-hidden="true">JUST LOOKING.</p>' }
-    "002" { return '<p class="margin-note margin-note-one" aria-hidden="true">PROFIT<br>IS PROFIT?</p>' }
-    "003" { return '<p class="margin-note margin-note-one" aria-hidden="true">TAKE PROFIT<br>DON''T CHASE<br>DON''T GET EMOTIONAL</p>' }
-    "004" { return '<p class="margin-note margin-note-one" aria-hidden="true">MONEY<br>I NEVER<br>HAD</p><p class="margin-note margin-note-two" aria-hidden="true">HOLD LONGER →</p>' }
-    "005" { return '<div class="evidence-cluster" aria-hidden="true"><span>WALLET 7</span><span>ONE SALE</span><span>WHO SOLD FIRST?</span><span>FUNDING WALLET → WALLET 7</span></div>' }
+    "001" { return "<p class=`"margin-note margin-note-one`" aria-hidden=`"true`">JUST LOOKING.</p>" }
+    "002" { return "<p class=`"margin-note margin-note-one`" aria-hidden=`"true`">PROFIT<br>IS PROFIT?</p>" }
+    "003" { return "<p class=`"margin-note margin-note-one`" aria-hidden=`"true`">TAKE PROFIT<br>DON'T CHASE<br>DON'T GET EMOTIONAL</p>" }
+    "004" { return "<p class=`"margin-note margin-note-one`" aria-hidden=`"true`">MONEY<br>I NEVER<br>HAD</p><p class=`"margin-note margin-note-two`" aria-hidden=`"true`">HOLD LONGER &rarr;</p>" }
+    "005" { return "<div class=`"evidence-cluster`" aria-hidden=`"true`"><span>WALLET 7</span><span>ONE SALE</span><span>WHO SOLD FIRST?</span><span>FUNDING WALLET &rarr; WALLET 7</span></div>" }
   }
 }
 
@@ -127,13 +127,15 @@ function Get-EntryNavigation($Entry) {
   $number = [int]$Entry.Number
   $previous = if ($number -gt 1) {
     $previousNumber = "{0:D3}" -f ($number - 1)
-    "<a class=`"entry-nav-link entry-nav-previous`" href=`"../$previousNumber/index.html`"><span>← Previous entry</span><strong>$previousNumber</strong></a>"
+    $previousPages = @(Get-EntryPagePaths $previousNumber)
+    $previousHash = if ($previousPages.Count -gt 1) { "#page-$($previousPages.Count)" } else { "" }
+    "<a class=`"entry-nav-link entry-nav-previous`" href=`"../$previousNumber/index.html$previousHash`"><span>&larr; Previous entry</span><strong>$previousNumber</strong></a>"
   } else {
     '<span class="entry-nav-space" aria-hidden="true"></span>'
   }
   $next = if ($number -lt 5) {
     $nextNumber = "{0:D3}" -f ($number + 1)
-    "<a class=`"entry-nav-link entry-nav-next`" href=`"../$nextNumber/index.html`"><span>Next entry →</span><strong>$nextNumber</strong></a>"
+    "<a class=`"entry-nav-link entry-nav-next`" href=`"../$nextNumber/index.html`"><span>Next entry &rarr;</span><strong>$nextNumber</strong></a>"
   } else {
     '<span class="entry-nav-space" aria-hidden="true"></span>'
   }
@@ -148,9 +150,18 @@ function Get-PageFooter {
       <span>FRP / PRE-LAUNCH</span>
     </div>
     <p>DON'T TRUST THE DEV. VERIFY THE DEV.</p>
-    <p class="footer-meta">© <span id="year">2026</span> FK RUG PULLS. No token exists yet.</p>
+    <p class="footer-meta">&copy; <span id="year">2026</span> FK RUG PULLS. No token exists yet.</p>
   </footer>
 '@
+}
+
+function Get-PageAnchors([string]$Number) {
+  $pagePaths = @(Get-EntryPagePaths $Number)
+  if ($pagePaths.Count -eq 0) { return "" }
+  $anchors = 1..$pagePaths.Count | ForEach-Object {
+    "        <span class=`"journal-page-anchor`" id=`"page-$_`" aria-hidden=`"true`"></span>"
+  }
+  return $anchors -join "`n"
 }
 
 function Write-Utf8NoBom([string]$Path, [string]$Content) {
@@ -183,7 +194,7 @@ $ledgerItems = foreach ($entry in $entries) {
           <a href="$($entry.Number)/index.html">
             <span class="ledger-number">$($entry.Number)</span>
             <span class="ledger-copy"><small>Journal entry / chronological file</small><strong>$(Encode-Html $entry.Title)</strong></span>
-            <span class="ledger-action">Read entry <b aria-hidden="true">→</b></span>
+            <span class="ledger-action">Read entry <b aria-hidden="true">&rarr;</b></span>
           </a>
         </li>
 "@
@@ -197,7 +208,7 @@ $indexHtml = @"
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <meta name="description" content="Read the five-part FK RUG PULLS journal: one continuous story from the first trade to the final rug.">
-  <title>The Journal — FK RUG PULLS</title>
+  <title>The Journal &mdash; FK RUG PULLS</title>
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="journal.css">
 </head>
@@ -219,14 +230,14 @@ $indexHtml = @"
   <main id="main">
     <section class="journal-hero" aria-labelledby="journal-title">
       <div class="journal-hero-copy">
-        <p class="eyebrow"><span aria-hidden="true">●</span> Recovered pages / case file 001—005</p>
+        <p class="eyebrow"><span aria-hidden="true">&#9679;</span> Recovered pages / case file 001&mdash;005</p>
         <h1 class="journal-title" id="journal-title"><span>THE</span><span>JOURNAL</span></h1>
         <p class="journal-deck">Five entries. One continuous story. Start with a bloke looking for one clean win. End with the wallet cluster he should have seen.</p>
-        <a class="start-reading" href="001/index.html">Start at entry 001 <span aria-hidden="true">↓</span></a>
+        <a class="start-reading" href="001/index.html">Start at entry 001 <span aria-hidden="true">&darr;</span></a>
       </div>
       <aside class="journal-cover-note" aria-label="Reading order">
         <span>Reading order</span>
-        <strong>001 → 002 → 003 → 004 → 005</strong>
+        <strong>001 &rarr; 002 &rarr; 003 &rarr; 004 &rarr; 005</strong>
         <p>Read chronologically.<br>Do not skip the evidence.</p>
       </aside>
     </section>
@@ -261,7 +272,7 @@ foreach ($entry in $entries) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a0a0a">
   <meta name="description" content="$(Encode-Html $entry.DocumentTitle): $(Encode-Html $entry.Title)">
-  <title>Entry $($entry.Number): $(Encode-Html $entry.Title) — FK RUG PULLS</title>
+  <title>Entry $($entry.Number): $(Encode-Html $entry.Title) &mdash; FK RUG PULLS</title>
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="../journal.css">
 </head>
@@ -295,16 +306,35 @@ foreach ($entry in $entries) {
       </header>
 
       <section class="journal-image-viewer" data-journal-viewer data-entry-id="$($entry.Number)" aria-label="Entry $($entry.Number) page viewer" hidden>
+$(Get-PageAnchors $entry.Number)
         <div class="journal-reader">
           <button class="journal-turn journal-turn-previous" type="button" data-journal-previous aria-label="Previous journal page">
-            <span class="journal-turn-arrow" aria-hidden="true">←</span>
+            <span class="journal-turn-arrow" aria-hidden="true">&larr;</span>
             <span class="journal-turn-label">Previous</span>
           </button>
 
-          <figure class="journal-page-figure">
-            <div class="journal-image-frame">
-              <img data-journal-page-image alt="" decoding="async">
-              <span class="journal-page-loading" data-journal-loading aria-hidden="true">Loading page</span>
+          <figure class="journal-page-figure" data-journal-book-stage>
+            <div class="journal-book" data-journal-book>
+              <div class="journal-book-cover" aria-hidden="true"></div>
+              <div class="journal-spread">
+                <div class="journal-sheet journal-sheet-left is-blank" data-journal-left-page>
+                  <img data-journal-left-image alt="" decoding="async">
+                  <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                </div>
+                <div class="journal-sheet journal-sheet-right is-blank" data-journal-right-page>
+                  <img data-journal-right-image alt="" decoding="async">
+                  <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                </div>
+              </div>
+              <div class="journal-mobile-sheet is-blank" data-journal-mobile-page>
+                <img data-journal-mobile-image alt="" decoding="async">
+                <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+              </div>
+              <div class="journal-turning-sheet" data-journal-turning-sheet aria-hidden="true">
+                <div class="journal-turn-face journal-turn-front" data-journal-turn-front></div>
+                <div class="journal-turn-face journal-turn-back" data-journal-turn-back></div>
+              </div>
+              <div class="journal-gutter" aria-hidden="true"></div>
             </div>
             <figcaption class="journal-page-caption">
               <strong>Entry $($entry.Number)</strong>
@@ -313,7 +343,7 @@ foreach ($entry in $entries) {
           </figure>
 
           <button class="journal-turn journal-turn-next" type="button" data-journal-next aria-label="Next journal page">
-            <span class="journal-turn-arrow" aria-hidden="true">→</span>
+            <span class="journal-turn-arrow" aria-hidden="true">&rarr;</span>
             <span class="journal-turn-label">Next</span>
           </button>
         </div>
@@ -328,7 +358,7 @@ $(Render-EntryCopy $entry)
         </div>
       </div>
 
-      <p class="source-link"><a href="../../Content/Journal/$($entry.FileName)">View original Markdown source <span aria-hidden="true">↗</span></a></p>
+      <p class="source-link"><a href="../../Content/Journal/$($entry.FileName)">View original Markdown source <span aria-hidden="true">&#8599;</span></a></p>
     </article>
 
     <nav class="entry-navigation" aria-label="Journal entry navigation">

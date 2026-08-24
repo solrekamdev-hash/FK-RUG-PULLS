@@ -9,13 +9,14 @@ $repositoryPath = [System.IO.Path]::GetFullPath($RepositoryRoot).TrimEnd(
   [System.IO.Path]::AltDirectorySeparatorChar
 )
 $repositoryPrefix = $repositoryPath + [System.IO.Path]::DirectorySeparatorChar
+$repositoryUri = [System.Uri]($repositoryPrefix)
 $htmlFiles = @(Get-ChildItem -LiteralPath $repositoryPath -Recurse -File -Filter "*.html" | Sort-Object FullName)
 $failures = [System.Collections.Generic.List[string]]::new()
 $anchorCache = @{}
 $checkedUrls = 0
 
 function Add-Failure([string]$PagePath, [int]$LineNumber, [string]$Attribute, [string]$Url, [string]$Reason) {
-  $relativePage = [System.IO.Path]::GetRelativePath($repositoryPath, $PagePath).Replace('\', '/')
+  $relativePage = [System.Uri]::UnescapeDataString($repositoryUri.MakeRelativeUri([System.Uri]$PagePath).ToString())
   $failures.Add("${relativePage}:${LineNumber} $Attribute=`"$Url`" $Reason")
 }
 
