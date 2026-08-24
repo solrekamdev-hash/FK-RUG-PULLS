@@ -17,6 +17,8 @@ The site is a zero-dependency static build:
 - `script.js` — copy-address interaction and small progressive enhancements
 - `assets/og-preview.png` — branded social preview image
 
+The journal routes are generated from `Content/Journal/*.md`. Optional notebook-page artwork lives at `assets/journal/NNN/page-NN.webp`; `tools/build-journal.ps1` discovers those files and writes the shared journal manifest. Entries without page artwork continue to render their Markdown source as a fallback. See [`assets/journal/README.md`](assets/journal/README.md) for the asset convention.
+
 Open `index.html` directly, or serve the folder with any static web server. All paths are relative and compatible with GitHub Pages project sites.
 
 ## Public wallets

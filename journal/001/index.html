@@ -32,14 +32,42 @@
     <article class="journal-entry" aria-labelledby="entry-title">
       <header class="entry-heading">
         <div>
-          <p class="entry-case-label">Journal entry <strong>001</strong> / recovered page</p>
+          <p class="entry-case-label">Journal entry <strong>001</strong> / notebook file</p>
           <h1 class="entry-title" id="entry-title" data-source-entry-title>I JUST NEED ONE FUCKING WIN.</h1>
         </div>
         <p class="entry-order" aria-label="Entry 1 of 5"><span>001</span> / 005</p>
       </header>
 
-      <div class="journal-page">
-        <p class="margin-note margin-note-one" aria-hidden="true">JUST LOOKING.</p>
+      <section class="journal-image-viewer" data-journal-viewer data-entry-id="001" aria-label="Entry 001 page viewer" hidden>
+        <div class="journal-reader">
+          <button class="journal-turn journal-turn-previous" type="button" data-journal-previous aria-label="Previous journal page">
+            <span class="journal-turn-arrow" aria-hidden="true">←</span>
+            <span class="journal-turn-label">Previous</span>
+          </button>
+
+          <figure class="journal-page-figure">
+            <div class="journal-image-frame">
+              <img data-journal-page-image alt="" decoding="async">
+              <span class="journal-page-loading" data-journal-loading aria-hidden="true">Loading page</span>
+            </div>
+            <figcaption class="journal-page-caption">
+              <strong>Entry 001</strong>
+              <span data-journal-page-indicator>Page 1 / 1</span>
+            </figcaption>
+          </figure>
+
+          <button class="journal-turn journal-turn-next" type="button" data-journal-next aria-label="Next journal page">
+            <span class="journal-turn-arrow" aria-hidden="true">→</span>
+            <span class="journal-turn-label">Next</span>
+          </button>
+        </div>
+        <p class="journal-reader-hint">Use the side controls or arrow keys to turn the page.</p>
+        <p class="journal-viewer-status" data-journal-status aria-live="polite"></p>
+      </section>
+
+      <div data-journal-fallback>
+        <div class="journal-page">
+          <p class="margin-note margin-note-one" aria-hidden="true">JUST LOOKING.</p>
           <div class="journal-copy">
             <p data-source-paragraph>money is actually fucking unbelievable.</p>
             <p data-source-paragraph>got paid friday and felt financially stable for roughly 14 minutes.</p>
@@ -81,6 +109,7 @@
             <p data-source-paragraph>just looking.</p>
             <p data-source-paragraph>literally just looking.</p>
           </div>
+        </div>
       </div>
 
       <p class="source-link"><a href="../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-001.md">View original Markdown source <span aria-hidden="true">↗</span></a></p>
@@ -101,6 +130,8 @@
     <p>DON'T TRUST THE DEV. VERIFY THE DEV.</p>
     <p class="footer-meta">© <span id="year">2026</span> FK RUG PULLS. No token exists yet.</p>
   </footer>
+  <script src="../journal-manifest.js"></script>
+  <script src="../journal-viewer.js"></script>
   <script src="../../script.js"></script>
 </body>
 </html>

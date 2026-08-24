@@ -5,6 +5,8 @@ param(
 $ErrorActionPreference = "Stop"
 $sourceDirectory = Join-Path $RepositoryRoot "Content\Journal"
 $journalDirectory = Join-Path $RepositoryRoot "journal"
+$manifestPath = Join-Path $journalDirectory "journal-manifest.js"
+$viewerScriptPath = Join-Path $journalDirectory "journal-viewer.js"
 $expectedFiles = 1..5 | ForEach-Object { "FK-RUG-PULLS-JOURNAL-ENTRY-{0:D3}.md" -f $_ }
 
 function Decode-Html([string]$Text) {
@@ -36,6 +38,35 @@ function Get-SourceParagraphs([string]$Path) {
 }
 
 $failures = [System.Collections.Generic.List[string]]::new()
+$manifest = $null
+
+if (-not (Test-Path -LiteralPath $manifestPath)) {
+  $failures.Add("Missing journal manifest: journal/journal-manifest.js")
+} else {
+  $manifestJavaScript = [System.IO.File]::ReadAllText($manifestPath)
+  $manifestMatch = [regex]::Match(
+    $manifestJavaScript,
+    '^\s*window\.FRP_JOURNAL\s*=\s*(?<json>\{.*\});\s*$',
+    [System.Text.RegularExpressions.RegexOptions]::Singleline
+  )
+  if (-not $manifestMatch.Success) {
+    $failures.Add("Journal manifest is not a file-safe window.FRP_JOURNAL assignment")
+  } else {
+    try {
+      $manifest = $manifestMatch.Groups["json"].Value | ConvertFrom-Json
+      if ($manifest.version -ne 1 -or $null -eq $manifest.entries) {
+        $failures.Add("Journal manifest must contain version 1 and an entries object")
+        $manifest = $null
+      }
+    } catch {
+      $failures.Add("Journal manifest contains invalid JSON: $($_.Exception.Message)")
+    }
+  }
+}
+
+if (-not (Test-Path -LiteralPath $viewerScriptPath)) {
+  $failures.Add("Missing shared page viewer: journal/journal-viewer.js")
+}
 
 foreach ($fileName in $expectedFiles) {
   $sourcePath = Join-Path $sourceDirectory $fileName
@@ -55,6 +86,19 @@ foreach ($fileName in $expectedFiles) {
   $sourceLines = [System.IO.File]::ReadAllLines($sourcePath)
   $sourceTitle = $sourceLines[2].Substring(3)
   $page = [System.IO.File]::ReadAllText($pagePath)
+  if ($page -notmatch ('data-journal-viewer\s+data-entry-id="{0}"' -f $number)) {
+    $failures.Add("Entry $number is missing its image-page viewer")
+  }
+  if ($page -notmatch 'data-journal-previous' -or $page -notmatch 'data-journal-next' -or $page -notmatch 'data-journal-page-indicator') {
+    $failures.Add("Entry $number is missing side navigation or page state")
+  }
+  if ($page -notmatch 'data-journal-fallback') {
+    $failures.Add("Entry $number is missing its Markdown fallback container")
+  }
+  if ($page -notmatch '<script src="\.\./journal-manifest\.js"></script>\s*<script src="\.\./journal-viewer\.js"></script>') {
+    $failures.Add("Entry $number does not load the shared manifest and viewer with explicit relative paths")
+  }
+
   $renderedTitleMatch = [regex]::Match($page, '<h1[^>]*data-source-entry-title[^>]*>(.*?)</h1>', [System.Text.RegularExpressions.RegexOptions]::Singleline)
   if (-not $renderedTitleMatch.Success -or (Decode-Html $renderedTitleMatch.Groups[1].Value) -cne $sourceTitle) {
     $failures.Add("Entry $number title differs from source")
@@ -71,6 +115,35 @@ foreach ($fileName in $expectedFiles) {
     if ($sourceParagraphs[$index] -cne $renderedParagraphs[$index]) {
       $failures.Add("Entry $number prose differs at paragraph $($index + 1)")
       break
+    }
+  }
+
+  if ($null -ne $manifest) {
+    $manifestProperty = $manifest.entries.PSObject.Properties[$number]
+    if ($null -eq $manifestProperty) {
+      $failures.Add("Manifest is missing entry $number")
+    } else {
+      $manifestEntry = $manifestProperty.Value
+      if ($manifestEntry.id -cne $number) { $failures.Add("Manifest entry $number has an incorrect id") }
+      if ($manifestEntry.title -cne $sourceTitle) { $failures.Add("Manifest entry $number title differs from source") }
+      if ($manifestEntry.markdown -cne "../../Content/Journal/$fileName") {
+        $failures.Add("Manifest entry $number has an incorrect Markdown fallback path")
+      }
+
+      $seenPagePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+      foreach ($pageImage in @($manifestEntry.pages)) {
+        if ($pageImage -notmatch ('^\.\./\.\./assets/journal/{0}/page-\d+\.(?:png|webp|jpe?g|avif)$' -f $number)) {
+          $failures.Add("Manifest entry $number has an invalid page-image path: $pageImage")
+          continue
+        }
+        if (-not $seenPagePaths.Add($pageImage)) {
+          $failures.Add("Manifest entry $number repeats page-image path: $pageImage")
+        }
+        $resolvedPageImage = [System.IO.Path]::GetFullPath((Join-Path (Join-Path $journalDirectory $number) $pageImage.Replace('/', '\')))
+        if (-not (Test-Path -LiteralPath $resolvedPageImage -PathType Leaf)) {
+          $failures.Add("Manifest entry $number references a missing page image: $pageImage")
+        }
+      }
     }
   }
 }
@@ -112,4 +185,4 @@ if ($failures.Count -gt 0) {
 
 & (Join-Path $PSScriptRoot "check-site-links.ps1") -RepositoryRoot $RepositoryRoot
 
-Write-Output "Journal checks passed: 5 exact title/prose renders, 6 routes, chronological index, visible root navigation, and no Pages/hosting configuration."
+Write-Output "Journal checks passed: shared manifest/viewer, 5 exact Markdown fallbacks, page-image paths, 6 routes, chronological index, explicit local links, and no Pages/hosting configuration."

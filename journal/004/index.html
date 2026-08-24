@@ -32,14 +32,42 @@
     <article class="journal-entry" aria-labelledby="entry-title">
       <header class="entry-heading">
         <div>
-          <p class="entry-case-label">Journal entry <strong>004</strong> / recovered page</p>
+          <p class="entry-case-label">Journal entry <strong>004</strong> / notebook file</p>
           <h1 class="entry-title" id="entry-title" data-source-entry-title>I SOLD TOO EARLY. OF COURSE I FUCKING DID.</h1>
         </div>
         <p class="entry-order" aria-label="Entry 4 of 5"><span>004</span> / 005</p>
       </header>
 
-      <div class="journal-page">
-        <p class="margin-note margin-note-one" aria-hidden="true">MONEY<br>I NEVER<br>HAD</p><p class="margin-note margin-note-two" aria-hidden="true">HOLD LONGER →</p>
+      <section class="journal-image-viewer" data-journal-viewer data-entry-id="004" aria-label="Entry 004 page viewer" hidden>
+        <div class="journal-reader">
+          <button class="journal-turn journal-turn-previous" type="button" data-journal-previous aria-label="Previous journal page">
+            <span class="journal-turn-arrow" aria-hidden="true">←</span>
+            <span class="journal-turn-label">Previous</span>
+          </button>
+
+          <figure class="journal-page-figure">
+            <div class="journal-image-frame">
+              <img data-journal-page-image alt="" decoding="async">
+              <span class="journal-page-loading" data-journal-loading aria-hidden="true">Loading page</span>
+            </div>
+            <figcaption class="journal-page-caption">
+              <strong>Entry 004</strong>
+              <span data-journal-page-indicator>Page 1 / 1</span>
+            </figcaption>
+          </figure>
+
+          <button class="journal-turn journal-turn-next" type="button" data-journal-next aria-label="Next journal page">
+            <span class="journal-turn-arrow" aria-hidden="true">→</span>
+            <span class="journal-turn-label">Next</span>
+          </button>
+        </div>
+        <p class="journal-reader-hint">Use the side controls or arrow keys to turn the page.</p>
+        <p class="journal-viewer-status" data-journal-status aria-live="polite"></p>
+      </section>
+
+      <div data-journal-fallback>
+        <div class="journal-page">
+          <p class="margin-note margin-note-one" aria-hidden="true">MONEY<br>I NEVER<br>HAD</p><p class="margin-note margin-note-two" aria-hidden="true">HOLD LONGER →</p>
           <div class="journal-copy">
             <p data-source-paragraph>okay so apparently there is a new way to lose money now.</p>
             <p data-source-paragraph>make profit.</p>
@@ -88,6 +116,7 @@
             <p data-source-paragraph>also Scott moved his bins onto my side of the driveway again.</p>
             <p data-source-paragraph>there will be consequences.</p>
           </div>
+        </div>
       </div>
 
       <p class="source-link"><a href="../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-004.md">View original Markdown source <span aria-hidden="true">↗</span></a></p>
@@ -108,6 +137,8 @@
     <p>DON'T TRUST THE DEV. VERIFY THE DEV.</p>
     <p class="footer-meta">© <span id="year">2026</span> FK RUG PULLS. No token exists yet.</p>
   </footer>
+  <script src="../journal-manifest.js"></script>
+  <script src="../journal-viewer.js"></script>
   <script src="../../script.js"></script>
 </body>
 </html>

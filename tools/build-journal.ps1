@@ -6,6 +6,7 @@ $ErrorActionPreference = "Stop"
 
 $sourceDirectory = Join-Path $RepositoryRoot "Content\Journal"
 $journalDirectory = Join-Path $RepositoryRoot "journal"
+$journalAssetsDirectory = Join-Path $RepositoryRoot "assets\journal"
 $expectedFiles = 1..5 | ForEach-Object { "FK-RUG-PULLS-JOURNAL-ENTRY-{0:D3}.md" -f $_ }
 
 $missingFiles = $expectedFiles | Where-Object { -not (Test-Path -LiteralPath (Join-Path $sourceDirectory $_)) }
@@ -53,6 +54,22 @@ function Get-Entry([int]$Number) {
 }
 
 $entries = 1..5 | ForEach-Object { Get-Entry $_ }
+
+function Get-EntryPagePaths([string]$Number) {
+  $entryAssetDirectory = Join-Path $journalAssetsDirectory $Number
+  if (-not (Test-Path -LiteralPath $entryAssetDirectory)) { return @() }
+
+  $pageFiles = @(Get-ChildItem -LiteralPath $entryAssetDirectory -File | Where-Object {
+    $_.BaseName -match '^page-(\d+)$' -and $_.Extension.ToLowerInvariant() -in @('.png', '.webp', '.jpg', '.jpeg', '.avif')
+  } | Sort-Object @{ Expression = { [int][regex]::Match($_.BaseName, '\d+$').Value } }, Name)
+
+  $duplicateNumbers = @($pageFiles | Group-Object { [int][regex]::Match($_.BaseName, '\d+$').Value } | Where-Object Count -gt 1)
+  if ($duplicateNumbers.Count -gt 0) {
+    throw "Entry $Number has multiple assets for page number(s): $($duplicateNumbers.Name -join ', ')"
+  }
+
+  return @($pageFiles | ForEach-Object { "../../assets/journal/$Number/$($_.Name)" })
+}
 
 function Get-Decorations([string]$Number) {
   switch ($Number) {
@@ -141,6 +158,24 @@ function Write-Utf8NoBom([string]$Path, [string]$Content) {
   [System.IO.Directory]::CreateDirectory($parent) | Out-Null
   [System.IO.File]::WriteAllText($Path, $Content, [System.Text.UTF8Encoding]::new($false))
 }
+
+$manifestEntries = [ordered]@{}
+foreach ($entry in $entries) {
+  $manifestEntries[$entry.Number] = [ordered]@{
+    id = $entry.Number
+    title = $entry.Title
+    subtitle = $entry.DocumentTitle
+    markdown = "../../Content/Journal/$($entry.FileName)"
+    pages = @(Get-EntryPagePaths $entry.Number)
+  }
+}
+$manifestData = [ordered]@{
+  version = 1
+  entries = $manifestEntries
+}
+$manifestJson = $manifestData | ConvertTo-Json -Depth 6
+$manifestJavaScript = "window.FRP_JOURNAL = $manifestJson;`n"
+Write-Utf8NoBom (Join-Path $journalDirectory "journal-manifest.js") $manifestJavaScript
 
 $ledgerItems = foreach ($entry in $entries) {
   @"
@@ -253,15 +288,44 @@ foreach ($entry in $entries) {
     <article class="journal-entry" aria-labelledby="entry-title">
       <header class="entry-heading">
         <div>
-          <p class="entry-case-label">Journal entry <strong>$($entry.Number)</strong> / recovered page</p>
+          <p class="entry-case-label">Journal entry <strong>$($entry.Number)</strong> / notebook file</p>
           <h1 class="entry-title" id="entry-title" data-source-entry-title>$(Encode-Html $entry.Title)</h1>
         </div>
         <p class="entry-order" aria-label="Entry $level of 5"><span>$($entry.Number)</span> / 005</p>
       </header>
 
-      <div class="journal-page">
-        $(Get-Decorations $entry.Number)
+      <section class="journal-image-viewer" data-journal-viewer data-entry-id="$($entry.Number)" aria-label="Entry $($entry.Number) page viewer" hidden>
+        <div class="journal-reader">
+          <button class="journal-turn journal-turn-previous" type="button" data-journal-previous aria-label="Previous journal page">
+            <span class="journal-turn-arrow" aria-hidden="true">←</span>
+            <span class="journal-turn-label">Previous</span>
+          </button>
+
+          <figure class="journal-page-figure">
+            <div class="journal-image-frame">
+              <img data-journal-page-image alt="" decoding="async">
+              <span class="journal-page-loading" data-journal-loading aria-hidden="true">Loading page</span>
+            </div>
+            <figcaption class="journal-page-caption">
+              <strong>Entry $($entry.Number)</strong>
+              <span data-journal-page-indicator>Page 1 / 1</span>
+            </figcaption>
+          </figure>
+
+          <button class="journal-turn journal-turn-next" type="button" data-journal-next aria-label="Next journal page">
+            <span class="journal-turn-arrow" aria-hidden="true">→</span>
+            <span class="journal-turn-label">Next</span>
+          </button>
+        </div>
+        <p class="journal-reader-hint">Use the side controls or arrow keys to turn the page.</p>
+        <p class="journal-viewer-status" data-journal-status aria-live="polite"></p>
+      </section>
+
+      <div data-journal-fallback>
+        <div class="journal-page">
+          $(Get-Decorations $entry.Number)
 $(Render-EntryCopy $entry)
+        </div>
       </div>
 
       <p class="source-link"><a href="../../Content/Journal/$($entry.FileName)">View original Markdown source <span aria-hidden="true">↗</span></a></p>
@@ -273,6 +337,8 @@ $(Render-EntryCopy $entry)
   </main>
 
 $(Get-PageFooter)
+  <script src="../journal-manifest.js"></script>
+  <script src="../journal-viewer.js"></script>
   <script src="../../script.js"></script>
 </body>
 </html>
@@ -281,4 +347,4 @@ $(Get-PageFooter)
   Write-Utf8NoBom (Join-Path $journalDirectory "$($entry.Number)\index.html") $entryHtml
 }
 
-Write-Output "Built journal index and $($entries.Count) entry pages from finalized Markdown sources."
+Write-Output "Built journal manifest, index, and $($entries.Count) entry pages from Markdown sources and discovered page images."
