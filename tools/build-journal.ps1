@@ -110,17 +110,17 @@ function Get-EntryNavigation($Entry) {
   $number = [int]$Entry.Number
   $previous = if ($number -gt 1) {
     $previousNumber = "{0:D3}" -f ($number - 1)
-    "<a class=`"entry-nav-link entry-nav-previous`" href=`"../$previousNumber/`"><span>← Previous entry</span><strong>$previousNumber</strong></a>"
+    "<a class=`"entry-nav-link entry-nav-previous`" href=`"../$previousNumber/index.html`"><span>← Previous entry</span><strong>$previousNumber</strong></a>"
   } else {
     '<span class="entry-nav-space" aria-hidden="true"></span>'
   }
   $next = if ($number -lt 5) {
     $nextNumber = "{0:D3}" -f ($number + 1)
-    "<a class=`"entry-nav-link entry-nav-next`" href=`"../$nextNumber/`"><span>Next entry →</span><strong>$nextNumber</strong></a>"
+    "<a class=`"entry-nav-link entry-nav-next`" href=`"../$nextNumber/index.html`"><span>Next entry →</span><strong>$nextNumber</strong></a>"
   } else {
     '<span class="entry-nav-space" aria-hidden="true"></span>'
   }
-  return "$previous`n        <a class=`"entry-nav-index`" href=`"../`">All entries</a>`n        $next"
+  return "$previous`n        <a class=`"entry-nav-index`" href=`"../index.html`">All entries</a>`n        $next"
 }
 
 function Get-PageFooter {
@@ -145,7 +145,7 @@ function Write-Utf8NoBom([string]$Path, [string]$Content) {
 $ledgerItems = foreach ($entry in $entries) {
   @"
         <li>
-          <a href="$($entry.Number)/">
+          <a href="$($entry.Number)/index.html">
             <span class="ledger-number">$($entry.Number)</span>
             <span class="ledger-copy"><small>Journal entry / chronological file</small><strong>$(Encode-Html $entry.Title)</strong></span>
             <span class="ledger-action">Read entry <b aria-hidden="true">→</b></span>
@@ -170,15 +170,15 @@ $indexHtml = @"
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="site-header journal-header">
-    <a class="wordmark" href="../" aria-label="FK RUG PULLS home">FRP<span class="red-dot">.</span></a>
+    <a class="wordmark" href="../index.html" aria-label="FK RUG PULLS home">FRP<span class="red-dot">.</span></a>
     <nav class="desktop-nav" aria-label="Primary navigation">
-      <a href="../#story">Story</a>
-      <a href="../#rules">Rules</a>
-      <a href="../#wallets">Wallets</a>
-      <a href="../#launch">Launch plan</a>
+      <a href="../index.html#story">Story</a>
+      <a href="../index.html#rules">Rules</a>
+      <a href="../index.html#wallets">Wallets</a>
+      <a href="../index.html#launch">Launch plan</a>
     </nav>
-    <a class="journal-nav-cta" href="./" aria-current="page">Journal</a>
-    <a class="status-stamp" href="../#contract">Pre-launch</a>
+    <a class="journal-nav-cta" href="index.html" aria-current="page">Journal</a>
+    <a class="status-stamp" href="../index.html#contract">Pre-launch</a>
   </header>
 
   <main id="main">
@@ -187,7 +187,7 @@ $indexHtml = @"
         <p class="eyebrow"><span aria-hidden="true">●</span> Recovered pages / case file 001—005</p>
         <h1 class="journal-title" id="journal-title"><span>THE</span><span>JOURNAL</span></h1>
         <p class="journal-deck">Five entries. One continuous story. Start with a bloke looking for one clean win. End with the wallet cluster he should have seen.</p>
-        <a class="start-reading" href="001/">Start at entry 001 <span aria-hidden="true">↓</span></a>
+        <a class="start-reading" href="001/index.html">Start at entry 001 <span aria-hidden="true">↓</span></a>
       </div>
       <aside class="journal-cover-note" aria-label="Reading order">
         <span>Reading order</span>
@@ -234,20 +234,20 @@ foreach ($entry in $entries) {
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="site-header journal-header">
-    <a class="wordmark" href="../../" aria-label="FK RUG PULLS home">FRP<span class="red-dot">.</span></a>
+    <a class="wordmark" href="../../index.html" aria-label="FK RUG PULLS home">FRP<span class="red-dot">.</span></a>
     <nav class="desktop-nav" aria-label="Primary navigation">
-      <a href="../../#story">Story</a>
-      <a href="../../#rules">Rules</a>
-      <a href="../../#wallets">Wallets</a>
-      <a href="../../#launch">Launch plan</a>
+      <a href="../../index.html#story">Story</a>
+      <a href="../../index.html#rules">Rules</a>
+      <a href="../../index.html#wallets">Wallets</a>
+      <a href="../../index.html#launch">Launch plan</a>
     </nav>
-    <a class="journal-nav-cta" href="../" aria-current="page">Journal</a>
-    <a class="status-stamp" href="../../#contract">Pre-launch</a>
+    <a class="journal-nav-cta" href="../index.html" aria-current="page">Journal</a>
+    <a class="status-stamp" href="../../index.html#contract">Pre-launch</a>
   </header>
 
   <main id="main" class="journal-entry-main">
     <nav class="journal-breadcrumb" aria-label="Journal breadcrumb">
-      <a href="../../">FK RUG PULLS</a><span aria-hidden="true">/</span><a href="../">JOURNAL</a><span aria-hidden="true">/</span><span>ENTRY $($entry.Number)</span>
+      <a href="../../index.html">FK RUG PULLS</a><span aria-hidden="true">/</span><a href="../index.html">JOURNAL</a><span aria-hidden="true">/</span><span>ENTRY $($entry.Number)</span>
     </nav>
 
     <article class="journal-entry" aria-labelledby="entry-title">

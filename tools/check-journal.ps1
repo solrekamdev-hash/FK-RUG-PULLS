@@ -80,7 +80,7 @@ if (-not (Test-Path -LiteralPath $indexPath)) {
   $failures.Add("Missing Journal index route")
 } else {
   $journalIndex = [System.IO.File]::ReadAllText($indexPath)
-  $positions = 1..5 | ForEach-Object { $journalIndex.IndexOf(('href="{0:D3}/"' -f $_), [System.StringComparison]::Ordinal) }
+  $positions = 1..5 | ForEach-Object { $journalIndex.IndexOf(('href="{0:D3}/index.html"' -f $_), [System.StringComparison]::Ordinal) }
   if ($positions -contains -1) { $failures.Add("Journal index does not link every entry") }
   for ($index = 1; $index -lt $positions.Count; $index++) {
     if ($positions[$index] -le $positions[$index - 1]) {
@@ -91,7 +91,7 @@ if (-not (Test-Path -LiteralPath $indexPath)) {
 }
 
 $rootIndex = [System.IO.File]::ReadAllText((Join-Path $RepositoryRoot "index.html"))
-if ($rootIndex -notmatch 'class="journal-nav-cta"\s+href="journal/"') {
+if ($rootIndex -notmatch 'class="journal-nav-cta"\s+href="journal/index\.html"') {
   $failures.Add("Root navigation is missing the Journal item")
 }
 
@@ -109,5 +109,7 @@ if ($failures.Count -gt 0) {
   $failures | ForEach-Object { Write-Error $_ }
   exit 1
 }
+
+& (Join-Path $PSScriptRoot "check-site-links.ps1") -RepositoryRoot $RepositoryRoot
 
 Write-Output "Journal checks passed: 5 exact title/prose renders, 6 routes, chronological index, visible root navigation, and no Pages/hosting configuration."
