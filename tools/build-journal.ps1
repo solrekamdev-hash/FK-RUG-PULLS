@@ -379,10 +379,7 @@ $(Get-PageAnchors $entry.Number)
                       <div class="journal-page-edge journal-page-edge-head" aria-hidden="true"></div>
                       <div class="journal-page-edge journal-page-edge-tail" aria-hidden="true"></div>
                     </div>
-                    <div class="journal-turning-sheet" data-journal-turning-sheet aria-hidden="true">
-                      <div class="journal-turn-face journal-turn-front" data-journal-turn-front></div>
-                      <div class="journal-turn-face journal-turn-back" data-journal-turn-back></div>
-                    </div>
+                    <div class="journal-turning-sheet" data-journal-turning-sheet aria-hidden="true"></div>
                     <div class="journal-gutter" aria-hidden="true"></div>
                   </div>
                 </div>

@@ -82,11 +82,14 @@ if (-not (Test-Path -LiteralPath $viewerScriptPath)) {
   if ($viewerScript -match 'support\.js|window\.React|createElement\(\s*["'']canvas') {
     $failures.Add("Journal viewer introduced a prototype runtime, React, or Canvas dependency")
   }
-  if ($viewerScript -match 'POCKET NOTEBOOK / 001|PROPERTY OF:|192 PAGES / BLACK') {
-    $failures.Add("Entry 001 closed covers must contain no decorative text")
+  if ($viewerScript -match 'POCKET NOTEBOOK / 001|PROPERTY OF:|192 PAGES / BLACK|ENTRY 001 / START|ENTRY 001 / END') {
+    $failures.Add("Entry 001 covers and structural inside surfaces must contain no invented decorative text")
   }
-  if ($viewerScript -notmatch 'index\.html\$\{targetHash\}') {
-    $failures.Add("Journal viewer entry-boundary navigation is not using explicit index.html routes")
+  if ($viewerScript -notmatch 'animateClosedBookTurnaround' -or $viewerScript -notmatch 'turnAround' -or $viewerScript -notmatch 'rotateY\(\$\{theta') {
+    $failures.Add("Journal viewer is missing its physical closed-book turnaround loop")
+  }
+  if ($viewerScript -notmatch 'class PageCurlEngine' -or $viewerScript -notmatch 'curlAngles' -or $viewerScript -notmatch 'new PageCurlEngine\(turningSheet, 18\)') {
+    $failures.Add("Journal viewer is missing the 18-strip developable page-curl engine")
   }
 }
 
@@ -94,8 +97,8 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   $failures.Add("Missing shared journal styles: journal/journal.css")
 } else {
   $viewerStyles = [System.IO.File]::ReadAllText($viewerStylePath)
-  if ($viewerStyles -notmatch '@keyframes journal-turn-forward' -or $viewerStyles -notmatch '@keyframes journal-turn-backward') {
-    $failures.Add("Journal viewer is missing physical forward/reverse page-turn animations")
+  if ($viewerStyles -notmatch '\.journal-curl-strip' -or $viewerStyles -notmatch '\.journal-curl-face-back' -or $viewerStyles -notmatch '\.journal-curl-shadow-gutter') {
+    $failures.Add("Journal viewer is missing segmented page-curl faces and moving shadows")
   }
   if ($viewerStyles -notmatch '@media \(max-width: 560px\)' -or $viewerStyles -notmatch '\.journal-mobile-sheet') {
     $failures.Add("Journal viewer is missing the single-page mobile layout")
@@ -106,8 +109,11 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   if ($viewerStyles -notmatch '\.journal-book-position' -or $viewerStyles -notmatch '\.journal-leaf' -or $viewerStyles -notmatch '\.journal-physical-shadow' -or $viewerStyles -notmatch '\.journal-page-edge') {
     $failures.Add("Journal viewer is missing its shared physical notebook structure")
   }
-  if ($viewerStyles -notmatch '\.journal-inside-design') {
-    $failures.Add("Journal viewer is missing code-rendered inside-page fallbacks")
+  if ($viewerStyles -notmatch '\.journal-book-rig \{ pointer-events: none; \}') {
+    $failures.Add("Journal 3D rig must not intercept the side navigation controls")
+  }
+  if ($viewerStyles -match '\.journal-inside-design') {
+    $failures.Add("Journal viewer still contains rejected code-rendered inside-page artwork")
   }
 }
 
@@ -305,4 +311,4 @@ if (-not $?) {
   throw "Site link compatibility checks failed"
 }
 
-Write-Output "Journal checks passed: four Entry 001 images, optional cover/inside assets, closed-cover state flow, physical desktop spreads, forward/reverse boundaries, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."
+Write-Output "Journal checks passed: four Entry 001 images, optional cover/inside assets, closed-cover state flow, segmented forward/reverse curls, turnaround loops, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."

@@ -11,23 +11,23 @@ const desktopImageStates = logic.desktopStates(4);
 assert.deepEqual(desktopImageStates.map((state) => state.key), [
   "cover-front", "inside-front", "page-2", "inside-back", "cover-back"
 ]);
-assert.deepEqual(desktopImageStates[1].surfaces.left, { type: "generated", role: "inside-front", panel: "primary" });
+assert.deepEqual(desktopImageStates[1].surfaces.left, { type: "structural", role: "inside-front" });
 assert.deepEqual(desktopImageStates[1].surfaces.right, { type: "page", pageIndex: 0 });
 assert.deepEqual(desktopImageStates[2].pageIndexes, [1, 2]);
 assert.deepEqual(desktopImageStates[3].surfaces.left, { type: "page", pageIndex: 3 });
-assert.deepEqual(desktopImageStates[3].surfaces.right, { type: "generated", role: "inside-back", panel: "primary" });
+assert.deepEqual(desktopImageStates[3].surfaces.right, { type: "structural", role: "inside-back" });
 
 let stateIndex = 0;
 for (const expectedState of [1, 2, 3, 4]) {
   stateIndex = logic.locationAfterStateTurn(desktopImageStates.length, stateIndex, 1).stateIndex;
   assert.equal(stateIndex, expectedState, "Desktop should advance from front cover through open spreads to back cover");
 }
-assert.deepEqual(logic.locationAfterStateTurn(desktopImageStates.length, stateIndex, 1), { type: "entry", direction: 1 });
+assert.deepEqual(logic.locationAfterStateTurn(desktopImageStates.length, stateIndex, 1), { type: "turnaround", direction: 1 });
 for (const expectedState of [3, 2, 1, 0]) {
   stateIndex = logic.locationAfterStateTurn(desktopImageStates.length, stateIndex, -1).stateIndex;
   assert.equal(stateIndex, expectedState, "Desktop should reopen and reverse to the front cover");
 }
-assert.deepEqual(logic.locationAfterStateTurn(desktopImageStates.length, stateIndex, -1), { type: "entry", direction: -1 });
+assert.deepEqual(logic.locationAfterStateTurn(desktopImageStates.length, stateIndex, -1), { type: "turnaround", direction: -1 });
 
 const desktopFallbackStates = logic.desktopStates(0);
 assert.deepEqual(desktopFallbackStates.map((state) => state.key), [
@@ -76,9 +76,18 @@ const mobileFront = logic.bookGeometry(0, true, 340, 15);
 const mobileBack = logic.bookGeometry(2, true, 340, 15);
 assert.equal(mobileFront.leftAngle, -180, "Mobile front cover must hinge away from its left edge");
 assert.equal(mobileBack.rightAngle, 180, "Mobile back cover must hinge over from its right edge");
-assert.equal(mobileFront.offsetX, 340, "Mobile front cover must recenter over one readable page width");
-assert.equal(mobileBack.offsetX, -340, "Mobile back cover must recenter over one readable page width");
 assert.ok(Math.abs(logic.physicalEase(0)) < .0001);
 assert.ok(Math.abs(logic.physicalEase(1) - 1) < .0001);
+assert.equal(mobileFront.offsetX, 340, "The mobile front hinge must translate one page back into the readable stage");
+assert.equal(mobileBack.offsetX, -340, "The mobile back hinge must mirror the front-cover centring translation");
 
-console.log("Journal viewer logic checks passed: continuous spine geometry, closed covers, designed inside pages, desktop spreads, Markdown flow, entry boundaries, reduced motion, and sequential mobile paging.");
+const curlStart = logic.curlAngles(0, 18);
+const curlMiddle = logic.curlAngles(.5, 18);
+const curlEnd = logic.curlAngles(1, 18);
+assert.ok(curlStart.every((angle) => Math.abs(angle) < .0001), "Curl must be flat on the right at rest");
+assert.ok(curlEnd.every((angle) => Math.abs(angle - 180) < .0001), "Curl must settle flat on the left");
+assert.ok(curlMiddle[18] > curlMiddle[0] + 35, "The free edge must lead the binding through the curl");
+assert.ok(Math.abs(logic.curlEase(0)) < .0001);
+assert.ok(Math.abs(logic.curlEase(1) - 1) < .0001);
+
+console.log("Journal viewer logic checks passed: continuous spine geometry, centred closed covers, neutral structural pages, segmented curl invariants, turnaround loops, Markdown flow, reduced motion, and sequential mobile paging.");
