@@ -1,5 +1,5 @@
 window.FRP_JOURNAL = {
-    "version":  1,
+    "version":  2,
     "entries":  {
                     "001":  {
                                 "id":  "001",
@@ -11,7 +11,13 @@ window.FRP_JOURNAL = {
                                               "../../assets/journal/001/page-02.webp",
                                               "../../assets/journal/001/page-03.webp",
                                               "../../assets/journal/001/page-04.webp"
-                                          ]
+                                          ],
+                                "assets":  {
+                                               "coverFront":  null,
+                                               "coverBack":  null,
+                                               "insideFront":  null,
+                                               "insideBack":  null
+                                           }
                             },
                     "002":  {
                                 "id":  "002",
@@ -20,7 +26,13 @@ window.FRP_JOURNAL = {
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-002.md",
                                 "pages":  [
 
-                                          ]
+                                          ],
+                                "assets":  {
+                                               "coverFront":  null,
+                                               "coverBack":  null,
+                                               "insideFront":  null,
+                                               "insideBack":  null
+                                           }
                             },
                     "003":  {
                                 "id":  "003",
@@ -29,7 +41,13 @@ window.FRP_JOURNAL = {
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-003.md",
                                 "pages":  [
 
-                                          ]
+                                          ],
+                                "assets":  {
+                                               "coverFront":  null,
+                                               "coverBack":  null,
+                                               "insideFront":  null,
+                                               "insideBack":  null
+                                           }
                             },
                     "004":  {
                                 "id":  "004",
@@ -38,7 +56,13 @@ window.FRP_JOURNAL = {
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-004.md",
                                 "pages":  [
 
-                                          ]
+                                          ],
+                                "assets":  {
+                                               "coverFront":  null,
+                                               "coverBack":  null,
+                                               "insideFront":  null,
+                                               "insideBack":  null
+                                           }
                             },
                     "005":  {
                                 "id":  "005",
@@ -47,7 +71,13 @@ window.FRP_JOURNAL = {
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-005.md",
                                 "pages":  [
 
-                                          ]
+                                          ],
+                                "assets":  {
+                                               "coverFront":  null,
+                                               "coverBack":  null,
+                                               "insideFront":  null,
+                                               "insideBack":  null
+                                           }
                             }
                 }
 };

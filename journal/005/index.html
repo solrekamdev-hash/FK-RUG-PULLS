@@ -38,42 +38,52 @@
         <p class="entry-order" aria-label="Entry 5 of 5"><span>005</span> / 005</p>
       </header>
 
-      <section class="journal-image-viewer" data-journal-viewer data-entry-id="005" aria-label="Entry 005 page viewer" hidden>
-
+      <section class="journal-image-viewer" data-journal-viewer data-entry-id="005" aria-label="Entry 005 notebook viewer" hidden>
+        <span class="journal-page-anchor" id="inside-front" aria-hidden="true"></span>
+        <span class="journal-page-anchor" id="content" aria-hidden="true"></span>
+        <span class="journal-page-anchor" id="inside-back" aria-hidden="true"></span>
+        <span class="journal-page-anchor" id="back-cover" aria-hidden="true"></span>
         <div class="journal-reader">
           <button class="journal-turn journal-turn-previous" type="button" data-journal-previous aria-label="Previous journal page">
             <span class="journal-turn-arrow" aria-hidden="true">&larr;</span>
             <span class="journal-turn-label">Previous</span>
           </button>
 
-          <figure class="journal-page-figure" data-journal-book-stage>
-            <div class="journal-book" data-journal-book>
-              <div class="journal-book-cover" aria-hidden="true"></div>
-              <div class="journal-spread">
-                <div class="journal-sheet journal-sheet-left is-blank" data-journal-left-page>
-                  <img data-journal-left-image alt="" decoding="async">
+          <div class="journal-reader-stage" data-journal-reader-stage>
+            <figure class="journal-page-figure" data-journal-book-stage>
+              <div class="journal-book" data-journal-book>
+                <div class="journal-book-cover" aria-hidden="true"></div>
+                <div class="journal-closed-cover" data-journal-closed-cover aria-hidden="true">
+                  <img data-journal-cover-image alt="" decoding="async" hidden>
+                  <div class="journal-cover-design" data-journal-cover-design aria-hidden="true"></div>
+                </div>
+                <div class="journal-spread">
+                  <div class="journal-sheet journal-sheet-left is-blank" data-journal-left-page>
+                    <img data-journal-left-image alt="" decoding="async">
+                    <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                  </div>
+                  <div class="journal-sheet journal-sheet-right is-blank" data-journal-right-page>
+                    <img data-journal-right-image alt="" decoding="async">
+                    <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                  </div>
+                </div>
+                <div class="journal-mobile-sheet is-blank" data-journal-mobile-page>
+                  <img data-journal-mobile-image alt="" decoding="async">
                   <span class="journal-page-loading" aria-hidden="true">Loading page</span>
                 </div>
-                <div class="journal-sheet journal-sheet-right is-blank" data-journal-right-page>
-                  <img data-journal-right-image alt="" decoding="async">
-                  <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                <div class="journal-turning-sheet" data-journal-turning-sheet aria-hidden="true">
+                  <div class="journal-turn-face journal-turn-front" data-journal-turn-front></div>
+                  <div class="journal-turn-face journal-turn-back" data-journal-turn-back></div>
                 </div>
+                <div class="journal-gutter" aria-hidden="true"></div>
               </div>
-              <div class="journal-mobile-sheet is-blank" data-journal-mobile-page>
-                <img data-journal-mobile-image alt="" decoding="async">
-                <span class="journal-page-loading" aria-hidden="true">Loading page</span>
-              </div>
-              <div class="journal-turning-sheet" data-journal-turning-sheet aria-hidden="true">
-                <div class="journal-turn-face journal-turn-front" data-journal-turn-front></div>
-                <div class="journal-turn-face journal-turn-back" data-journal-turn-back></div>
-              </div>
-              <div class="journal-gutter" aria-hidden="true"></div>
-            </div>
-            <figcaption class="journal-page-caption">
-              <strong>Entry 005</strong>
-              <span data-journal-page-indicator>Page 1 / 1</span>
-            </figcaption>
-          </figure>
+              <figcaption class="journal-page-caption">
+                <strong>Entry 005</strong>
+                <span data-journal-page-indicator>Closed notebook</span>
+              </figcaption>
+            </figure>
+            <div class="journal-markdown-stage" data-journal-markdown-stage hidden></div>
+          </div>
 
           <button class="journal-turn journal-turn-next" type="button" data-journal-next aria-label="Next journal page">
             <span class="journal-turn-arrow" aria-hidden="true">&rarr;</span>
@@ -276,7 +286,7 @@
     </article>
 
     <nav class="entry-navigation" aria-label="Journal entry navigation">
-      <a class="entry-nav-link entry-nav-previous" href="../004/index.html"><span>&larr; Previous entry</span><strong>004</strong></a>
+      <a class="entry-nav-link entry-nav-previous" href="../004/index.html#back-cover"><span>&larr; Previous entry</span><strong>004</strong></a>
         <a class="entry-nav-index" href="../index.html">All entries</a>
         <span class="entry-nav-space" aria-hidden="true"></span>
     </nav>

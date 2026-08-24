@@ -56,8 +56,8 @@ if (-not (Test-Path -LiteralPath $manifestPath)) {
   } else {
     try {
       $manifest = $manifestMatch.Groups["json"].Value | ConvertFrom-Json
-      if ($manifest.version -ne 1 -or $null -eq $manifest.entries) {
-        $failures.Add("Journal manifest must contain version 1 and an entries object")
+      if ($manifest.version -ne 2 -or $null -eq $manifest.entries) {
+        $failures.Add("Journal manifest must contain version 2 and an entries object")
         $manifest = $null
       }
     } catch {
@@ -94,6 +94,12 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   if ($viewerStyles -notmatch '@media \(prefers-reduced-motion: reduce\)') {
     $failures.Add("Journal styles do not respect prefers-reduced-motion")
   }
+  if ($viewerStyles -notmatch '@keyframes journal-cover-open-forward' -or $viewerStyles -notmatch '\.journal-closed-cover') {
+    $failures.Add("Journal viewer is missing its physical closed-cover presentation")
+  }
+  if ($viewerStyles -notmatch '\.journal-inside-design') {
+    $failures.Add("Journal viewer is missing code-rendered inside-page fallbacks")
+  }
 }
 
 foreach ($fileName in $expectedFiles) {
@@ -122,6 +128,9 @@ foreach ($fileName in $expectedFiles) {
   }
   if ($page -notmatch 'data-journal-left-page' -or $page -notmatch 'data-journal-right-page' -or $page -notmatch 'data-journal-mobile-page' -or $page -notmatch 'data-journal-turning-sheet') {
     $failures.Add("Entry $number is missing physical spread, mobile page, or turning-sheet markup")
+  }
+  if ($page -notmatch 'data-journal-closed-cover' -or $page -notmatch 'data-journal-cover-image' -or $page -notmatch 'data-journal-markdown-stage') {
+    $failures.Add("Entry $number is missing its closed-cover or integrated Markdown stage")
   }
   if ($page -notmatch 'data-journal-fallback') {
     $failures.Add("Entry $number is missing its Markdown fallback container")
@@ -159,6 +168,28 @@ foreach ($fileName in $expectedFiles) {
       if ($manifestEntry.title -cne $sourceTitle) { $failures.Add("Manifest entry $number title differs from source") }
       if ($manifestEntry.markdown -cne "../../Content/Journal/$fileName") {
         $failures.Add("Manifest entry $number has an incorrect Markdown fallback path")
+      }
+      if ($null -eq $manifestEntry.assets) {
+        $failures.Add("Manifest entry $number is missing optional cover/inside asset slots")
+      } else {
+        foreach ($assetProperty in @('coverFront', 'coverBack', 'insideFront', 'insideBack')) {
+          if ($null -eq $manifestEntry.assets.PSObject.Properties[$assetProperty]) {
+            $failures.Add("Manifest entry $number is missing optional asset property: $assetProperty")
+            continue
+          }
+          $assetPath = $manifestEntry.assets.$assetProperty
+          if ($null -ne $assetPath) {
+            $expectedStem = switch ($assetProperty) {
+              'coverFront' { 'cover-front' }
+              'coverBack' { 'cover-back' }
+              'insideFront' { 'inside-front' }
+              'insideBack' { 'inside-back' }
+            }
+            if ($assetPath -notmatch ('^\.\./\.\./assets/journal/{0}/{1}\.(?:png|webp|jpe?g|avif)$' -f $number, $expectedStem)) {
+              $failures.Add("Manifest entry $number has an invalid optional asset path: $assetPath")
+            }
+          }
+        }
       }
 
       $seenPagePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -208,8 +239,8 @@ if ($null -ne $manifest) {
 $entry002Path = Join-Path $journalDirectory "002\index.html"
 if (Test-Path -LiteralPath $entry002Path) {
   $entry002Page = [System.IO.File]::ReadAllText($entry002Path)
-  if ($entry002Page -notmatch 'href="\.\./001/index\.html#page-4"') {
-    $failures.Add("Entry 002 reverse navigation must land on Entry 001's final spread")
+  if ($entry002Page -notmatch 'href="\.\./001/index\.html#back-cover"') {
+    $failures.Add("Entry 002 reverse navigation must land on Entry 001's closed back cover")
   }
 }
 
@@ -262,4 +293,4 @@ if (-not $?) {
   throw "Site link compatibility checks failed"
 }
 
-Write-Output "Journal checks passed: four Entry 001 images, physical desktop spreads, forward/reverse boundaries, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."
+Write-Output "Journal checks passed: four Entry 001 images, optional cover/inside assets, closed-cover state flow, physical desktop spreads, forward/reverse boundaries, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."

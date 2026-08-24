@@ -71,6 +71,20 @@ function Get-EntryPagePaths([string]$Number) {
   return @($pageFiles | ForEach-Object { "../../assets/journal/$Number/$($_.Name)" })
 }
 
+function Get-OptionalEntryAsset([string]$Number, [string]$Stem) {
+  $entryAssetDirectory = Join-Path $journalAssetsDirectory $Number
+  if (-not (Test-Path -LiteralPath $entryAssetDirectory)) { return $null }
+
+  $matches = @(Get-ChildItem -LiteralPath $entryAssetDirectory -File | Where-Object {
+    $_.BaseName -ieq $Stem -and $_.Extension.ToLowerInvariant() -in @('.png', '.webp', '.jpg', '.jpeg', '.avif')
+  })
+  if ($matches.Count -gt 1) {
+    throw "Entry $Number has multiple assets named ${Stem}"
+  }
+  if ($matches.Count -eq 0) { return $null }
+  return "../../assets/journal/$Number/$($matches[0].Name)"
+}
+
 function Get-Decorations([string]$Number) {
   switch ($Number) {
     "001" { return "<p class=`"margin-note margin-note-one`" aria-hidden=`"true`">JUST LOOKING.</p>" }
@@ -127,9 +141,7 @@ function Get-EntryNavigation($Entry) {
   $number = [int]$Entry.Number
   $previous = if ($number -gt 1) {
     $previousNumber = "{0:D3}" -f ($number - 1)
-    $previousPages = @(Get-EntryPagePaths $previousNumber)
-    $previousHash = if ($previousPages.Count -gt 1) { "#page-$($previousPages.Count)" } else { "" }
-    "<a class=`"entry-nav-link entry-nav-previous`" href=`"../$previousNumber/index.html$previousHash`"><span>&larr; Previous entry</span><strong>$previousNumber</strong></a>"
+    "<a class=`"entry-nav-link entry-nav-previous`" href=`"../$previousNumber/index.html#back-cover`"><span>&larr; Previous entry</span><strong>$previousNumber</strong></a>"
   } else {
     '<span class="entry-nav-space" aria-hidden="true"></span>'
   }
@@ -157,9 +169,14 @@ function Get-PageFooter {
 
 function Get-PageAnchors([string]$Number) {
   $pagePaths = @(Get-EntryPagePaths $Number)
-  if ($pagePaths.Count -eq 0) { return "" }
-  $anchors = 1..$pagePaths.Count | ForEach-Object {
-    "        <span class=`"journal-page-anchor`" id=`"page-$_`" aria-hidden=`"true`"></span>"
+  $anchors = [System.Collections.Generic.List[string]]::new()
+  foreach ($stateAnchor in @('inside-front', 'content', 'inside-back', 'back-cover')) {
+    $anchors.Add("        <span class=`"journal-page-anchor`" id=`"$stateAnchor`" aria-hidden=`"true`"></span>")
+  }
+  if ($pagePaths.Count -gt 0) {
+    1..$pagePaths.Count | ForEach-Object {
+      $anchors.Add("        <span class=`"journal-page-anchor`" id=`"page-$_`" aria-hidden=`"true`"></span>")
+    }
   }
   return $anchors -join "`n"
 }
@@ -178,10 +195,16 @@ foreach ($entry in $entries) {
     subtitle = $entry.DocumentTitle
     markdown = "../../Content/Journal/$($entry.FileName)"
     pages = @(Get-EntryPagePaths $entry.Number)
+    assets = [ordered]@{
+      coverFront = Get-OptionalEntryAsset $entry.Number "cover-front"
+      coverBack = Get-OptionalEntryAsset $entry.Number "cover-back"
+      insideFront = Get-OptionalEntryAsset $entry.Number "inside-front"
+      insideBack = Get-OptionalEntryAsset $entry.Number "inside-back"
+    }
   }
 }
 $manifestData = [ordered]@{
-  version = 1
+  version = 2
   entries = $manifestEntries
 }
 $manifestJson = $manifestData | ConvertTo-Json -Depth 6
@@ -305,7 +328,7 @@ foreach ($entry in $entries) {
         <p class="entry-order" aria-label="Entry $level of 5"><span>$($entry.Number)</span> / 005</p>
       </header>
 
-      <section class="journal-image-viewer" data-journal-viewer data-entry-id="$($entry.Number)" aria-label="Entry $($entry.Number) page viewer" hidden>
+      <section class="journal-image-viewer" data-journal-viewer data-entry-id="$($entry.Number)" aria-label="Entry $($entry.Number) notebook viewer" hidden>
 $(Get-PageAnchors $entry.Number)
         <div class="journal-reader">
           <button class="journal-turn journal-turn-previous" type="button" data-journal-previous aria-label="Previous journal page">
@@ -313,34 +336,41 @@ $(Get-PageAnchors $entry.Number)
             <span class="journal-turn-label">Previous</span>
           </button>
 
-          <figure class="journal-page-figure" data-journal-book-stage>
-            <div class="journal-book" data-journal-book>
-              <div class="journal-book-cover" aria-hidden="true"></div>
-              <div class="journal-spread">
-                <div class="journal-sheet journal-sheet-left is-blank" data-journal-left-page>
-                  <img data-journal-left-image alt="" decoding="async">
+          <div class="journal-reader-stage" data-journal-reader-stage>
+            <figure class="journal-page-figure" data-journal-book-stage>
+              <div class="journal-book" data-journal-book>
+                <div class="journal-book-cover" aria-hidden="true"></div>
+                <div class="journal-closed-cover" data-journal-closed-cover aria-hidden="true">
+                  <img data-journal-cover-image alt="" decoding="async" hidden>
+                  <div class="journal-cover-design" data-journal-cover-design aria-hidden="true"></div>
+                </div>
+                <div class="journal-spread">
+                  <div class="journal-sheet journal-sheet-left is-blank" data-journal-left-page>
+                    <img data-journal-left-image alt="" decoding="async">
+                    <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                  </div>
+                  <div class="journal-sheet journal-sheet-right is-blank" data-journal-right-page>
+                    <img data-journal-right-image alt="" decoding="async">
+                    <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                  </div>
+                </div>
+                <div class="journal-mobile-sheet is-blank" data-journal-mobile-page>
+                  <img data-journal-mobile-image alt="" decoding="async">
                   <span class="journal-page-loading" aria-hidden="true">Loading page</span>
                 </div>
-                <div class="journal-sheet journal-sheet-right is-blank" data-journal-right-page>
-                  <img data-journal-right-image alt="" decoding="async">
-                  <span class="journal-page-loading" aria-hidden="true">Loading page</span>
+                <div class="journal-turning-sheet" data-journal-turning-sheet aria-hidden="true">
+                  <div class="journal-turn-face journal-turn-front" data-journal-turn-front></div>
+                  <div class="journal-turn-face journal-turn-back" data-journal-turn-back></div>
                 </div>
+                <div class="journal-gutter" aria-hidden="true"></div>
               </div>
-              <div class="journal-mobile-sheet is-blank" data-journal-mobile-page>
-                <img data-journal-mobile-image alt="" decoding="async">
-                <span class="journal-page-loading" aria-hidden="true">Loading page</span>
-              </div>
-              <div class="journal-turning-sheet" data-journal-turning-sheet aria-hidden="true">
-                <div class="journal-turn-face journal-turn-front" data-journal-turn-front></div>
-                <div class="journal-turn-face journal-turn-back" data-journal-turn-back></div>
-              </div>
-              <div class="journal-gutter" aria-hidden="true"></div>
-            </div>
-            <figcaption class="journal-page-caption">
-              <strong>Entry $($entry.Number)</strong>
-              <span data-journal-page-indicator>Page 1 / 1</span>
-            </figcaption>
-          </figure>
+              <figcaption class="journal-page-caption">
+                <strong>Entry $($entry.Number)</strong>
+                <span data-journal-page-indicator>Closed notebook</span>
+              </figcaption>
+            </figure>
+            <div class="journal-markdown-stage" data-journal-markdown-stage hidden></div>
+          </div>
 
           <button class="journal-turn journal-turn-next" type="button" data-journal-next aria-label="Next journal page">
             <span class="journal-turn-arrow" aria-hidden="true">&rarr;</span>
