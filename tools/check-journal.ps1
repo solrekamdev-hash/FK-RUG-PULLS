@@ -82,14 +82,20 @@ if (-not (Test-Path -LiteralPath $viewerScriptPath)) {
   if ($viewerScript -match 'support\.js|window\.React|createElement\(\s*["'']canvas') {
     $failures.Add("Journal viewer introduced a prototype runtime, React, or Canvas dependency")
   }
-  if ($viewerScript -match 'POCKET NOTEBOOK / 001|PROPERTY OF:|192 PAGES / BLACK|ENTRY 001 / START|ENTRY 001 / END') {
-    $failures.Add("Entry 001 covers and structural inside surfaces must contain no invented decorative text")
+  if ($viewerScript -match 'POCKET NOTEBOOK / 001|PROPERTY OF:|192 PAGES / BLACK') {
+    $failures.Add("Entry 001 closed covers must contain no decorative text")
+  }
+  if ($viewerScript -notmatch 'ENTRY 001 / START' -or $viewerScript -notmatch 'JUST LOOKING\.' -or $viewerScript -notmatch 'ENTRY 001 / END' -or $viewerScript -notmatch 'ONE CLEAN WIN\.') {
+    $failures.Add("Entry 001 is missing its approved opening or ending inside-page treatment")
   }
   if ($viewerScript -notmatch 'animateClosedBookTurnaround' -or $viewerScript -notmatch 'turnAround' -or $viewerScript -notmatch 'rotateY\(\$\{theta') {
     $failures.Add("Journal viewer is missing its physical closed-book turnaround loop")
   }
   if ($viewerScript -notmatch 'class PageCurlEngine' -or $viewerScript -notmatch 'curlAngles' -or $viewerScript -notmatch 'new PageCurlEngine\(turningSheet, 18\)') {
     $failures.Add("Journal viewer is missing the 18-strip developable page-curl engine")
+  }
+  if ($viewerScript -notmatch 'waitForSurfaceImage' -or $viewerScript -notmatch 'waitForSettledPaint' -or $viewerScript -notmatch 'renderState\(states\.indexOf\(targetState\), true, true\)') {
+    $failures.Add("Journal viewer is missing its covered destination-spread settling sequence")
   }
 }
 
@@ -112,8 +118,8 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   if ($viewerStyles -notmatch '\.journal-book-rig \{ pointer-events: none; \}') {
     $failures.Add("Journal 3D rig must not intercept the side navigation controls")
   }
-  if ($viewerStyles -match '\.journal-inside-design') {
-    $failures.Add("Journal viewer still contains rejected code-rendered inside-page artwork")
+  if ($viewerStyles -notmatch '\.journal-inside-design') {
+    $failures.Add("Journal viewer is missing the approved code-rendered inside-page treatment")
   }
 }
 
@@ -311,4 +317,4 @@ if (-not $?) {
   throw "Site link compatibility checks failed"
 }
 
-Write-Output "Journal checks passed: four Entry 001 images, optional cover/inside assets, closed-cover state flow, segmented forward/reverse curls, turnaround loops, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."
+Write-Output "Journal checks passed: four Entry 001 images, approved designed edge pages, optional cover/inside assets, covered curl settling, turnaround loops, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."

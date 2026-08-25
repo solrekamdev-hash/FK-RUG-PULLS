@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const structuralSurface = (role) => ({ type: "structural", role });
+  const generatedSurface = (role, panel = "primary") => ({ type: "generated", role, panel });
   const pageSurface = (pageIndex) => ({ type: "page", pageIndex });
 
   const logic = Object.freeze({
@@ -28,18 +28,18 @@
       const states = [{ key: "cover-front", kind: "cover", side: "front", pageIndexes: [] }];
       if (pageCount < 1) {
         states.push(
-          { key: "inside-front", kind: "spread", surfaces: { left: structuralSurface("inside-front"), right: structuralSurface("inside-front") }, pageIndexes: [] },
+          { key: "inside-front", kind: "spread", surfaces: { left: generatedSurface("inside-front", "secondary"), right: generatedSurface("inside-front") }, pageIndexes: [] },
           { key: "content", kind: "markdown", pageIndexes: [] },
-          { key: "inside-back", kind: "spread", surfaces: { left: structuralSurface("inside-back"), right: structuralSurface("inside-back") }, pageIndexes: [] }
+          { key: "inside-back", kind: "spread", surfaces: { left: generatedSurface("inside-back"), right: generatedSurface("inside-back", "secondary") }, pageIndexes: [] }
         );
       } else {
         let includesInsideBack = false;
         for (let spreadIndex = 0; spreadIndex <= this.lastSpreadIndex(pageCount); spreadIndex += 1) {
           const spread = this.spreadPages(pageCount, spreadIndex);
-          const left = spread.left === null ? structuralSurface("inside-front") : pageSurface(spread.left);
+          const left = spread.left === null ? generatedSurface("inside-front") : pageSurface(spread.left);
           let right = spread.right === null ? null : pageSurface(spread.right);
           if (right === null) {
-            right = structuralSurface("inside-back");
+            right = generatedSurface("inside-back");
             includesInsideBack = true;
           }
           const pageIndexes = [spread.left, spread.right].filter((pageIndex) => pageIndex !== null);
@@ -50,7 +50,7 @@
           states.push({
             key: "inside-back",
             kind: "spread",
-            surfaces: { left: structuralSurface("inside-back"), right: structuralSurface("inside-back") },
+            surfaces: { left: generatedSurface("inside-back"), right: generatedSurface("inside-back", "secondary") },
             pageIndexes: []
           });
         }
@@ -62,7 +62,7 @@
     mobileStates(pageCount) {
       const states = [
         { key: "cover-front", kind: "cover", side: "front", pageIndexes: [] },
-        { key: "inside-front", kind: "surface", surface: structuralSurface("inside-front"), pageIndexes: [] }
+        { key: "inside-front", kind: "surface", surface: generatedSurface("inside-front"), pageIndexes: [] }
       ];
       if (pageCount < 1) {
         states.push({ key: "content", kind: "markdown", pageIndexes: [] });
@@ -72,7 +72,7 @@
         }
       }
       states.push(
-        { key: "inside-back", kind: "surface", surface: structuralSurface("inside-back"), pageIndexes: [] },
+        { key: "inside-back", kind: "surface", surface: generatedSurface("inside-back"), pageIndexes: [] },
         { key: "cover-back", kind: "cover", side: "back", pageIndexes: [] }
       );
       return states;
@@ -219,23 +219,33 @@
   const designs = {
     "001": {
       coverFront: [],
-      coverBack: []
+      coverBack: [],
+      insideFront: ["ENTRY 001 / START", "JUST LOOKING.", "RENT / PHONE / FUEL / FOOD", "NO STUPID SHIT."],
+      insideBack: ["ENTRY 001 / END", "ONE CLEAN WIN.", "DON'T CHASE. DON'T PANIC.", "CLOSE THE BOOK."]
     },
     "002": {
       coverFront: ["FIELD NOTES / 002", "PROFIT?", "DO NOT GET GREEDY"],
-      coverBack: ["ENTRY 002", "TAKE PROFIT", "COIN / CHART / EXIT"]
+      coverBack: ["ENTRY 002", "TAKE PROFIT", "COIN / CHART / EXIT"],
+      insideFront: ["ENTRY 002 / PLAN", "PROFIT IS PROFIT?", "$  →  $$  →  ???", "MARKET CAP / LIQUIDITY"],
+      insideBack: ["ENTRY 002 / RULES", "SELL SOME.", "DON'T CHASE THE CANDLE.", "+ + +  -  ?"]
     },
     "003": {
       coverFront: ["TRADING LOG / 003", "I GET IT NOW", "LET IT RUN / TRUST THE CHART"],
-      coverBack: ["ENTRY 003", "UP ONLY", "TAKE PROFIT LATER"]
+      coverBack: ["ENTRY 003", "UP ONLY", "TAKE PROFIT LATER"],
+      insideFront: ["ENTRY 003 / THESIS", "I KNOW WHAT I'M DOING.", "HIGHER HIGH / HIGHER LOW", "HOLD  HOLD  HOLD"],
+      insideBack: ["ENTRY 003 / RESULT", "DON'T SELL YET.", "ONE MORE CANDLE.", "↑ ↑ ↑  $  $  $"]
     },
     "004": {
       coverFront: ["DO NOT CLOSE / 004", "HOLD LONGER", "MONEY I NEVER HAD"],
-      coverBack: ["ENTRY 004", "TOO EARLY", "WHY DID I SELL / WHY / WHY"]
+      coverBack: ["ENTRY 004", "TOO EARLY", "WHY DID I SELL / WHY / WHY"],
+      insideFront: ["ENTRY 004 / AGAIN", "HOLD LONGER.", "HOLD HOLD HOLD HOLD", "DON'T TOUCH SELL"],
+      insideBack: ["ENTRY 004 / OBSESSION", "I SOLD TOO EARLY.", "OF COURSE I DID.", "WHY?  WHY?  WHY?"]
     },
     "005": {
       coverFront: ["FINAL FILE / 005", "FK RUG PULLS", "FOLLOW THE WALLETS"],
-      coverBack: ["CASE CLOSED?", "FK RUG PULLS", "WHO SOLD FIRST?"]
+      coverBack: ["CASE CLOSED?", "FK RUG PULLS", "WHO SOLD FIRST?"],
+      insideFront: ["ENTRY 005 / EVIDENCE", "FK RUG PULLS", "WALLET 7 / ONE SALE", "WHO FUNDED WHO"],
+      insideBack: ["ENTRY 005 / END", "FOLLOW THE MONEY.", "WHO SOLD. WHO MOVED.", "FK RUG PULLS"]
     }
   };
 
@@ -514,7 +524,7 @@
   function sourceForDescriptor(descriptor) {
     if (!descriptor) return null;
     if (descriptor.type === "page") return entry.pages[descriptor.pageIndex] || null;
-    return descriptor.type === "structural" ? assetFor(descriptor.role) : null;
+    return descriptor.type === "generated" ? assetFor(descriptor.role) : null;
   }
 
   function addDesignElement(root, tagName, className, text) {
@@ -551,10 +561,27 @@
     }
   }
 
+  function createInsideDesign(descriptor) {
+    const design = designs[entry.id]?.[descriptor.role === "inside-front" ? "insideFront" : "insideBack"] || [entry.id, "NOTES", "", ""];
+    const root = document.createElement("div");
+    root.className = "journal-inside-design";
+    root.dataset.insideRole = descriptor.role;
+    root.dataset.panel = descriptor.panel || "primary";
+    root.setAttribute("aria-hidden", "true");
+    const primary = descriptor.panel === "secondary" ? design[2] : design[1];
+    const secondary = descriptor.panel === "secondary" ? design[3] : design[2];
+    addDesignElement(root, "span", "journal-design-label", design[0]);
+    addDesignElement(root, "strong", "journal-design-title", primary);
+    addDesignElement(root, "span", "journal-design-detail", secondary);
+    addDesignElement(root, "span", "journal-design-marks", descriptor.role === "inside-front" ? "×  ×   →" : "←   ×  ×");
+    for (let index = 0; index < 3; index += 1) addDesignElement(root, "i", `journal-page-scribble journal-page-scribble-${index + 1}`, "");
+    return root;
+  }
+
   function resetSurface(surface) {
     const image = surface.querySelector("img");
     surface.classList.add("is-blank");
-    surface.classList.remove("is-loading", "is-structural", "has-structural-asset");
+    surface.classList.remove("is-loading", "is-generated", "has-generated-asset");
     surface.dataset.page = "blank";
     surface.dataset.surfaceKind = "blank";
     surface.removeAttribute("role");
@@ -563,6 +590,7 @@
     image.hidden = true;
     image.alt = "";
     image.removeAttribute("src");
+    surface.querySelector(".journal-inside-design")?.remove();
   }
 
   function pageDescription(pageIndex) {
@@ -585,16 +613,18 @@
       return;
     }
 
-    surface.classList.add("is-structural");
+    surface.classList.add("is-generated");
     surface.dataset.surfaceKind = descriptor.role;
     surface.dataset.page = descriptor.role;
+    surface.removeAttribute("aria-hidden");
+    surface.setAttribute("role", "img");
+    surface.setAttribute("aria-label", `Entry ${entry.id}, ${descriptor.role.replace("-", " ")} notes`);
+    const design = createInsideDesign(descriptor);
+    surface.append(design);
     const source = assetFor(descriptor.role);
     if (source) {
-      surface.classList.remove("is-blank");
-      surface.classList.add("is-loading", "has-structural-asset");
-      surface.removeAttribute("aria-hidden");
-      surface.setAttribute("role", "img");
-      surface.setAttribute("aria-label", `Entry ${entry.id}, ${descriptor.role.replace("-", " ")} artwork`);
+      design.hidden = true;
+      surface.classList.add("is-loading", "has-generated-asset");
       image.hidden = false;
       image.alt = `Entry ${entry.id}, ${descriptor.role.replace("-", " ")} artwork`;
       image.src = source;
@@ -618,8 +648,8 @@
   function stateDescription(state) {
     if (state.key === "cover-front") return `Entry ${entry.id}, front cover closed.`;
     if (state.key === "cover-back") return `Entry ${entry.id}, back cover closed.`;
-    if (state.key === "inside-front") return `Entry ${entry.id}, inside front cover.`;
-    if (state.key === "inside-back") return `Entry ${entry.id}, inside back cover.`;
+    if (state.key === "inside-front") return `Entry ${entry.id}, inside front notes.`;
+    if (state.key === "inside-back") return `Entry ${entry.id}, inside back notes.`;
     if (state.key === "content") return `Entry ${entry.id}, Markdown journal content.`;
     const numbers = state.pageIndexes.map((pageIndex) => pageIndex + 1);
     return numbers.length > 1
@@ -718,8 +748,8 @@
   }
 
   function turnLabel(targetState, direction) {
-    if (targetState.key === "inside-front") return direction > 0 ? `Open entry ${entry.id}` : `Return to entry ${entry.id} inside front cover`;
-    if (targetState.key === "inside-back") return direction > 0 ? `Turn to entry ${entry.id} inside back cover` : `Reopen entry ${entry.id} inside back cover`;
+    if (targetState.key === "inside-front") return direction > 0 ? `Open entry ${entry.id}` : `Return to entry ${entry.id} opening notes`;
+    if (targetState.key === "inside-back") return direction > 0 ? `Turn to entry ${entry.id} closing notes` : `Reopen entry ${entry.id} closing notes`;
     if (targetState.key === "cover-front") return "Close journal to front cover";
     if (targetState.key === "cover-back") return "Close journal to back cover";
     if (targetState.key === "content") return `Read entry ${entry.id} journal transcript`;
@@ -800,15 +830,34 @@
     });
   }
 
+  async function waitForSurfaceImage(surface) {
+    const image = surface.querySelector("img");
+    if (image.hidden || !image.hasAttribute("src")) return;
+    if (!image.complete) {
+      await new Promise((resolve) => {
+        const finish = () => {
+          image.removeEventListener("load", finish);
+          image.removeEventListener("error", finish);
+          resolve();
+        };
+        image.addEventListener("load", finish);
+        image.addEventListener("error", finish);
+      });
+    }
+    if (image.naturalWidth > 0) {
+      surface.classList.remove("is-loading");
+      if (typeof image.decode === "function") await image.decode().catch(() => {});
+    }
+  }
+
+  function waitForSettledPaint() {
+    return new Promise((resolve) => {
+      window.requestAnimationFrame(() => window.requestAnimationFrame(resolve));
+    });
+  }
+
   async function animateDesktop(targetState, direction) {
     const currentState = states[currentStateIndex];
-    if (direction > 0) {
-      setSurface(leftSurface, currentState.surfaces.left);
-      setSurface(rightSurface, targetState.surfaces.right);
-    } else {
-      setSurface(leftSurface, targetState.surfaces.left);
-      setSurface(rightSurface, currentState.surfaces.right);
-    }
     if (!pageCurl) pageCurl = new PageCurlEngine(turningSheet, 18);
     const pageWidth = book.clientWidth / 2;
     const thickness = Math.max(8, Math.min(15, pageWidth * .044));
@@ -823,11 +872,25 @@
       originalStateIndex: currentStateIndex,
       targetStateIndex: states.indexOf(targetState)
     };
+    const revealedSurface = direction > 0 ? rightSurface : leftSurface;
+    const revealedDescriptor = direction > 0 ? targetState.surfaces.right : targetState.surfaces.left;
+    setSurface(revealedSurface, revealedDescriptor);
+    await waitForSurfaceImage(revealedSurface);
+    if (imageFailure) {
+      pendingCurl = null;
+      pageCurl.reset(direction);
+      return;
+    }
     const completed = await pageCurl.turn({ direction, duration: 780 });
     if (!completed) return;
+    const settledSurface = direction > 0 ? leftSurface : rightSurface;
+    const settledDescriptor = direction > 0 ? targetState.surfaces.left : targetState.surfaces.right;
+    setSurface(settledSurface, settledDescriptor);
+    await waitForSurfaceImage(settledSurface);
+    renderState(states.indexOf(targetState), true, true);
+    await waitForSettledPaint();
     pendingCurl = null;
     pageCurl.reset(direction);
-    renderState(states.indexOf(targetState), true);
   }
 
   async function animateMobile(targetState, direction) {
@@ -1071,18 +1134,16 @@
     const image = surface.querySelector("img");
     image.addEventListener("load", () => {
       surface.classList.remove("is-loading");
+      if (surface.dataset.surfaceKind !== "page") surface.querySelector(".journal-inside-design")?.setAttribute("hidden", "");
     });
     image.addEventListener("error", (event) => {
       if (surface.dataset.surfaceKind === "page") {
         showMarkdownFallback(event);
         return;
       }
-      surface.classList.add("is-blank");
-      surface.classList.remove("is-loading", "has-structural-asset");
+      surface.classList.remove("is-loading", "has-generated-asset");
       image.hidden = true;
-      surface.setAttribute("aria-hidden", "true");
-      surface.removeAttribute("role");
-      surface.removeAttribute("aria-label");
+      surface.querySelector(".journal-inside-design")?.removeAttribute("hidden");
     });
   });
 

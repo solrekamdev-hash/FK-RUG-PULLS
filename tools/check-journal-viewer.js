@@ -11,11 +11,11 @@ const desktopImageStates = logic.desktopStates(4);
 assert.deepEqual(desktopImageStates.map((state) => state.key), [
   "cover-front", "inside-front", "page-2", "inside-back", "cover-back"
 ]);
-assert.deepEqual(desktopImageStates[1].surfaces.left, { type: "structural", role: "inside-front" });
+assert.deepEqual(desktopImageStates[1].surfaces.left, { type: "generated", role: "inside-front", panel: "primary" });
 assert.deepEqual(desktopImageStates[1].surfaces.right, { type: "page", pageIndex: 0 });
 assert.deepEqual(desktopImageStates[2].pageIndexes, [1, 2]);
 assert.deepEqual(desktopImageStates[3].surfaces.left, { type: "page", pageIndex: 3 });
-assert.deepEqual(desktopImageStates[3].surfaces.right, { type: "structural", role: "inside-back" });
+assert.deepEqual(desktopImageStates[3].surfaces.right, { type: "generated", role: "inside-back", panel: "primary" });
 
 let stateIndex = 0;
 for (const expectedState of [1, 2, 3, 4]) {
@@ -90,4 +90,4 @@ assert.ok(curlMiddle[18] > curlMiddle[0] + 35, "The free edge must lead the bind
 assert.ok(Math.abs(logic.curlEase(0)) < .0001);
 assert.ok(Math.abs(logic.curlEase(1) - 1) < .0001);
 
-console.log("Journal viewer logic checks passed: continuous spine geometry, centred closed covers, neutral structural pages, segmented curl invariants, turnaround loops, Markdown flow, reduced motion, and sequential mobile paging.");
+console.log("Journal viewer logic checks passed: continuous spine geometry, centred closed covers, approved designed edge pages, segmented curl invariants, turnaround loops, Markdown flow, reduced motion, and sequential mobile paging.");

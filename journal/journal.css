@@ -275,7 +275,7 @@
 .journal-design-label { font: 700 clamp(.48rem, .8vw, .68rem)/1.35 "Courier New", monospace; letter-spacing: .16em; }
 .journal-design-title { display: block; font: 900 clamp(1.35rem, 3.2vw, 3rem)/.9 "Arial Black", Impact, sans-serif; letter-spacing: -.05em; }
 .journal-design-detail { font: 700 clamp(.55rem, 1vw, .8rem)/1.45 "Courier New", monospace; letter-spacing: .09em; }
-.journal-cover-scratch { position: absolute; display: block; width: 22%; border-top: .16rem solid currentColor; opacity: 0; transform: rotate(-12deg); }
+.journal-cover-scratch, .journal-page-scribble { position: absolute; display: block; width: 22%; border-top: .16rem solid currentColor; opacity: 0; transform: rotate(-12deg); }
 .journal-cover-scratch-1 { top: 18%; right: 12%; }
 .journal-cover-scratch-2 { right: 15%; bottom: 22%; transform: rotate(17deg); }
 .journal-cover-scratch-3 { bottom: 16%; left: 12%; transform: rotate(-28deg); }
@@ -369,6 +369,42 @@
   opacity: .64;
   pointer-events: none;
 }
+.journal-inside-design {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(.8rem, 2.2vw, 1.7rem);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12% 11%;
+  overflow: hidden;
+  color: #25211c;
+  text-transform: uppercase;
+}
+.journal-inside-design[data-panel="secondary"] { align-items: flex-end; text-align: right; }
+.journal-inside-design .journal-design-title { max-width: 92%; font-size: clamp(1.25rem, 2.8vw, 2.5rem); transform: rotate(-1.2deg); }
+.journal-inside-design .journal-design-detail { max-width: 82%; padding: .45rem .55rem; border: 1px solid rgba(55,43,31,.28); background: rgba(255,248,229,.24); transform: rotate(.7deg); }
+.journal-design-marks { color: #93231f; font: 900 clamp(1.2rem, 2.5vw, 2rem)/1 "Arial Black", sans-serif; letter-spacing: .18em; transform: rotate(-4deg); }
+.journal-page-scribble-1 { top: 18%; right: 12%; }
+.journal-page-scribble-2 { bottom: 22%; left: 10%; transform: rotate(18deg); }
+.journal-page-scribble-3 { right: 16%; bottom: 13%; transform: rotate(-33deg); }
+.level-1 .journal-inside-design .journal-page-scribble { opacity: .12; }
+.level-1 .journal-inside-design .journal-design-title { font-family: "Courier New", monospace; font-weight: 700; letter-spacing: .02em; }
+.level-2 .journal-inside-design .journal-page-scribble { color: #9d2e27; opacity: .4; }
+.level-2 .journal-inside-design .journal-design-title { text-decoration: underline 3px rgba(157,46,39,.6); text-underline-offset: .18em; }
+.level-3 .journal-inside-design .journal-page-scribble { width: 30%; color: #b3231e; opacity: .64; }
+.level-3 .journal-inside-design .journal-design-title { color: #1b1916; font-size: clamp(1.5rem, 3.3vw, 3rem); text-decoration: underline 4px #a7231f; text-underline-offset: .15em; }
+.level-3 .journal-inside-design { transform: rotate(-.25deg); }
+.level-4 .journal-inside-design { gap: .55rem; padding: 8%; }
+.level-4 .journal-inside-design .journal-page-scribble { width: 42%; color: #c51b17; opacity: .88; border-top-width: .24rem; }
+.level-4 .journal-inside-design .journal-design-title { color: #171411; font-size: clamp(1.75rem, 4vw, 3.6rem); text-shadow: .09rem .08rem rgba(180,31,26,.32); transform: rotate(-2.2deg); }
+.level-4 .journal-inside-design .journal-design-detail { color: #8e1c18; border-width: 2px; transform: rotate(2deg); }
+.level-5 .journal-inside-design { gap: .45rem; padding: 7%; background: repeating-linear-gradient(28deg, transparent 0 52px, rgba(211,19,19,.055) 53px 56px); }
+.level-5 .journal-inside-design .journal-page-scribble { width: 55%; color: var(--red); opacity: 1; border-top-width: .3rem; }
+.level-5 .journal-inside-design .journal-design-title { color: #0d0c0a; font-size: clamp(2rem, 4.8vw, 4.4rem); line-height: .82; text-shadow: .12rem .1rem rgba(211,19,19,.5); transform: rotate(-2.8deg); }
+.level-5 .journal-inside-design .journal-design-detail { color: var(--red); background: rgba(255,244,220,.36); border: 3px solid var(--red); font-size: clamp(.65rem, 1.2vw, 1rem); }
 .journal-sheet img, .journal-mobile-sheet img {
   position: relative;
   z-index: 1;
