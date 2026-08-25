@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="580" viewBox="0 0 420 580">
+  <defs>
+    <filter id="board-grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".72 .92" numOctaves="3" seed="29" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values="
+        .18 .18 .18 0 .15
+        .17 .17 .17 0 .145
+        .15 .15 .15 0 .13
+        0 0 0 0 .09"/>
+    </filter>
+  </defs>
+  <rect width="420" height="580" filter="url(#board-grain)"/>
+  <g fill="none" stroke="#d7d1c3" stroke-linecap="round">
+    <path d="M37 72c24 3 42 2 68-1" opacity=".028"/>
+    <path d="M302 98c21 9 42 13 69 12" opacity=".022"/>
+    <path d="M66 261c32-5 63-4 91 2" opacity=".018"/>
+    <path d="M249 332c29 4 54 3 88-3" opacity=".024"/>
+    <path d="M92 468c22-3 43-1 68 5" opacity=".026"/>
+    <path d="M287 520c19-7 38-7 61-3" opacity=".021"/>
+    <path d="M17 183c8 2 17 2 27-1M373 238c11-2 21-1 31 2" opacity=".032"/>
+  </g>
+  <g fill="none" stroke="#dcd5c5" stroke-linecap="round" opacity=".052">
+    <path d="M2 2c18 1 29 2 42 8M2 2c2 15 4 29 9 41"/>
+    <path d="M418 2c-18 1-30 3-42 9M418 2c-1 13-4 27-8 39"/>
+    <path d="M2 578c17-1 30-4 43-9M2 578c2-15 4-27 9-40"/>
+    <path d="M418 578c-17-2-31-4-43-10M418 578c-2-14-4-27-9-39"/>
+  </g>
+  <g fill="#d7d0c0" opacity=".035">
+    <circle cx="28" cy="119" r=".8"/><circle cx="83" cy="347" r=".65"/><circle cx="138" cy="174" r=".7"/>
+    <circle cx="206" cy="428" r=".75"/><circle cx="261" cy="202" r=".6"/><circle cx="333" cy="391" r=".8"/>
+    <circle cx="389" cy="145" r=".65"/>
+  </g>
+</svg>

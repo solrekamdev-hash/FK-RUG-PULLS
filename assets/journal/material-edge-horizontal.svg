@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="90" viewBox="0 0 720 90">
+  <defs>
+    <linearGradient id="stock" y1="0" y2="1">
+      <stop stop-color="#c7bda8"/><stop offset=".18" stop-color="#e8e1cf"/><stop offset=".56" stop-color="#d8cfba"/><stop offset=".86" stop-color="#eee8d9"/><stop offset="1" stop-color="#c2b69f"/>
+    </linearGradient>
+    <filter id="edge-grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".58 .36" numOctaves="2" seed="23" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values=".15 .15 .15 0 .1 .13 .13 .13 0 .08 .1 .1 .1 0 .045 0 0 0 0 .08"/>
+    </filter>
+  </defs>
+  <rect width="720" height="90" fill="url(#stock)"/>
+  <rect width="720" height="90" filter="url(#edge-grain)"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M9 0l1 90M15 0l-2 90M23 0l1 90M31 0l-1 90M40 0l2 90M47 0l-1 90M56 0l1 90M63 0l-2 90" stroke="#746851" opacity=".19"/>
+    <path d="M75 0l1 90M83 0l-1 90M91 0l2 90M102 0l-1 90M109 0l1 90M120 0l-2 90M128 0l1 90" stroke="#70644d" opacity=".13"/>
+    <path d="M140 0l-1 90M147 0l2 90M158 0l-1 90M166 0l1 90M177 0l-2 90M184 0l1 90M196 0l-1 90" stroke="#776b52" opacity=".17"/>
+    <path d="M207 0l2 90M216 0l-1 90M225 0l1 90M237 0l-2 90M245 0l1 90M254 0l-1 90M266 0l2 90" stroke="#6e624b" opacity=".12"/>
+    <path d="M278 0l-1 90M286 0l2 90M297 0l-1 90M306 0l1 90M318 0l-2 90M327 0l1 90M338 0l-1 90" stroke="#75694f" opacity=".2"/>
+    <path d="M350 0l2 90M359 0l-1 90M369 0l1 90M381 0l-2 90M389 0l1 90M400 0l-1 90M411 0l2 90" stroke="#6e624b" opacity=".13"/>
+    <path d="M423 0l-1 90M431 0l2 90M442 0l-1 90M451 0l1 90M463 0l-2 90M472 0l1 90M483 0l-1 90" stroke="#75694f" opacity=".18"/>
+    <path d="M495 0l2 90M504 0l-1 90M514 0l1 90M526 0l-2 90M534 0l1 90M545 0l-1 90M556 0l2 90" stroke="#6e624b" opacity=".12"/>
+    <path d="M568 0l-1 90M576 0l2 90M587 0l-1 90M596 0l1 90M608 0l-2 90M617 0l1 90M628 0l-1 90" stroke="#75694f" opacity=".19"/>
+    <path d="M640 0l2 90M649 0l-1 90M659 0l1 90M671 0l-2 90M679 0l1 90M690 0l-1 90M702 0l2 90M711 0l-1 90" stroke="#6e624b" opacity=".14"/>
+    <path d="M14 0l-1 90M149 0l1 90M319 0l-1 90M432 0l1 90M609 0l-1 90" stroke="#fffdf4" opacity=".2"/>
+  </g>
+  <g fill="#655a44" opacity=".22"><circle cx="114" cy="18" r="1"/><circle cx="205" cy="67" r=".8"/><circle cx="344" cy="37" r="1.1"/><circle cx="487" cy="73" r=".9"/><circle cx="633" cy="25" r=".8"/></g>
+</svg>

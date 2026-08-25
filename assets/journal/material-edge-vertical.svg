@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90" height="720" viewBox="0 0 90 720">
+  <defs>
+    <linearGradient id="stock" x1="0" x2="1">
+      <stop stop-color="#c7bda8"/><stop offset=".18" stop-color="#e8e1cf"/><stop offset=".56" stop-color="#d8cfba"/><stop offset=".86" stop-color="#eee8d9"/><stop offset="1" stop-color="#c2b69f"/>
+    </linearGradient>
+    <filter id="edge-grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".36 .58" numOctaves="2" seed="17" result="noise"/>
+      <feColorMatrix in="noise" type="matrix" values=".15 .15 .15 0 .1 .13 .13 .13 0 .08 .1 .1 .1 0 .045 0 0 0 0 .08"/>
+    </filter>
+  </defs>
+  <rect width="90" height="720" fill="url(#stock)"/>
+  <rect width="90" height="720" filter="url(#edge-grain)"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M0 9l90 1M0 15l90-2M0 23l90 1M0 31l90-1M0 40l90 2M0 47l90-1M0 56l90 1M0 63l90-2" stroke="#746851" opacity=".19"/>
+    <path d="M0 75l90 1M0 83l90-1M0 91l90 2M0 102l90-1M0 109l90 1M0 120l90-2M0 128l90 1" stroke="#70644d" opacity=".13"/>
+    <path d="M0 140l90-1M0 147l90 2M0 158l90-1M0 166l90 1M0 177l90-2M0 184l90 1M0 196l90-1" stroke="#776b52" opacity=".17"/>
+    <path d="M0 207l90 2M0 216l90-1M0 225l90 1M0 237l90-2M0 245l90 1M0 254l90-1M0 266l90 2" stroke="#6e624b" opacity=".12"/>
+    <path d="M0 278l90-1M0 286l90 2M0 297l90-1M0 306l90 1M0 318l90-2M0 327l90 1M0 338l90-1" stroke="#75694f" opacity=".2"/>
+    <path d="M0 350l90 2M0 359l90-1M0 369l90 1M0 381l90-2M0 389l90 1M0 400l90-1M0 411l90 2" stroke="#6e624b" opacity=".13"/>
+    <path d="M0 423l90-1M0 431l90 2M0 442l90-1M0 451l90 1M0 463l90-2M0 472l90 1M0 483l90-1" stroke="#75694f" opacity=".18"/>
+    <path d="M0 495l90 2M0 504l90-1M0 514l90 1M0 526l90-2M0 534l90 1M0 545l90-1M0 556l90 2" stroke="#6e624b" opacity=".12"/>
+    <path d="M0 568l90-1M0 576l90 2M0 587l90-1M0 596l90 1M0 608l90-2M0 617l90 1M0 628l90-1" stroke="#75694f" opacity=".19"/>
+    <path d="M0 640l90 2M0 649l90-1M0 659l90 1M0 671l90-2M0 679l90 1M0 690l90-1M0 702l90 2M0 711l90-1" stroke="#6e624b" opacity=".14"/>
+    <path d="M0 14l90-1M0 149l90 1M0 319l90-1M0 432l90 1M0 609l90-1" stroke="#fffdf4" opacity=".2"/>
+  </g>
+  <g fill="#655a44" opacity=".22"><circle cx="18" cy="114" r="1"/><circle cx="67" cy="205" r=".8"/><circle cx="37" cy="344" r="1.1"/><circle cx="73" cy="487" r=".9"/><circle cx="25" cy="633" r=".8"/></g>
+</svg>

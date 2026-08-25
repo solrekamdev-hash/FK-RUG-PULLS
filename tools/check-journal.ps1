@@ -9,6 +9,12 @@ $manifestPath = Join-Path $journalDirectory "journal-manifest.js"
 $viewerScriptPath = Join-Path $journalDirectory "journal-viewer.js"
 $viewerStylePath = Join-Path $journalDirectory "journal.css"
 $viewerLogicTestPath = Join-Path $PSScriptRoot "check-journal-viewer.js"
+$materialPaths = @(
+  (Join-Path $RepositoryRoot "assets\journal\material-paper.svg"),
+  (Join-Path $RepositoryRoot "assets\journal\material-cover.svg"),
+  (Join-Path $RepositoryRoot "assets\journal\material-edge-vertical.svg"),
+  (Join-Path $RepositoryRoot "assets\journal\material-edge-horizontal.svg")
+)
 $expectedFiles = 1..5 | ForEach-Object { "FK-RUG-PULLS-JOURNAL-ENTRY-{0:D3}.md" -f $_ }
 
 function Decode-Html([string]$Text) {
@@ -82,6 +88,9 @@ if (-not (Test-Path -LiteralPath $viewerScriptPath)) {
   if ($viewerScript -match 'support\.js|window\.React|createElement\(\s*["'']canvas') {
     $failures.Add("Journal viewer introduced a prototype runtime, React, or Canvas dependency")
   }
+  if ($viewerScript -match 'makeTexture|makeCoverTexture|makeEdgeTexture') {
+    $failures.Add("Journal viewer must not transplant the reference texture or page-turn runtime")
+  }
   if ($viewerScript -match 'POCKET NOTEBOOK / 001|PROPERTY OF:|192 PAGES / BLACK') {
     $failures.Add("Entry 001 closed covers must contain no decorative text")
   }
@@ -123,6 +132,24 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   }
   if ($viewerStyles -notmatch '\.journal-sheet\.is-endleaf' -or $viewerStyles -notmatch '\.journal-curl-texture\.is-left-page::after') {
     $failures.Add("Journal viewer is missing matte Entry 001 endleafs or endpoint-matched curl page shading")
+  }
+  if ($viewerStyles -notmatch '--journal-paper-material' -or $viewerStyles -notmatch '--journal-cover-material' -or $viewerStyles -notmatch '--journal-edge-vertical' -or $viewerStyles -notmatch '--journal-edge-horizontal') {
+    $failures.Add("Journal viewer is missing its paper, cover, or layered page-edge material assets")
+  }
+  if ($viewerStyles -notmatch '\.journal-sheet-left::after[\s\S]*var\(--journal-paper-material\)' -or $viewerStyles -notmatch '\.journal-curl-texture\.is-left-page::after[\s\S]*var\(--journal-paper-material\)') {
+    $failures.Add("Resting and curling pages must share the same physical paper material")
+  }
+}
+
+foreach ($materialPath in $materialPaths) {
+  if (-not (Test-Path -LiteralPath $materialPath -PathType Leaf)) {
+    $failures.Add("Missing journal material asset: $([System.IO.Path]::GetFileName($materialPath))")
+    continue
+  }
+  try {
+    [xml][System.IO.File]::ReadAllText($materialPath) | Out-Null
+  } catch {
+    $failures.Add("Invalid journal material SVG: $([System.IO.Path]::GetFileName($materialPath))")
   }
 }
 
@@ -320,4 +347,4 @@ if (-not $?) {
   throw "Site link compatibility checks failed"
 }
 
-Write-Output "Journal checks passed: four Entry 001 images, matte edge endleafs, optional cover/inside assets, endpoint-matched curl settling, scroll-stable state history, turnaround loops, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."
+Write-Output "Journal checks passed: four Entry 001 images, shared resting/curl paper material, layered page edges, matte cover/endleafs, endpoint-matched curl settling, scroll-stable state history, turnaround loops, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."
