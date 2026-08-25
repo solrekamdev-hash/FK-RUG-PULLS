@@ -7,10 +7,10 @@ window.FRP_JOURNAL = {
                                 "subtitle":  "FK RUG PULLS — JOURNAL ENTRY 001",
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-001.md",
                                 "pages":  [
-                                              "../../assets/journal/001/page-01.webp",
-                                              "../../assets/journal/001/page-02.webp",
-                                              "../../assets/journal/001/page-03.webp",
-                                              "../../assets/journal/001/page-04.webp"
+                                              "../../assets/journal/001/rendered/page-01.webp",
+                                              "../../assets/journal/001/rendered/page-02.webp",
+                                              "../../assets/journal/001/rendered/page-03.webp",
+                                              "../../assets/journal/001/rendered/page-04.webp"
                                           ],
                                 "assets":  {
                                                "coverFront":  null,

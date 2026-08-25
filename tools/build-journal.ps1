@@ -59,7 +59,14 @@ function Get-EntryPagePaths([string]$Number) {
   $entryAssetDirectory = Join-Path $journalAssetsDirectory $Number
   if (-not (Test-Path -LiteralPath $entryAssetDirectory)) { return @() }
 
-  $pageFiles = @(Get-ChildItem -LiteralPath $entryAssetDirectory -File | Where-Object {
+  $renderedAssetDirectory = Join-Path $entryAssetDirectory "rendered"
+  $pageAssetDirectory = if (Test-Path -LiteralPath $renderedAssetDirectory -PathType Container) {
+    $renderedAssetDirectory
+  } else {
+    $entryAssetDirectory
+  }
+
+  $pageFiles = @(Get-ChildItem -LiteralPath $pageAssetDirectory -File | Where-Object {
     $_.BaseName -match '^page-(\d+)$' -and $_.Extension.ToLowerInvariant() -in @('.png', '.webp', '.jpg', '.jpeg', '.avif')
   } | Sort-Object @{ Expression = { [int][regex]::Match($_.BaseName, '\d+$').Value } }, Name)
 
@@ -68,7 +75,8 @@ function Get-EntryPagePaths([string]$Number) {
     throw "Entry $Number has multiple assets for page number(s): $($duplicateNumbers.Name -join ', ')"
   }
 
-  return @($pageFiles | ForEach-Object { "../../assets/journal/$Number/$($_.Name)" })
+  $relativeDirectory = if ($pageAssetDirectory -eq $renderedAssetDirectory) { "$Number/rendered" } else { $Number }
+  return @($pageFiles | ForEach-Object { "../../assets/journal/$relativeDirectory/$($_.Name)" })
 }
 
 function Get-OptionalEntryAsset([string]$Number, [string]$Stem) {

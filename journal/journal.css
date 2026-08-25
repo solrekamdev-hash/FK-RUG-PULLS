@@ -348,6 +348,12 @@
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
+.journal-sheet-left[data-surface-kind="page"]::after {
+  background-image: linear-gradient(90deg, rgba(60,50,38,.035), transparent 1.5%, transparent 96.6%, rgba(68,54,37,.055) 98.7%, rgba(45,36,28,.12));
+}
+.journal-sheet-right[data-surface-kind="page"]::after {
+  background-image: linear-gradient(90deg, rgba(45,36,28,.12), rgba(68,54,37,.055) 1.3%, transparent 3.4%, transparent 98.5%, rgba(60,50,38,.035));
+}
 .journal-sheet.is-blank, .journal-mobile-sheet.is-blank {
   --journal-margin-line: 10.4%;
   background:
@@ -516,6 +522,12 @@
   background-image:
     var(--journal-paper-material),
     linear-gradient(90deg, rgba(48,39,29,.22), transparent 12%, transparent 92%, rgba(255,252,241,.07) 98.6%, rgba(57,47,36,.1));
+}
+.journal-curl-texture.has-image.is-left-page::after {
+  background-image: linear-gradient(90deg, rgba(60,50,38,.035), transparent 1.5%, transparent 96.6%, rgba(68,54,37,.055) 98.7%, rgba(45,36,28,.12));
+}
+.journal-curl-texture.has-image.is-right-page::after {
+  background-image: linear-gradient(90deg, rgba(45,36,28,.12), rgba(68,54,37,.055) 1.3%, transparent 3.4%, transparent 98.5%, rgba(60,50,38,.035));
 }
 .journal-curl-texture.is-blank {
   background:

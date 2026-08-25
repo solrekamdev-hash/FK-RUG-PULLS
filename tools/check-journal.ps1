@@ -15,6 +15,12 @@ $materialPaths = @(
   (Join-Path $RepositoryRoot "assets\journal\material-edge-vertical.svg"),
   (Join-Path $RepositoryRoot "assets\journal\material-edge-horizontal.svg")
 )
+$protectedEntry001Hashes = [ordered]@{
+  "page-01.webp" = "1e797d1e94dae072987ae07681b8838942e6570ffce22f9bf09fdad97023b8ff"
+  "page-02.webp" = "71f9484cad8dcb1c0abd8b658673c3f81b2dd6308182385f486b83cd25e78ffc"
+  "page-03.webp" = "2d5a6774c8aa99658d3f6807f6b8a273af3cb92d30b1b3af4ecff051a8dfa19c"
+  "page-04.webp" = "cc3f54cdbb2ca9424b640bc5e05cb7a00e7c6fe0f1f790977cb30ec9fe6f4560"
+}
 $expectedFiles = 1..5 | ForEach-Object { "FK-RUG-PULLS-JOURNAL-ENTRY-{0:D3}.md" -f $_ }
 
 function Decode-Html([string]$Text) {
@@ -139,6 +145,21 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   if ($viewerStyles -notmatch '\.journal-sheet-left::after[\s\S]*var\(--journal-paper-material\)' -or $viewerStyles -notmatch '\.journal-curl-texture\.is-left-page::after[\s\S]*var\(--journal-paper-material\)') {
     $failures.Add("Resting and curling pages must share the same physical paper material")
   }
+  if ($viewerStyles -notmatch '\.journal-sheet-left\[data-surface-kind="page"\]::after' -or $viewerStyles -notmatch '\.journal-curl-texture\.has-image\.is-left-page::after') {
+    $failures.Add("Rendered resting and curling pages must share the same narrow book-level shading")
+  }
+}
+
+foreach ($protectedAsset in $protectedEntry001Hashes.GetEnumerator()) {
+  $protectedPath = Join-Path $RepositoryRoot "assets\journal\001\$($protectedAsset.Key)"
+  if (-not (Test-Path -LiteralPath $protectedPath -PathType Leaf)) {
+    $failures.Add("Missing protected Entry 001 source: $($protectedAsset.Key)")
+    continue
+  }
+  $actualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $protectedPath).Hash.ToLowerInvariant()
+  if ($actualHash -cne $protectedAsset.Value) {
+    $failures.Add("Protected Entry 001 source hash changed: $($protectedAsset.Key)")
+  }
 }
 
 foreach ($materialPath in $materialPaths) {
@@ -248,7 +269,7 @@ foreach ($fileName in $expectedFiles) {
 
       $seenPagePaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
       foreach ($pageImage in @($manifestEntry.pages)) {
-        if ($pageImage -notmatch ('^\.\./\.\./assets/journal/{0}/page-\d+\.(?:png|webp|jpe?g|avif)$' -f $number)) {
+        if ($pageImage -notmatch ('^\.\./\.\./assets/journal/{0}/(?:rendered/)?page-\d+\.(?:png|webp|jpe?g|avif)$' -f $number)) {
           $failures.Add("Manifest entry $number has an invalid page-image path: $pageImage")
           continue
         }
@@ -266,10 +287,10 @@ foreach ($fileName in $expectedFiles) {
 
 if ($null -ne $manifest) {
   $expectedEntry001Pages = @(
-    "../../assets/journal/001/page-01.webp",
-    "../../assets/journal/001/page-02.webp",
-    "../../assets/journal/001/page-03.webp",
-    "../../assets/journal/001/page-04.webp"
+    "../../assets/journal/001/rendered/page-01.webp",
+    "../../assets/journal/001/rendered/page-02.webp",
+    "../../assets/journal/001/rendered/page-03.webp",
+    "../../assets/journal/001/rendered/page-04.webp"
   )
   $entry001Pages = @($manifest.entries.'001'.pages)
   if ($entry001Pages.Count -ne $expectedEntry001Pages.Count) {
