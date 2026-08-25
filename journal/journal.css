@@ -351,6 +351,20 @@
     #e6d5b9;
 }
 .journal-sheet-left.is-blank { --journal-margin-line: 89.6%; }
+.journal-sheet.is-endleaf,
+.journal-mobile-sheet.is-endleaf {
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.035), transparent 24%),
+    repeating-linear-gradient(92deg, transparent 0 3px, rgba(255,255,255,.012) 4px),
+    #181817;
+  border-color: #050505;
+}
+.journal-sheet.is-endleaf::after,
+.journal-mobile-sheet.is-endleaf::after {
+  background:
+    radial-gradient(ellipse at 50% 110%, rgba(0,0,0,.3), transparent 58%),
+    linear-gradient(90deg, rgba(255,255,255,.025), transparent 12%, transparent 88%, rgba(0,0,0,.2));
+}
 .journal-sheet.is-blank::before, .journal-mobile-sheet.is-blank::before {
   content: "";
   position: absolute;
@@ -494,6 +508,19 @@
 .journal-curl-texture {
   background-repeat: no-repeat;
   transform-origin: center;
+}
+.journal-curl-texture::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+.journal-curl-texture.is-left-page::after {
+  background: linear-gradient(90deg, rgba(64,42,25,.2), rgba(255,248,226,.12) 1.6%, transparent 9%, transparent 81%, rgba(45,29,17,.3));
+}
+.journal-curl-texture.is-right-page::after {
+  background: linear-gradient(90deg, rgba(45,29,17,.3), transparent 19%, transparent 91%, rgba(255,248,226,.12) 98.4%, rgba(64,42,25,.2));
 }
 .journal-curl-texture.is-blank {
   background:

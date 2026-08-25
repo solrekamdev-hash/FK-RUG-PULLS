@@ -173,6 +173,13 @@
       });
     },
 
+    curlShade(progress, faceAmount, frontVisible) {
+      const q = Math.max(0, Math.min(1, progress));
+      const face = Math.max(0, Math.min(1, faceAmount));
+      const bend = Math.sin(Math.PI * Math.pow(q, .94));
+      return bend * (frontVisible ? .04 + (.4 * (1 - face)) : .12 + (.34 * (1 - face)));
+    },
+
     bookGeometry(position, mobile = false, pageWidth = 340, thickness = 15) {
       const pos = Math.max(0, Math.min(2, position));
       const clamp01 = (value) => Math.max(0, Math.min(1, value));
@@ -220,8 +227,8 @@
     "001": {
       coverFront: [],
       coverBack: [],
-      insideFront: ["ENTRY 001 / START", "JUST LOOKING.", "RENT / PHONE / FUEL / FOOD", "NO STUPID SHIT."],
-      insideBack: ["ENTRY 001 / END", "ONE CLEAN WIN.", "DON'T CHASE. DON'T PANIC.", "CLOSE THE BOOK."]
+      insideFront: [],
+      insideBack: []
     },
     "002": {
       coverFront: ["FIELD NOTES / 002", "PROFIT?", "DO NOT GET GREEDY"],
@@ -286,7 +293,6 @@
   let states = statesForMode();
   let currentStateIndex = logic.stateIndexFromHash(states, window.location.hash, entry.pages.length);
   let isAnimating = false;
-  let suppressHashChange = false;
   let queuedHash = null;
   let imageFailure = false;
   let pageCurl = null;
@@ -388,10 +394,12 @@
       }
     }
 
-    paintTexture(texture, descriptor) {
+    paintTexture(texture, descriptor, side) {
       const source = sourceForDescriptor(descriptor);
       texture.classList.toggle("is-blank", !source);
       texture.classList.toggle("has-image", Boolean(source));
+      texture.classList.toggle("is-left-page", side === "left");
+      texture.classList.toggle("is-right-page", side === "right");
       texture.style.backgroundImage = source ? `url("${source.replace(/"/g, "%22")}")` : "";
       if (source) {
         texture.style.backgroundSize = `${(this.width * 1.065).toFixed(2)}px ${(this.height * 1.025).toFixed(2)}px`;
@@ -402,10 +410,12 @@
       }
     }
 
-    setFaces(frontDescriptor, backDescriptor) {
+    setFaces(frontDescriptor, backDescriptor, direction) {
+      const frontSide = direction > 0 ? "right" : "left";
+      const backSide = direction > 0 ? "left" : "right";
       this.strips.forEach((strip) => {
-        this.paintTexture(strip.front.texture, frontDescriptor);
-        this.paintTexture(strip.back.texture, backDescriptor);
+        this.paintTexture(strip.front.texture, frontDescriptor, frontSide);
+        this.paintTexture(strip.back.texture, backDescriptor, backSide);
       });
     }
 
@@ -434,7 +444,8 @@
       }
 
       const airborne = width * .038 * bell;
-      this.sheet.style.transform = `translateZ(${(this.baseZ + airborne).toFixed(2)}px) rotateZ(${(-.9 * bell).toFixed(2)}deg) rotateX(${(-1.4 * bell).toFixed(2)}deg)`;
+      const restingPageAngle = -1.1 + (2.2 * q);
+      this.sheet.style.transform = `translateX(${q.toFixed(3)}px) translateZ(${(this.baseZ + airborne).toFixed(2)}px) rotateZ(${(-.9 * bell).toFixed(2)}deg) rotateX(${(-1.4 * bell).toFixed(2)}deg) rotateY(${restingPageAngle.toFixed(3)}deg)`;
       let x = 0;
       let z = 0;
       let minimumX = 0;
@@ -449,8 +460,8 @@
         const frontVisible = Math.cos(radians) >= 0;
         strip.front.face.style.visibility = frontVisible ? "visible" : "hidden";
         strip.back.face.style.visibility = frontVisible ? "hidden" : "visible";
-        strip.front.shade.style.opacity = frontVisible ? (.04 + (.4 * (1 - faceAmount))).toFixed(3) : "0";
-        strip.back.shade.style.opacity = frontVisible ? "0" : (.12 + (.34 * (1 - faceAmount))).toFixed(3);
+        strip.front.shade.style.opacity = frontVisible ? logic.curlShade(q, faceAmount, true).toFixed(3) : "0";
+        strip.back.shade.style.opacity = frontVisible ? "0" : logic.curlShade(q, faceAmount, false).toFixed(3);
         x += stripWidth * Math.cos(radians);
         z += stripWidth * Math.sin(radians);
         minimumX = Math.min(minimumX, x);
@@ -581,7 +592,7 @@
   function resetSurface(surface) {
     const image = surface.querySelector("img");
     surface.classList.add("is-blank");
-    surface.classList.remove("is-loading", "is-generated", "has-generated-asset");
+    surface.classList.remove("is-loading", "is-generated", "is-endleaf", "has-generated-asset");
     surface.dataset.page = "blank";
     surface.dataset.surfaceKind = "blank";
     surface.removeAttribute("role");
@@ -613,15 +624,22 @@
       return;
     }
 
-    surface.classList.add("is-generated");
     surface.dataset.surfaceKind = descriptor.role;
     surface.dataset.page = descriptor.role;
     surface.removeAttribute("aria-hidden");
     surface.setAttribute("role", "img");
+    const source = assetFor(descriptor.role);
+    if (entry.id === "001" && !source) {
+      surface.classList.remove("is-blank");
+      surface.classList.add("is-endleaf");
+      surface.setAttribute("aria-label", `Entry ${entry.id}, ${descriptor.role.replace("-", " ")} cover`);
+      return;
+    }
+
+    surface.classList.add("is-generated");
     surface.setAttribute("aria-label", `Entry ${entry.id}, ${descriptor.role.replace("-", " ")} notes`);
     const design = createInsideDesign(descriptor);
     surface.append(design);
-    const source = assetFor(descriptor.role);
     if (source) {
       design.hidden = true;
       surface.classList.add("is-loading", "has-generated-asset");
@@ -648,8 +666,8 @@
   function stateDescription(state) {
     if (state.key === "cover-front") return `Entry ${entry.id}, front cover closed.`;
     if (state.key === "cover-back") return `Entry ${entry.id}, back cover closed.`;
-    if (state.key === "inside-front") return `Entry ${entry.id}, inside front notes.`;
-    if (state.key === "inside-back") return `Entry ${entry.id}, inside back notes.`;
+    if (state.key === "inside-front") return `Entry ${entry.id}, inside front ${entry.id === "001" ? "cover" : "notes"}.`;
+    if (state.key === "inside-back") return `Entry ${entry.id}, inside back ${entry.id === "001" ? "cover" : "notes"}.`;
     if (state.key === "content") return `Entry ${entry.id}, Markdown journal content.`;
     const numbers = state.pageIndexes.map((pageIndex) => pageIndex + 1);
     return numbers.length > 1
@@ -748,8 +766,8 @@
   }
 
   function turnLabel(targetState, direction) {
-    if (targetState.key === "inside-front") return direction > 0 ? `Open entry ${entry.id}` : `Return to entry ${entry.id} opening notes`;
-    if (targetState.key === "inside-back") return direction > 0 ? `Turn to entry ${entry.id} closing notes` : `Reopen entry ${entry.id} closing notes`;
+    if (targetState.key === "inside-front") return direction > 0 ? `Open entry ${entry.id}` : `Return to entry ${entry.id} inside front ${entry.id === "001" ? "cover" : "notes"}`;
+    if (targetState.key === "inside-back") return direction > 0 ? `Turn to entry ${entry.id} inside back ${entry.id === "001" ? "cover" : "notes"}` : `Reopen entry ${entry.id} inside back ${entry.id === "001" ? "cover" : "notes"}`;
     if (targetState.key === "cover-front") return "Close journal to front cover";
     if (targetState.key === "cover-back") return "Close journal to back cover";
     if (targetState.key === "content") return `Read entry ${entry.id} journal transcript`;
@@ -850,21 +868,15 @@
     }
   }
 
-  function waitForSettledPaint() {
-    return new Promise((resolve) => {
-      window.requestAnimationFrame(() => window.requestAnimationFrame(resolve));
-    });
-  }
-
   async function animateDesktop(targetState, direction) {
     const currentState = states[currentStateIndex];
     if (!pageCurl) pageCurl = new PageCurlEngine(turningSheet, 18);
     const pageWidth = book.clientWidth / 2;
     const thickness = Math.max(8, Math.min(15, pageWidth * .044));
-    pageCurl.ensureSize(pageWidth, book.clientHeight, (thickness / 2) + 1);
+    pageCurl.ensureSize(pageWidth, book.clientHeight, thickness / 2);
     const frontDescriptor = direction > 0 ? currentState.surfaces.right : currentState.surfaces.left;
     const backDescriptor = direction > 0 ? targetState.surfaces.left : targetState.surfaces.right;
-    pageCurl.setFaces(frontDescriptor, backDescriptor);
+    pageCurl.setFaces(frontDescriptor, backDescriptor, direction);
     pageCurl.apply(0, direction);
     pageCurl.setVisible(true);
     pendingCurl = {
@@ -888,7 +900,6 @@
     setSurface(settledSurface, settledDescriptor);
     await waitForSurfaceImage(settledSurface);
     renderState(states.indexOf(targetState), true, true);
-    await waitForSettledPaint();
     pendingCurl = null;
     pageCurl.reset(direction);
   }
@@ -1047,12 +1058,8 @@
   function writeStateHash(state) {
     const nextHash = logic.stateHash(state);
     if (window.location.hash === nextHash) return;
-    if (nextHash) {
-      suppressHashChange = true;
-      window.location.hash = nextHash;
-    } else {
-      window.history.pushState(null, "", window.location.pathname + window.location.search);
-    }
+    const nextUrl = `${window.location.pathname}${window.location.search}${nextHash}`;
+    window.history.pushState(null, "", nextUrl);
   }
 
   function applyQueuedHash() {
@@ -1161,18 +1168,16 @@
   previousButton.addEventListener("click", () => turn(-1));
   nextButton.addEventListener("click", () => turn(1));
 
-  window.addEventListener("hashchange", () => {
-    if (suppressHashChange) {
-      suppressHashChange = false;
-      return;
-    }
+  const handleLocationChange = () => {
     if (isAnimating) {
       queuedHash = window.location.hash;
       return;
     }
     states = statesForMode();
     renderState(logic.stateIndexFromHash(states, window.location.hash, entry.pages.length), true);
-  });
+  };
+  window.addEventListener("hashchange", handleLocationChange);
+  window.addEventListener("popstate", handleLocationChange);
 
   const handleModeChange = () => {
     if (isAnimating) return;

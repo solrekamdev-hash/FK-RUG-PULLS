@@ -85,8 +85,8 @@ if (-not (Test-Path -LiteralPath $viewerScriptPath)) {
   if ($viewerScript -match 'POCKET NOTEBOOK / 001|PROPERTY OF:|192 PAGES / BLACK') {
     $failures.Add("Entry 001 closed covers must contain no decorative text")
   }
-  if ($viewerScript -notmatch 'ENTRY 001 / START' -or $viewerScript -notmatch 'JUST LOOKING\.' -or $viewerScript -notmatch 'ENTRY 001 / END' -or $viewerScript -notmatch 'ONE CLEAN WIN\.') {
-    $failures.Add("Entry 001 is missing its approved opening or ending inside-page treatment")
+  if ($viewerScript -notmatch 'entry\.id === "001"' -or $viewerScript -notmatch 'is-endleaf' -or $viewerScript -match 'ENTRY 001 / START|JUST LOOKING\.|ENTRY 001 / END|ONE CLEAN WIN\.') {
+    $failures.Add("Entry 001 must use plain matte endleafs without generated opening or ending copy")
   }
   if ($viewerScript -notmatch 'animateClosedBookTurnaround' -or $viewerScript -notmatch 'turnAround' -or $viewerScript -notmatch 'rotateY\(\$\{theta') {
     $failures.Add("Journal viewer is missing its physical closed-book turnaround loop")
@@ -94,8 +94,8 @@ if (-not (Test-Path -LiteralPath $viewerScriptPath)) {
   if ($viewerScript -notmatch 'class PageCurlEngine' -or $viewerScript -notmatch 'curlAngles' -or $viewerScript -notmatch 'new PageCurlEngine\(turningSheet, 18\)') {
     $failures.Add("Journal viewer is missing the 18-strip developable page-curl engine")
   }
-  if ($viewerScript -notmatch 'waitForSurfaceImage' -or $viewerScript -notmatch 'waitForSettledPaint' -or $viewerScript -notmatch 'renderState\(states\.indexOf\(targetState\), true, true\)') {
-    $failures.Add("Journal viewer is missing its covered destination-spread settling sequence")
+  if ($viewerScript -notmatch 'waitForSurfaceImage' -or $viewerScript -notmatch 'renderState\(states\.indexOf\(targetState\), true, true\)' -or $viewerScript -notmatch 'history\.pushState') {
+    $failures.Add("Journal viewer is missing its decoded destination-spread commit or scroll-stable history update")
   }
 }
 
@@ -120,6 +120,9 @@ if (-not (Test-Path -LiteralPath $viewerStylePath)) {
   }
   if ($viewerStyles -notmatch '\.journal-inside-design') {
     $failures.Add("Journal viewer is missing the approved code-rendered inside-page treatment")
+  }
+  if ($viewerStyles -notmatch '\.journal-sheet\.is-endleaf' -or $viewerStyles -notmatch '\.journal-curl-texture\.is-left-page::after') {
+    $failures.Add("Journal viewer is missing matte Entry 001 endleafs or endpoint-matched curl page shading")
   }
 }
 
@@ -317,4 +320,4 @@ if (-not $?) {
   throw "Site link compatibility checks failed"
 }
 
-Write-Output "Journal checks passed: four Entry 001 images, approved designed edge pages, optional cover/inside assets, covered curl settling, turnaround loops, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."
+Write-Output "Journal checks passed: four Entry 001 images, matte edge endleafs, optional cover/inside assets, endpoint-matched curl settling, scroll-stable state history, turnaround loops, keyboard and reduced-motion support, sequential mobile paging, 5 exact Markdown fallbacks, 6 routes, and explicit local links."

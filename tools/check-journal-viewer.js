@@ -89,5 +89,8 @@ assert.ok(curlEnd.every((angle) => Math.abs(angle - 180) < .0001), "Curl must se
 assert.ok(curlMiddle[18] > curlMiddle[0] + 35, "The free edge must lead the binding through the curl");
 assert.ok(Math.abs(logic.curlEase(0)) < .0001);
 assert.ok(Math.abs(logic.curlEase(1) - 1) < .0001);
+assert.ok(Math.abs(logic.curlShade(0, 1, true)) < .0001, "The curl must not shade its resting start frame");
+assert.ok(Math.abs(logic.curlShade(1, 1, false)) < .0001, "The curl must not shade its settled end frame");
+assert.ok(logic.curlShade(.5, 0, false) > .4, "The curl must retain physical shading while bent");
 
-console.log("Journal viewer logic checks passed: continuous spine geometry, centred closed covers, approved designed edge pages, segmented curl invariants, turnaround loops, Markdown flow, reduced motion, and sequential mobile paging.");
+console.log("Journal viewer logic checks passed: continuous spine geometry, centred closed covers, matte edge endleafs, endpoint-matched segmented curls, turnaround loops, Markdown flow, reduced motion, and sequential mobile paging.");
