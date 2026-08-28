@@ -10,13 +10,20 @@ Deployment status: **NOT_DEPLOYED**
 
 Official FRP mint address: **NONE**
 
-This file is a pre-deployment checklist and a future public record. Completing documentation does not authorize token creation. The planned settings below must be checked again immediately before any separately authorized deployment.
+This file is a pre-deployment checklist and a future public record. Completing documentation does not authorize token creation. Planned technical launch settings must be checked again immediately before any separately authorized deployment.
 
-## Finalized creator beneficial-ownership rule
+## Locked ownership structure
 
-The creator beneficial-ownership cap is a finalized project rule, permanently locked at exactly 2% of total FRP supply. Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements must never exceed 2% of total FRP supply.
+The ownership structure is finalized at:
 
-This specific cap does not need to be re-decided before deployment. Compliance must still be verified before deployment and after launch. No other launch setting is finalized by this decision.
+- **1% creator / creator trading wallet**
+- **1% operational Treasury**
+- **1% secondary Treasury reserve**
+- **97% public**
+
+At exactly 1,000,000,000 FRP, that equals 10,000,000 FRP creator, 10,000,000 FRP operational Treasury, 10,000,000 FRP secondary Treasury reserve, and 970,000,000 FRP public.
+
+Creator personal beneficial ownership must never exceed 1% of total FRP supply. Treasury holdings are separate project assets and do not count as creator personal holdings. Treasury assets must never be used to bypass the creator cap.
 
 ## Pre-deployment checklist
 
@@ -31,13 +38,17 @@ This specific cap does not need to be re-decided before deployment. Compliance m
 - [ ] Reconfirm no mining.
 - [ ] Verify the deployer address character by character.
 - [ ] Verify the creator trading address character by character.
+- [ ] Verify the Treasury address character by character.
 - [ ] Confirm no presale.
-- [ ] Confirm no reserved creator allocation.
 - [ ] Confirm no private team allocation.
-- [ ] Verify pre-deployment compliance with the finalized 2% cap across all wallets, custodians, nominees, accounts, or other arrangements.
+- [ ] Verify creator personal beneficial ownership does not exceed 1%.
+- [ ] Verify the operational Treasury represents 1% of total supply.
+- [ ] Verify the secondary Treasury reserve represents 1% of total supply.
+- [ ] Verify 97% remains outside creator and Treasury ownership for the public.
+- [ ] Confirm Treasury assets are not being used to bypass the creator personal cap.
 - [ ] Confirm the deployer is not used for normal creator trading.
-- [ ] Reconfirm that the creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.
-- [ ] Reconfirm that creator FRP activity is intended to occur through the published creator trading wallet.
+- [ ] Reconfirm creator FRP activity is intended to occur through the published creator trading wallet.
+- [ ] Reconfirm Treasury activity is intended to occur through the published Treasury structure and be publicly documented.
 - [ ] Prepare an independent review of all settings before signing anything.
 
 ## Planned launch settings — recheck before deployment
@@ -57,7 +68,8 @@ This specific cap does not need to be re-decided before deployment. Compliance m
 | Role | Address | Rule |
 | --- | --- | --- |
 | Deployer | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token; no normal creator trading |
-| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; the finalized 2% cap applies across all wallets, custodians, nominees, accounts, or other arrangements |
+| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Creator personal beneficial ownership capped at 1% |
+| Treasury | `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn` | 2% project Treasury total: 1% operational + 1% secondary reserve; not creator personal holdings |
 
 ## Post-deployment record — leave blank until deployment
 
@@ -66,6 +78,9 @@ This specific cap does not need to be re-decided before deployment. Compliance m
 - Creation transaction: Not deployed
 - Independent verifier: Not assigned
 - Verification result: Pending deployment
-- Post-launch creator beneficial-ownership cap verification: Pending deployment
+- Creator 1% cap verification: Pending deployment
+- Operational Treasury 1% verification: Pending deployment
+- Secondary Treasury reserve 1% verification: Pending deployment
+- Public 97% verification: Pending deployment
 
 Never insert a proposed, draft, or placeholder address in the official mint field.
