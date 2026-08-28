@@ -3,19 +3,19 @@
     "name": "FK RUG PULLS",
     "ticker": "FRP",
     "status": "PRE-LAUNCH",
-    "description": "A transparency-first Solana memecoin project built around public creator wallets and visible launch records."
+    "description": "A transparency-first Solana memecoin project built around public creator wallets, a public Treasury, visible rules, and post-deployment verification."
   },
   "deploymentStatus": "NOT_DEPLOYED",
   "officialMintAddress": null,
-  "creatorBeneficialOwnershipCap": {
-    "maximumPercentOfTotalFrpSupply": 2,
+  "ownershipStructure": {
     "status": "FINALIZED_LOCKED",
-    "scope": "Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements.",
-    "requiresRedecisionBeforeDeployment": false,
-    "complianceVerificationRequired": [
-      "BEFORE_LAUNCH",
-      "AFTER_LAUNCH"
-    ]
+    "creatorPersonalPercentOfTotalFrpSupply": 1,
+    "operationalTreasuryPercentOfTotalFrpSupply": 1,
+    "secondaryTreasuryReservePercentOfTotalFrpSupply": 1,
+    "publicPercentOfTotalFrpSupply": 97,
+    "totalProjectControlledPercentOfTotalFrpSupply": 3,
+    "treasuryCountsAsCreatorPersonalBeneficialOwnership": false,
+    "treasuryMayBeUsedToBypassCreatorCap": false
   },
   "socialLinks": {
     "tokenX": "https://x.com/FKRUGPULLS",
@@ -36,6 +36,12 @@
     },
     "mining": false
   },
+  "plannedAmountsAtStandardSupply": {
+    "creator": 10000000,
+    "operationalTreasury": 10000000,
+    "secondaryTreasuryReserve": 10000000,
+    "public": 970000000
+  },
   "wallets": {
     "deployer": {
       "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
@@ -43,14 +49,23 @@
     },
     "creatorTrading": {
       "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
-      "purpose": "The published wallet intended for creator FRP buying, holding, receiving, selling, transferring, and other beneficial control. The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement for this activity.",
-      "maximumCreatorBeneficialOwnershipPercentOfTotalFrpSupply": 2
+      "purpose": "Published wallet for creator FRP activity.",
+      "maximumCreatorPersonalBeneficialOwnershipPercentOfTotalFrpSupply": 1
+    },
+    "treasury": {
+      "address": "8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn",
+      "purpose": "Published FK RUG PULLS project Treasury.",
+      "totalPercentOfTotalFrpSupply": 2,
+      "operationalPercentOfTotalFrpSupply": 1,
+      "secondaryReservePercentOfTotalFrpSupply": 1,
+      "countsAsCreatorPersonalBeneficialOwnership": false
     }
   },
   "allocationRules": {
     "presale": false,
-    "reservedCreatorAllocation": false,
     "privateTeamAllocation": false,
-    "creatorUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false
+    "creatorPersonalBeneficialOwnershipCapPercent": 1,
+    "treasuryUseToBypassCreatorCapPermitted": false,
+    "intendedPublicOwnershipPercent": 97
   }
 }
