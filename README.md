@@ -4,7 +4,7 @@
 >
 > There is no official FRP mint address yet.
 
-FK RUG PULLS is a pre-launch Solana memecoin project built around public creator wallets, visible rules, and post-deployment verification. This repository contains the static website, machine-readable launch information, and transparency documentation.
+FK RUG PULLS is a pre-launch Solana memecoin project built around public wallets, visible rules, a public Treasury structure, and post-deployment verification. This repository contains the static website, machine-readable launch information, and transparency documentation.
 
 No token deployment, wallet connection, signing, or transaction code is included.
 
@@ -21,26 +21,34 @@ The journal routes are generated from `Content/Journal/*.md`. Optional notebook-
 
 Open `index.html` directly, or serve the folder with any static web server. All paths are relative and compatible with GitHub Pages project sites.
 
+## Locked ownership structure
+
+The current locked structure is:
+
+| Bucket | Share | Amount at exactly 1B FRP |
+| --- | ---: | ---: |
+| Creator / creator trading wallet | 1% | 10,000,000 FRP |
+| Operational Treasury | 1% | 10,000,000 FRP |
+| Secondary Treasury reserve | 1% | 10,000,000 FRP |
+| Public | 97% | 970,000,000 FRP |
+
+Creator personal beneficial ownership must never exceed **1% of total FRP supply**.
+
+The Treasury represents **2% of total supply in total** and is a separate project asset: 1% operational Treasury plus 1% secondary Treasury reserve. Treasury holdings do not count as creator personal holdings and must not be used to bypass the creator cap.
+
 ## Public wallets
 
-| Role | Address | Permission |
+| Role | Address | Permission / purpose |
 | --- | --- | --- |
 | Deployer | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token; not used for normal creator trading |
-| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; total creator beneficial ownership must never exceed 2% of total FRP supply |
+| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; creator personal beneficial ownership capped at 1% |
+| Treasury | `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn` | Published project Treasury; 2% total split into 1% operational and 1% secondary reserve |
 
 The same addresses and rules are recorded in [`wallets.json`](wallets.json) and [`launch-manifest.json`](launch-manifest.json).
 
-The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through the published creator trading wallet.
-
-### Finalized creator beneficial-ownership cap
-
-The creator beneficial-ownership cap is a finalized project rule, permanently locked at exactly 2% of total FRP supply. Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements must never exceed 2% of total FRP supply.
-
-This specific cap does not need to be re-decided before deployment. Compliance must still be verified before deployment and after launch. Only this rule is finalized; the other launch settings below remain planned.
-
 ## Planned launch settings
 
-These are plans, not deployed facts, and **must be checked again before deployment**.
+These technical settings are plans, not deployed facts, and **must be checked again before deployment**.
 
 | Setting | Plan |
 | --- | --- |
@@ -56,7 +64,7 @@ Deployment is not authorized by this repository or by completing its checklists.
 
 ## Documentation
 
-- [`docs/transparency-pledge.md`](docs/transparency-pledge.md) — plain-language public-wallet rules
+- [`docs/transparency-pledge.md`](docs/transparency-pledge.md) — plain-language wallet and ownership rules
 - [`docs/launch-record.md`](docs/launch-record.md) — pre-launch checklist and future creation record
 - [`docs/verification.md`](docs/verification.md) — post-deployment on-chain checks
 - [`docs/brand.md`](docs/brand.md) — story, tone, colour, and visual system
@@ -67,20 +75,9 @@ Deployment is not authorized by this repository or by completing its checklists.
 - Developer X: [@SolRDev](https://x.com/SolRDev)
 - GitHub: [solrekamdev-hash/FK-RUG-PULLS](https://github.com/solrekamdev-hash/FK-RUG-PULLS)
 
-## GitHub Pages
-
-After the committed files are pushed to GitHub:
-
-1. Open the repository's **Settings → Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select the default branch and the `/ (root)` folder, then save.
-4. Wait for GitHub Pages to publish and confirm the displayed URL.
-
-No build command, paid service, API key, secret, or environment variable is required.
-
 ## Risk warning
 
-FRP will be a speculative memecoin. Transparency does not guarantee profit, safety, liquidity, price stability, or continued value. Whales can sell. The creator can sell. The price can collapse.
+FRP will be a speculative memecoin. Transparency does not guarantee profit, safety, liquidity, price stability, or continued value. Whales can sell. The creator can sell. Treasury assets can move for documented project purposes. The price can collapse.
 
 Nothing in this repository is financial advice.
 
