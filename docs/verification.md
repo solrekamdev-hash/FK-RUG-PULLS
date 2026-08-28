@@ -17,49 +17,70 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 - Compare it with the planned standard target of approximately 1,000,000,000 FRP.
 - Record any difference and the reason for it.
 
-## 3. Mint authority
+## 3. Ownership structure
+
+Verify the locked structure against the actual supply:
+
+- Creator personal holdings: **maximum 1%**.
+- Operational Treasury: **1%**.
+- Secondary Treasury reserve: **1%**.
+- Public ownership: **97%**.
+
+At exactly 1,000,000,000 FRP, the reference amounts are 10,000,000 / 10,000,000 / 10,000,000 / 970,000,000 FRP respectively.
+
+Treasury holdings are separate project assets and must not be counted as creator personal beneficial ownership. Treasury assets must not be used to bypass the creator cap.
+
+## 4. Mint authority
 
 - Identify the current mint authority.
 - Confirm whether it is active or revoked, and record the exact on-chain state.
 - Do not describe the supply as fixed unless the authority state proves it.
 
-## 4. Freeze authority
+## 5. Freeze authority
 
 - Identify the current freeze authority.
 - Confirm whether it is active, revoked, or was never configured.
 - Publish the exact result without softening the wording.
 
-## 5. Token program
+## 6. Token program
 
 - Confirm which Solana token program owns the mint account.
 - Record the program ID and whether the mint uses the original Token Program or Token-2022.
 - Review any enabled extensions before making claims about token behaviour.
 
-## 6. Deployer holdings
+## 7. Deployer holdings
 
 - Inspect `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2`.
 - Record all FRP token accounts and balances connected to it.
 - Confirm it has not been used for normal creator trading.
 
-## 7. Creator trading holdings
+## 8. Creator trading holdings
 
 - Inspect `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V`.
 - Record its FRP balance and percentage of total supply.
-- Confirm the creator has not used or controlled any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.
-- Confirm creator FRP activity occurred through the published creator trading wallet.
-- Confirm total creator beneficial ownership across all arrangements never exceeds 2% of total FRP supply.
-- Review buys, holdings, receipts, sells, transfers, and linked accounts for evidence of undeclared control.
+- Confirm creator personal beneficial ownership does not exceed 1% of total FRP supply.
+- Review linked wallets, accounts, custodians, nominees, or other arrangements for evidence of undeclared creator personal control.
+- Confirm creator FRP activity occurred through the published creator trading wallet where intended.
 
-## 8. Pump.fun configuration
+## 9. Treasury holdings
+
+- Inspect `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn`.
+- Record its FRP balance and percentage of total supply.
+- Confirm total Treasury holdings represent the planned 2% project Treasury structure.
+- Confirm 1% is designated operational Treasury and 1% is designated secondary Treasury reserve in the public records.
+- Confirm Treasury assets have not been represented or used as creator personal holdings.
+- Review Treasury movements and match them against published project purposes.
+
+## 10. Pump.fun configuration
 
 - Confirm the token was created through the expected Pump.fun flow.
 - Verify pair: SOL.
 - Verify Cash Back: ON.
 - Verify Mayhem Mode: OFF.
-- Confirm there was no presale or private allocation.
+- Confirm there was no presale or private team allocation.
 - Save public evidence for every configuration claim.
 
-## 9. Creation transaction
+## 11. Creation transaction
 
 - Publish a direct link to the creation transaction.
 - Record the signer, timestamp, slot, instructions, fees, and resulting accounts.
@@ -72,10 +93,15 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 | --- | --- | --- | --- |
 | Mint address | Pending deployment | — | — |
 | Total supply | Pending deployment | — | — |
+| 1% creator cap | Pending deployment | — | — |
+| 1% operational Treasury | Pending deployment | — | — |
+| 1% secondary Treasury reserve | Pending deployment | — | — |
+| 97% public ownership | Pending deployment | — | — |
 | Mint authority | Pending deployment | — | — |
 | Freeze authority | Pending deployment | — | — |
 | Token program | Pending deployment | — | — |
 | Deployer holdings | Pending deployment | — | — |
 | Creator trading holdings | Pending deployment | — | — |
+| Treasury holdings | Pending deployment | — | — |
 | Pump.fun configuration | Pending deployment | — | — |
 | Creation transaction | Pending deployment | — | — |
