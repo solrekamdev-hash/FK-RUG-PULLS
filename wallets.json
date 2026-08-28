@@ -3,15 +3,22 @@
   "ticker": "FRP",
   "network": "Solana",
   "deploymentStatus": "NOT_DEPLOYED",
-  "creatorBeneficialOwnershipCap": {
-    "maximumPercentOfTotalFrpSupply": 2,
+  "ownershipStructure": {
     "status": "FINALIZED_LOCKED",
-    "scope": "Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements.",
-    "requiresRedecisionBeforeDeployment": false,
-    "complianceVerificationRequired": [
-      "BEFORE_LAUNCH",
-      "AFTER_LAUNCH"
-    ]
+    "creatorPersonalPercentOfTotalFrpSupply": 1,
+    "operationalTreasuryPercentOfTotalFrpSupply": 1,
+    "secondaryTreasuryReservePercentOfTotalFrpSupply": 1,
+    "publicPercentOfTotalFrpSupply": 97,
+    "totalProjectControlledPercentOfTotalFrpSupply": 3,
+    "plannedStandardSupply": 1000000000,
+    "plannedAmountsAtStandardSupply": {
+      "creator": 10000000,
+      "operationalTreasury": 10000000,
+      "secondaryTreasuryReserve": 10000000,
+      "public": 970000000
+    },
+    "treasuryCountsAsCreatorPersonalBeneficialOwnership": false,
+    "treasuryMayBeUsedToBypassCreatorCap": false
   },
   "wallets": [
     {
@@ -20,27 +27,49 @@
       "purpose": "Creates the token at an authorized launch and provides a public record of deployment activity.",
       "tradingPermissions": {
         "mayCreateToken": true,
-        "mayPerformNormalCreatorTrading": false,
-        "notes": "This wallet is reserved for deployment activity and is not used for normal creator buys or sells."
+        "mayPerformNormalCreatorTrading": false
       }
     },
     {
       "label": "Creator trading wallet",
       "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
-      "purpose": "The published wallet intended for creator FRP buying, holding, receiving, selling, transferring, and other beneficial control.",
+      "purpose": "Published wallet for creator FRP activity.",
+      "maximumCreatorPersonalBeneficialOwnershipPercentOfTotalFrpSupply": 1,
+      "plannedAmountAtStandardSupply": 10000000,
       "tradingPermissions": {
         "mayCreateToken": false,
         "mayBuy": true,
-        "maySell": true,
-        "maximumCreatorBeneficialOwnershipPercentOfTotalFrpSupply": 2,
-        "notes": "The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through this published wallet."
+        "maySell": true
       }
+    },
+    {
+      "label": "Treasury wallet",
+      "address": "8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn",
+      "purpose": "Published project Treasury for FK RUG PULLS ecosystem activity.",
+      "plannedTotalTreasuryPercentOfTotalFrpSupply": 2,
+      "plannedAmountAtStandardSupply": 20000000,
+      "internalBuckets": [
+        {
+          "label": "Operational Treasury",
+          "percentOfTotalFrpSupply": 1,
+          "plannedAmountAtStandardSupply": 10000000
+        },
+        {
+          "label": "Secondary Treasury reserve",
+          "percentOfTotalFrpSupply": 1,
+          "plannedAmountAtStandardSupply": 10000000
+        }
+      ],
+      "countsAsCreatorPersonalBeneficialOwnership": false,
+      "mayBeUsedToBypassCreatorCap": false
     }
   ],
   "rules": {
-    "creatorUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false,
+    "creatorPersonalBeneficialOwnershipCapPercent": 1,
+    "creatorUseOfUndeclaredArrangementsToExceedPersonalCapPermitted": false,
+    "treasuryUseToBypassCreatorCapPermitted": false,
     "presale": false,
-    "reservedCreatorAllocation": false,
-    "privateTeamAllocation": false
+    "privateTeamAllocation": false,
+    "intendedPublicOwnershipPercent": 97
   }
 }
