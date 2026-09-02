@@ -99,16 +99,16 @@
           <p class="kicker">Promises are cheap / rules are visible</p>
           <h2 id="rules-title">WRITE IT DOWN.<br>THEN WATCH IT.</h2>
         </div>
-        <p class="rules-deck">This is the operating pledge for the creator. It is not a promise of profit or safety. The 2% creator beneficial-ownership cap is finalized and permanently locked; the other launch settings remain planned.</p>
+        <p class="rules-deck">This is the operating pledge for the project. It is not a promise of profit or safety. Four project wallets are disclosed, but only Personal, Operational Treasury, and Secondary Treasury are final project-controlled allocation buckets: 3% project-controlled and 97% public. Treasury locks are planned after launch, not completed.</p>
       </div>
 
       <ol class="rule-list">
         <li><span class="rule-number">01</span><div><h3>No undeclared FRP control</h3><p>The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.</p></div></li>
         <li><span class="rule-number">02</span><div><h3>No presale</h3><p>No private early purchase round and no hidden head start.</p></div></li>
-        <li><span class="rule-number">03</span><div><h3>No reserved allocation</h3><p>No reserved creator allocation and no private team allocation.</p></div></li>
-        <li><span class="rule-number">04</span><div><h3>Two percent maximum — locked</h3><p>Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements must never exceed 2% of total FRP supply. This finalized rule does not need to be re-decided before deployment, but compliance must be verified before and after launch.</p></div></li>
-        <li><span class="rule-number">05</span><div><h3>Trading is visible</h3><p>The creator can buy and sell FRP. This activity is intended to occur through the published creator trading wallet, where it can be inspected.</p></div></li>
-        <li><span class="rule-number">06</span><div><h3>Separate the deployer</h3><p>The deployer creates the token. It is not used for normal creator trading.</p></div></li>
+        <li><span class="rule-number">03</span><div><h3>Four wallets on the table</h3><p>The disclosed wallets are Personal / Trading, Dev / Deployer, Operational Treasury, and Secondary Treasury. Every address is public and distinct.</p></div></li>
+        <li><span class="rule-number">04</span><div><h3>Three final allocation buckets</h3><p>Personal is capped at 1%, Operational Treasury receives 1%, Secondary Treasury receives 1%, and Public receives 97%. Total final project-controlled allocation is 3%.</p></div></li>
+        <li><span class="rule-number">05</span><div><h3>Personal trading is visible</h3><p>Personal FRP buying and selling is intended to occur through the published Personal / Trading wallet, where it can be inspected. That wallet is capped at 1%.</p></div></li>
+        <li><span class="rule-number">06</span><div><h3>Deployer is transit only</h3><p>If deployment is authorized, the Dev / Deployer temporarily acquires 2%, transfers 1% to each treasury, and is intended to finish at 0%. Both treasuries have a planned 90-day lock after launch.</p></div></li>
       </ol>
     </section>
 
@@ -119,19 +119,19 @@
           <p class="kicker">Known addresses / pin them up</p>
           <h2 id="wallets-title">CHECK THE<br>FUCKING WALLETS.</h2>
         </div>
-        <p>These are the only declared project-controlled wallets for FRP. Copy them. Save them. Verify every character against the public files.</p>
+        <p>These are the four disclosed project wallets for FRP. Copy them. Save them. Verify every character against the public files.</p>
       </div>
 
       <div class="wallet-grid">
         <article class="wallet-card">
           <div class="wallet-card-top">
             <span class="wallet-label">Wallet 01</span>
-            <span class="permission-tag">Deploy only</span>
+            <span class="permission-tag">1% maximum</span>
           </div>
-          <h3>Deployer wallet</h3>
-          <p>Creates the token. Not used for normal creator trading.</p>
-          <code class="wallet-address">3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2</code>
-          <button class="copy-button" type="button" data-copy="3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2" aria-label="Copy deployer wallet address">
+          <h3>Personal / Trading</h3>
+          <p>The published wallet for personal FRP activity. Personal buys and sells are public and inspectable.</p>
+          <code class="wallet-address">9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V</code>
+          <button class="copy-button" type="button" data-copy="9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V" aria-label="Copy personal trading wallet address">
             <span aria-hidden="true">[ + ]</span> Copy address
           </button>
         </article>
@@ -139,15 +139,57 @@
         <article class="wallet-card wallet-card-invert">
           <div class="wallet-card-top">
             <span class="wallet-label">Wallet 02</span>
-            <span class="permission-tag">Public trading</span>
+            <span class="permission-tag">Transit / final 0%</span>
           </div>
-          <h3>Creator trading wallet</h3>
-          <p>The published wallet for creator FRP activity. Total creator beneficial ownership must never exceed 2% of total FRP supply.</p>
-          <code class="wallet-address">9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V</code>
-          <button class="copy-button copy-button-light" type="button" data-copy="9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V" aria-label="Copy creator trading wallet address">
+          <h3>Dev / Deployer</h3>
+          <p>Deployer/transit wallet. It temporarily acquires 2%, transfers 1% to each treasury, and has a final intended holding of 0%.</p>
+          <code class="wallet-address">3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2</code>
+          <button class="copy-button copy-button-light" type="button" data-copy="3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2" aria-label="Copy dev deployer wallet address">
             <span aria-hidden="true">[ + ]</span> Copy address
           </button>
         </article>
+
+        <article class="wallet-card">
+          <div class="wallet-card-top">
+            <span class="wallet-label">Wallet 03</span>
+            <span class="permission-tag">Final 1%</span>
+          </div>
+          <h3>Operational Treasury</h3>
+          <p>Final holding: 1%. Planned 90-day treasury lock after launch. FRP is not deployed, so this treasury is not locked yet.</p>
+          <code class="wallet-address">8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn</code>
+          <button class="copy-button" type="button" data-copy="8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn" aria-label="Copy operational treasury wallet address">
+            <span aria-hidden="true">[ + ]</span> Copy address
+          </button>
+        </article>
+
+        <article class="wallet-card wallet-card-invert">
+          <div class="wallet-card-top">
+            <span class="wallet-label">Wallet 04</span>
+            <span class="permission-tag">Final 1%</span>
+          </div>
+          <h3>Secondary Treasury</h3>
+          <p>Final holding: 1%. Planned 90-day treasury lock after launch. FRP is not deployed, so this treasury is not locked yet.</p>
+          <code class="wallet-address">9auPy6qFFd41jirxw1Qo4BaZdEzo5EYyc52tQDZrJvQk</code>
+          <button class="copy-button copy-button-light" type="button" data-copy="9auPy6qFFd41jirxw1Qo4BaZdEzo5EYyc52tQDZrJvQk" aria-label="Copy secondary treasury wallet address">
+            <span aria-hidden="true">[ + ]</span> Copy address
+          </button>
+        </article>
+      </div>
+
+      <div class="allocation-disclosure" aria-labelledby="allocation-title">
+        <div class="allocation-heading">
+          <p class="kicker">Final allocation / every percent accounted for</p>
+          <h3 id="allocation-title">3% PROJECT-CONTROLLED.<br>97% PUBLIC.</h3>
+          <p>There are three final project-controlled allocation buckets. The separate deployer/transit wallet has a final intended holding of 0%.</p>
+        </div>
+        <dl class="allocation-list">
+          <div><dt>Personal</dt><dd>1%</dd></div>
+          <div><dt>Operational Treasury</dt><dd>1%</dd></div>
+          <div><dt>Secondary Treasury</dt><dd>1%</dd></div>
+          <div><dt>Public</dt><dd>97%</dd></div>
+          <div class="allocation-total"><dt>Total</dt><dd>100%</dd></div>
+        </dl>
+        <p class="allocation-equation">1% + 1% + 1% + 97% = 100%</p>
       </div>
       <p class="copy-status" role="status" aria-live="polite"></p>
     </section>
@@ -160,7 +202,7 @@
           <h2 id="launch-title">PLANNED.<br>NOT FINAL.</h2>
           <div class="warning-note">
             <strong>Check again before deployment.</strong>
-            These listed launch settings are the current plan only and must be re-verified before any token is created. The separately stated 2% creator beneficial-ownership cap is already finalized and locked; its compliance, not the rule itself, must be verified before and after launch.
+            These listed launch settings are the current plan only and must be re-verified before any token is created. The final allocation model is 1% Personal, 1% Operational Treasury, 1% Secondary Treasury, and 97% Public. The deployer is transit only and has a final intended holding of 0%.
           </div>
         </div>
         <dl class="settings-list">
@@ -171,6 +213,8 @@
           <div><dt>Mayhem Mode</dt><dd>Off</dd></div>
           <div><dt>Standard supply target</dt><dd>≈ 1,000,000,000 FRP</dd></div>
           <div><dt>Mining</dt><dd>None</dd></div>
+          <div><dt>Operational Treasury lock</dt><dd>Planned 90 days after launch</dd></div>
+          <div><dt>Secondary Treasury lock</dt><dd>Planned 90 days after launch</dd></div>
           <div><dt>Deployment status</dt><dd class="status-red">Not deployed</dd></div>
         </dl>
       </div>

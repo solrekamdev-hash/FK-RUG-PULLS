@@ -8,20 +8,27 @@
   "deploymentStatus": "NOT_DEPLOYED",
   "officialMintAddress": null,
   "allocationStructure": {
-    "status": "FINALIZED_LOCKED",
+    "status": "FINALIZED",
     "personalTradingWalletMaximumPercentOfTotalFrpSupply": 1,
-    "operationalTreasuryWalletMaximumPercentOfTotalFrpSupply": 1,
-    "devDeployerAndSecondaryTreasuryWalletMaximumPercentOfTotalFrpSupply": 1,
+    "operationalTreasuryWalletPercentOfTotalFrpSupply": 1,
+    "secondaryTreasuryWalletPercentOfTotalFrpSupply": 1,
     "projectControlledPercentOfTotalFrpSupply": 3,
     "publicPercentOfTotalFrpSupply": 97,
     "totalPercentOfTotalFrpSupply": 100,
-    "deployerAndSecondaryTreasuryAreOneWallet": true,
-    "additionalAllocationForSecondaryTreasuryRole": false,
+    "finalProjectControlledAllocationBucketCount": 3,
+    "deployerIsFinalAllocationBucket": false,
+    "deployerFinalIntendedPercentOfTotalFrpSupply": 0,
     "requiresRedecisionBeforeDeployment": false,
     "complianceVerificationRequired": [
       "BEFORE_LAUNCH",
       "AFTER_LAUNCH"
     ]
+  },
+  "launchTransitProcess": {
+    "deployerTemporarilyAcquiresPercentOfTotalFrpSupply": 2,
+    "operationalTreasuryTransferPercentOfTotalFrpSupply": 1,
+    "secondaryTreasuryTransferPercentOfTotalFrpSupply": 1,
+    "deployerFinalIntendedPercentOfTotalFrpSupply": 0
   },
   "socialLinks": {
     "tokenX": "https://x.com/FKRUGPULLS",
@@ -40,7 +47,12 @@
       "ticker": "FRP",
       "approximate": true
     },
-    "mining": false
+    "mining": false,
+    "treasuryLocks": {
+      "status": "PLANNED_AFTER_LAUNCH",
+      "operationalTreasuryDurationDays": 90,
+      "secondaryTreasuryDurationDays": 90
+    }
   },
   "wallets": {
     "personalTrading": {
@@ -48,22 +60,33 @@
       "purpose": "Published wallet for personal FRP activity.",
       "maximumPercentOfTotalFrpSupply": 1
     },
+    "devDeployer": {
+      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
+      "purpose": "Deployer and transit wallet. It temporarily acquires 2%, then transfers 1% to each treasury.",
+      "temporaryAcquisitionPercentOfTotalFrpSupply": 2,
+      "finalIntendedPercentOfTotalFrpSupply": 0,
+      "isFinalAllocationBucket": false,
+      "mayPerformNormalPersonalTrading": false
+    },
     "operationalTreasury": {
       "address": "8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn",
       "purpose": "Primary wallet for project operations and treasury activity.",
-      "maximumPercentOfTotalFrpSupply": 1
+      "finalPercentOfTotalFrpSupply": 1,
+      "lockStatus": "PLANNED_AFTER_LAUNCH",
+      "plannedLockDurationDays": 90
     },
-    "devDeployerAndSecondaryTreasury": {
-      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
-      "purpose": "Creates the token at an authorized launch and also serves as the secondary treasury; these are two roles of one wallet and one allocation bucket.",
-      "maximumPercentOfTotalFrpSupply": 1,
-      "singleWalletForBothRoles": true,
-      "additionalAllocationForSecondaryTreasuryRole": false,
-      "mayPerformNormalPersonalTrading": false
+    "secondaryTreasury": {
+      "address": "9auPy6qFFd41jirxw1Qo4BaZdEzo5EYyc52tQDZrJvQk",
+      "purpose": "Secondary treasury wallet, distinct from the deployer and operational treasury wallets.",
+      "finalPercentOfTotalFrpSupply": 1,
+      "lockStatus": "PLANNED_AFTER_LAUNCH",
+      "plannedLockDurationDays": 90
     }
   },
   "allocationRules": {
-    "projectWalletCount": 3,
+    "disclosedProjectWalletCount": 4,
+    "finalProjectControlledAllocationBucketCount": 3,
+    "treasuryWalletsAreDistinct": true,
     "projectUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false,
     "presale": false
   }

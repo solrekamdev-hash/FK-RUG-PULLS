@@ -46,27 +46,38 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 
 - Inspect `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn`.
 - Record all FRP token accounts and balances connected to it.
-- Confirm the wallet never exceeds 1% of total FRP supply.
+- Confirm its final holding is 1% of total FRP supply.
+- Verify the planned 90-day lock after launch from direct on-chain evidence before describing the treasury as locked.
 - Review treasury receipts, transfers, and linked accounts for evidence of undeclared control.
 
-## 8. Dev/deployer + secondary treasury wallet holdings
+## 8. Dev/deployer transit wallet holdings
 
 - Inspect `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2`.
-- Confirm this same address signed the creation transaction and serves as the secondary treasury.
+- Confirm this same address signed the creation transaction.
 - Record all FRP token accounts and balances connected to it.
-- Confirm the wallet never exceeds 1% of total FRP supply.
-- Confirm no separate allocation was added for its secondary-treasury role.
+- Confirm it temporarily acquired 2% of total FRP supply.
+- Confirm it transferred 1% to the Operational Treasury and 1% to the Secondary Treasury.
+- Confirm its final holding is 0% and that it is not a final allocation bucket.
 
-## 9. Allocation structure
+## 9. Secondary treasury wallet holdings
 
-- Confirm exactly three project wallets are documented and inspect all three addresses character by character.
-- Confirm the dev/deployer and secondary treasury are one shared wallet and one shared allocation bucket.
-- Confirm each project-controlled wallet is capped at 1% of total FRP supply.
+- Inspect `9auPy6qFFd41jirxw1Qo4BaZdEzo5EYyc52tQDZrJvQk`.
+- Record all FRP token accounts and balances connected to it.
+- Confirm its final holding is 1% of total FRP supply.
+- Verify the planned 90-day lock after launch from direct on-chain evidence before describing the treasury as locked.
+- Confirm this address is distinct from the Operational Treasury and dev/deployer addresses.
+
+## 10. Allocation structure
+
+- Confirm four project wallets are documented and inspect all four addresses character by character.
+- Confirm the Operational Treasury and Secondary Treasury are distinct wallets.
+- Confirm the dev/deployer is a transit wallet and not a fourth final allocation bucket.
+- Confirm the three final project-controlled allocation buckets: Personal maximum 1%, Operational Treasury 1%, and Secondary Treasury 1%.
 - Confirm project-controlled allocation totals 3% and public allocation is 97%.
 - Confirm the complete calculation is 1% + 1% + 1% + 97% = 100%.
 - Confirm the project has not used or controlled any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control a project allocation.
 
-## 10. Pump.fun configuration
+## 11. Pump.fun configuration
 
 - Confirm the token was created through the expected Pump.fun flow.
 - Verify pair: SOL.
@@ -75,7 +86,7 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 - Confirm there was no presale.
 - Save public evidence for every configuration claim.
 
-## 11. Creation transaction
+## 12. Creation transaction
 
 - Publish a direct link to the creation transaction.
 - Record the signer, timestamp, slot, instructions, fees, and resulting accounts.
@@ -93,7 +104,8 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 | Token program | Pending deployment | — | — |
 | Personal/trading wallet holdings | Pending deployment | — | — |
 | Operational treasury wallet holdings | Pending deployment | — | — |
-| Dev/deployer + secondary treasury wallet holdings | Pending deployment | — | — |
+| Dev/deployer transit wallet holdings | Pending deployment | — | — |
+| Secondary treasury wallet holdings | Pending deployment | — | — |
 | Allocation structure | Pending deployment | — | — |
 | Pump.fun configuration | Pending deployment | — | — |
 | Creation transaction | Pending deployment | — | — |

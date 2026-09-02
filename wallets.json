@@ -4,10 +4,11 @@
   "network": "Solana",
   "deploymentStatus": "NOT_DEPLOYED",
   "allocationStructure": {
-    "status": "FINALIZED_LOCKED",
+    "status": "FINALIZED",
     "projectControlledPercentOfTotalFrpSupply": 3,
     "publicPercentOfTotalFrpSupply": 97,
     "totalPercentOfTotalFrpSupply": 100,
+    "finalProjectControlledAllocationBucketCount": 3,
     "requiresRedecisionBeforeDeployment": false,
     "complianceVerificationRequired": [
       "BEFORE_LAUNCH",
@@ -21,14 +22,17 @@
       },
       {
         "role": "Operational treasury wallet",
-        "maximumPercentOfTotalFrpSupply": 1,
-        "projectControlled": true
+        "percentOfTotalFrpSupply": 1,
+        "projectControlled": true,
+        "lockStatus": "PLANNED_AFTER_LAUNCH",
+        "plannedLockDurationDays": 90
       },
       {
-        "role": "Dev/deployer wallet and secondary treasury",
-        "maximumPercentOfTotalFrpSupply": 1,
+        "role": "Secondary treasury wallet",
+        "percentOfTotalFrpSupply": 1,
         "projectControlled": true,
-        "singleWalletForBothRoles": true
+        "lockStatus": "PLANNED_AFTER_LAUNCH",
+        "plannedLockDurationDays": 90
       },
       {
         "role": "Public",
@@ -36,6 +40,20 @@
         "projectControlled": false
       }
     ]
+  },
+  "launchTransitProcess": {
+    "deployerTemporarilyAcquiresPercentOfTotalFrpSupply": 2,
+    "transfers": [
+      {
+        "destination": "Operational treasury wallet",
+        "percentOfTotalFrpSupply": 1
+      },
+      {
+        "destination": "Secondary treasury wallet",
+        "percentOfTotalFrpSupply": 1
+      }
+    ],
+    "deployerFinalIntendedPercentOfTotalFrpSupply": 0
   },
   "wallets": [
     {
@@ -50,32 +68,49 @@
       }
     },
     {
+      "label": "Dev/deployer wallet",
+      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
+      "purpose": "Deployer and transit wallet for an authorized launch. It temporarily acquires 2%, transfers 1% to each treasury, and is intended to hold 0% after those transfers.",
+      "temporaryAcquisitionPercentOfTotalFrpSupply": 2,
+      "finalIntendedPercentOfTotalFrpSupply": 0,
+      "isFinalAllocationBucket": false,
+      "permissions": {
+        "mayCreateToken": true,
+        "mayPerformLaunchTransfers": true,
+        "mayPerformNormalPersonalTrading": false
+      }
+    },
+    {
       "label": "Operational treasury wallet",
       "address": "8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn",
       "purpose": "The published primary wallet for project operations and treasury activity.",
-      "maximumPercentOfTotalFrpSupply": 1,
+      "finalPercentOfTotalFrpSupply": 1,
+      "lockStatus": "PLANNED_AFTER_LAUNCH",
+      "plannedLockDurationDays": 90,
       "permissions": {
         "mayCreateToken": false,
         "mayFundProjectOperations": true
       }
     },
     {
-      "label": "Dev/deployer wallet and secondary treasury",
-      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
-      "purpose": "Creates the token at an authorized launch and also serves as the secondary treasury.",
-      "maximumPercentOfTotalFrpSupply": 1,
-      "singleWalletForBothRoles": true,
-      "additionalAllocationForSecondaryTreasuryRole": false,
+      "label": "Secondary treasury wallet",
+      "address": "9auPy6qFFd41jirxw1Qo4BaZdEzo5EYyc52tQDZrJvQk",
+      "purpose": "The published secondary treasury wallet, distinct from the deployer and operational treasury wallets.",
+      "finalPercentOfTotalFrpSupply": 1,
+      "lockStatus": "PLANNED_AFTER_LAUNCH",
+      "plannedLockDurationDays": 90,
       "permissions": {
-        "mayCreateToken": true,
-        "mayFundProjectOperations": true,
-        "mayPerformNormalPersonalTrading": false
+        "mayCreateToken": false,
+        "mayFundProjectOperations": true
       }
     }
   ],
   "rules": {
-    "projectWalletCount": 3,
-    "deployerAndSecondaryTreasuryAreOneWallet": true,
+    "disclosedProjectWalletCount": 4,
+    "finalProjectControlledAllocationBucketCount": 3,
+    "deployerIsFinalAllocationBucket": false,
+    "deployerFinalIntendedPercentOfTotalFrpSupply": 0,
+    "treasuryWalletsAreDistinct": true,
     "projectUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false,
     "presale": false
   }

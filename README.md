@@ -26,12 +26,13 @@ Open `index.html` directly, or serve the folder with any static web server. All 
 | Role | Address | Permission |
 | --- | --- | --- |
 | Personal/trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for personal FRP activity; capped at 1% of total FRP supply |
-| Operational treasury | `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn` | Primary project operations and treasury wallet; capped at 1% of total FRP supply |
-| Dev/deployer + secondary treasury | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token and also serves as the secondary treasury; capped at 1% of total FRP supply |
+| Dev/deployer | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Deployer/transit wallet; temporarily acquires 2%, transfers 1% to each treasury, and has a final intended holding of 0% |
+| Operational treasury | `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn` | Final 1% allocation; planned 90-day treasury lock after launch |
+| Secondary treasury | `9auPy6qFFd41jirxw1Qo4BaZdEzo5EYyc52tQDZrJvQk` | Final 1% allocation; planned 90-day treasury lock after launch |
 
 The same addresses and rules are recorded in [`wallets.json`](wallets.json) and [`launch-manifest.json`](launch-manifest.json).
 
-There are exactly three project wallets. The dev/deployer and secondary treasury are two roles performed by the same wallet, not separate wallets or allocation buckets. The secondary-treasury role receives no allocation beyond that wallet's 1% cap.
+Four project wallets are disclosed. The dev/deployer is a transit wallet, not a fourth final allocation bucket. After it transfers 1% to the Operational Treasury and 1% to the distinct Secondary Treasury, its final intended holding is 0%. The three final project-controlled allocation buckets are Personal, Operational Treasury, and Secondary Treasury.
 
 The project must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control a project allocation. Personal FRP activity is intended to occur through the published personal/trading wallet.
 
@@ -40,12 +41,12 @@ The project must not use or control any undeclared wallet, account, custodian, n
 | Allocation bucket | Finalized share or cap |
 | --- | ---: |
 | Personal/trading wallet | Maximum 1% |
-| Operational treasury wallet | Maximum 1% |
-| Dev/deployer + secondary treasury wallet | Maximum 1% |
+| Operational treasury wallet | 1% |
+| Secondary treasury wallet | 1% |
 | Public | 97% |
 | **Total** | **100%** |
 
-Project-controlled allocation totals exactly 3%. Public allocation is 97%. This structure does not need to be re-decided before deployment, but compliance must still be verified before deployment and after launch. Only this allocation structure is finalized; the other launch settings below remain planned.
+Final allocation is 1% Personal + 1% Operational Treasury + 1% Secondary Treasury + 97% Public = 100%. Project-controlled allocation totals exactly 3%. The dev/deployer has no permanent allocation and a final intended holding of 0%. This structure does not need to be re-decided before deployment, but compliance must still be verified before deployment and after launch. Only this allocation structure is finalized; the other launch settings below remain planned.
 
 ## Planned launch settings
 
@@ -60,6 +61,8 @@ These are plans, not deployed facts, and **must be checked again before deployme
 | Mayhem Mode | OFF |
 | Standard supply target | Approximately 1,000,000,000 FRP |
 | Mining | None |
+| Operational Treasury lock | Planned 90-day treasury lock after launch |
+| Secondary Treasury lock | Planned 90-day treasury lock after launch |
 
 Deployment is not authorized by this repository or by completing its checklists.
 
