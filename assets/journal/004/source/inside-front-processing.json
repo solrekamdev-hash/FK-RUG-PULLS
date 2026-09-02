@@ -1,0 +1,38 @@
+{
+  "source": "assets/journal/004/source/inside-front-imagegen-rgb.png",
+  "source_sha256": "c260794f92373501eaf96daaf9447113a22f2bc8dd9493cfb20c130c5c1fe588",
+  "source_size": [
+    973,
+    1616
+  ],
+  "source_mode": "RGB",
+  "output": "assets/journal/004/inside-front.png",
+  "output_sha256": "0ed4707a2c446939619a4ea0aaf4960272a7473863b4ef6947e569f784aa5bb4",
+  "output_size": [
+    924,
+    1534
+  ],
+  "output_mode": "RGBA",
+  "content_size": [
+    850,
+    1412
+  ],
+  "content_offset": [
+    37,
+    61
+  ],
+  "alpha_bbox": [
+    86,
+    98,
+    829,
+    1440
+  ],
+  "edge_clearance_px": {
+    "left": 86,
+    "top": 98,
+    "right": 95,
+    "bottom": 94
+  },
+  "nonzero_alpha_fraction": 0.08237,
+  "paper_background_baked": false
+}

@@ -1,0 +1,38 @@
+{
+  "source": "assets/journal/004/source/page-01-imagegen-rgb.png",
+  "source_sha256": "04116073eba46d20d5d2e3ba938eee3a7d7f4ba138f4db06b4b1dce82a91ca1b",
+  "source_size": [
+    973,
+    1616
+  ],
+  "source_mode": "RGB",
+  "output": "assets/journal/004/artwork/page-01.png",
+  "output_sha256": "577c6f1171503b830cb9ff33b3aaedb79e2776b4da4f12cbed50daa4d50fc213",
+  "output_size": [
+    924,
+    1534
+  ],
+  "output_mode": "RGBA",
+  "content_size": [
+    850,
+    1412
+  ],
+  "content_offset": [
+    37,
+    61
+  ],
+  "alpha_bbox": [
+    78,
+    89,
+    862,
+    1441
+  ],
+  "edge_clearance_px": {
+    "left": 78,
+    "top": 89,
+    "right": 62,
+    "bottom": 93
+  },
+  "nonzero_alpha_fraction": 0.079842,
+  "paper_background_baked": false
+}
