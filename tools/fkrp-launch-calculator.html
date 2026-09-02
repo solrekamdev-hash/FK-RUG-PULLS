@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="description" content="A local-only FK RUG PULLS launch allocation calculator and manual verification record.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; connect-src 'none'">
+  <title>FK RUG PULLS — Launch Calculator / Checker</title>
+  <style>
+    :root {
+      --ink: #0a0a0a;
+      --paper: #f0eee7;
+      --paper-light: #fffefa;
+      --white: #fff;
+      --red: #d31313;
+      --green: #176b3a;
+      --amber: #8a5700;
+      --muted: #66625b;
+      --rule: rgba(10, 10, 10, .22);
+      --shadow: 8px 10px 0 rgba(10, 10, 10, .12);
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(0deg, transparent 0, transparent 4px, rgba(0, 0, 0, .018) 5px),
+        var(--paper);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    code, .mono, input, textarea, output { font-family: "Courier New", Courier, monospace; }
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 1rem;
+      left: 1rem;
+      padding: .75rem 1rem;
+      color: var(--white);
+      background: var(--ink);
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .masthead {
+      padding: 1rem max(1rem, calc((100vw - var(--max)) / 2));
+      color: var(--white);
+      background: var(--ink);
+      border-bottom: 8px solid var(--red);
+    }
+    .masthead-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 52px;
+    }
+    .wordmark {
+      margin: 0;
+      font: 900 1.25rem/1 "Arial Black", Impact, sans-serif;
+      letter-spacing: -.05em;
+    }
+    .wordmark span { color: var(--red); }
+    .case-label {
+      color: #bcbcbc;
+      font: 700 .68rem/1.3 "Courier New", monospace;
+      text-align: right;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+    }
+    .warning-banner {
+      padding: clamp(1.4rem, 4vw, 2.4rem) max(1rem, calc((100vw - var(--max)) / 2));
+      color: var(--white);
+      background: var(--red);
+    }
+    .warning-banner p {
+      max-width: var(--max);
+      margin: 0;
+      font: 900 clamp(1.6rem, 4vw, 3.3rem)/.98 "Arial Black", Impact, sans-serif;
+      letter-spacing: -.045em;
+      text-transform: uppercase;
+    }
+    .warning-banner small {
+      display: block;
+      margin-top: .9rem;
+      font: 700 .78rem/1.5 "Courier New", monospace;
+      letter-spacing: .04em;
+    }
+    main {
+      width: min(calc(100% - 2rem), var(--max));
+      margin: 0 auto;
+      padding: clamp(2rem, 5vw, 4.5rem) 0 5rem;
+    }
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      gap: clamp(2rem, 6vw, 5rem);
+      align-items: end;
+      margin-bottom: 2.2rem;
+    }
+    h1, h2, h3 { text-transform: uppercase; }
+    h1 {
+      margin: 0;
+      font: 900 clamp(3.2rem, 8vw, 7.4rem)/.78 "Arial Black", Impact, sans-serif;
+      letter-spacing: -.075em;
+    }
+    .intro-copy {
+      margin: 0;
+      color: var(--muted);
+      font: 700 .9rem/1.65 "Courier New", monospace;
+    }
+    .intro-copy strong { color: var(--ink); }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.25rem;
+    }
+    .card {
+      grid-column: span 6;
+      padding: clamp(1.25rem, 3vw, 2rem);
+      background: var(--paper-light);
+      border: 2px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+    .card-wide { grid-column: 1 / -1; }
+    .card-dark {
+      color: var(--white);
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+    .card-number {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.6rem;
+      padding-bottom: .65rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--rule);
+      font: 700 .65rem/1 "Courier New", monospace;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .card-dark .card-number { color: #aaa; border-color: #3e3e3e; }
+    h2 {
+      margin: 0 0 .65rem;
+      font: 900 clamp(1.55rem, 3vw, 2.4rem)/.95 "Arial Black", Impact, sans-serif;
+      letter-spacing: -.045em;
+    }
+    h3 {
+      margin: 1.5rem 0 .6rem;
+      font: 900 .9rem/1.15 "Arial Black", sans-serif;
+      letter-spacing: .02em;
+    }
+    .card-deck {
+      margin: 0 0 1.4rem;
+      color: var(--muted);
+      font: 700 .78rem/1.55 "Courier New", monospace;
+    }
+    .card-dark .card-deck { color: #bdbdbd; }
+    .field { margin-top: 1rem; }
+    label, .field-label {
+      display: block;
+      margin-bottom: .45rem;
+      font: 900 .72rem/1.3 "Arial Black", sans-serif;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: .86rem .9rem;
+      color: var(--ink);
+      background: var(--white);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+    input[type="text"]:focus, textarea:focus, button:focus-visible, input[type="checkbox"]:focus-visible {
+      outline: 4px solid rgba(211, 19, 19, .28);
+      outline-offset: 2px;
+    }
+    .card-dark input[type="text"] { border-color: var(--white); }
+    .field-hint {
+      display: block;
+      margin-top: .4rem;
+      color: var(--muted);
+      font: 400 .7rem/1.45 "Courier New", monospace;
+    }
+    .card-dark .field-hint { color: #aaa; }
+    .target-grid, .result-grid, .final-grid, .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .75rem;
+    }
+    .target-grid { margin-top: 1.4rem; }
+    .result-grid { margin-top: 1.2rem; }
+    .datum {
+      min-width: 0;
+      padding: .9rem;
+      background: rgba(10, 10, 10, .045);
+      border-left: 5px solid var(--ink);
+    }
+    .card-dark .datum { background: #181818; border-color: var(--red); }
+    .datum dt {
+      margin: 0 0 .45rem;
+      color: var(--muted);
+      font: 700 .65rem/1.2 "Courier New", monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .card-dark .datum dt { color: #aaa; }
+    .datum dd {
+      min-height: 1.2em;
+      margin: 0;
+      overflow-wrap: anywhere;
+      font: 700 clamp(.84rem, 1.8vw, 1.05rem)/1.3 "Courier New", monospace;
+    }
+    .status {
+      margin: 1.2rem 0 0;
+      padding: .9rem 1rem;
+      border: 2px solid currentColor;
+      font: 900 .8rem/1.45 "Arial Black", sans-serif;
+      letter-spacing: .035em;
+      text-transform: uppercase;
+    }
+    .status[data-state="waiting"] { color: var(--muted); }
+    .card-dark .status[data-state="waiting"] { color: #aaa; }
+    .status[data-state="pass"] { color: var(--green); background: #edf8f1; }
+    .status[data-state="warn"] { color: var(--amber); background: #fff6e5; }
+    .status[data-state="stop"] { color: var(--white); background: var(--red); border-color: var(--red); }
+    .card-dark .status[data-state="pass"] { color: var(--white); background: var(--green); border-color: #4ba16e; }
+    .card-dark .status[data-state="warn"] { color: #ffd58b; background: #392600; border-color: #b87912; }
+    .card-dark .status[data-state="stop"] { color: var(--white); background: var(--red); }
+    .wallet-strip {
+      margin-top: 1.3rem;
+      padding: .9rem;
+      background: rgba(10, 10, 10, .05);
+      border: 1px solid var(--rule);
+    }
+    .wallet-strip strong {
+      display: block;
+      margin-bottom: .35rem;
+      font: 900 .68rem/1 "Arial Black", sans-serif;
+      text-transform: uppercase;
+    }
+    .wallet-strip code {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: .72rem;
+      line-height: 1.45;
+    }
+    .final-grid { margin: 1.4rem 0; }
+    .balance-panel {
+      padding: 1rem;
+      border: 1px solid var(--rule);
+      background: rgba(10, 10, 10, .035);
+    }
+    .balance-panel .field { margin-top: 0; }
+    .balance-result {
+      display: block;
+      margin-top: .65rem;
+      min-height: 1.4em;
+      color: var(--muted);
+      font: 700 .74rem/1.4 "Courier New", monospace;
+    }
+    .balance-result[data-state="pass"] { color: var(--green); }
+    .balance-result[data-state="stop"] { color: var(--red); font-weight: 900; }
+    .allocation-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .75rem;
+      margin-top: 1rem;
+    }
+    .checklist {
+      display: grid;
+      gap: .85rem;
+      margin-top: 1.4rem;
+    }
+    .check-row {
+      display: grid;
+      grid-template-columns: 1.45rem 1fr;
+      gap: .8rem;
+      align-items: start;
+      padding: 1rem;
+      color: var(--ink);
+      background: var(--paper-light);
+      border: 2px solid var(--white);
+    }
+    .check-row label { margin: .08rem 0 0; cursor: pointer; }
+    input[type="checkbox"] {
+      width: 1.35rem;
+      height: 1.35rem;
+      margin: 0;
+      accent-color: var(--red);
+    }
+    .evidence-grid { margin-top: 1.5rem; }
+    .evidence-grid .field { margin-top: 0; }
+    .evidence-grid .field-wide { grid-column: 1 / -1; }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      align-items: center;
+      margin-top: 1.4rem;
+    }
+    .button {
+      min-height: 48px;
+      padding: .85rem 1.15rem;
+      color: var(--white);
+      background: var(--red);
+      border: 2px solid var(--red);
+      font: 900 .75rem/1 "Arial Black", sans-serif;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .button:hover { background: #ed1717; }
+    .copy-feedback {
+      min-height: 1.2em;
+      color: var(--muted);
+      font: 700 .72rem/1.4 "Courier New", monospace;
+    }
+    #summary-output {
+      min-height: 22rem;
+      margin-top: 1rem;
+      resize: vertical;
+      white-space: pre;
+      font-size: .76rem;
+      line-height: 1.5;
+    }
+    footer {
+      padding: 2rem max(1rem, calc((100vw - var(--max)) / 2));
+      color: #a9a9a9;
+      background: var(--ink);
+      border-top: 8px solid var(--red);
+      font: 700 .7rem/1.55 "Courier New", monospace;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    footer strong { color: var(--white); }
+    .noscript {
+      margin: 1rem;
+      padding: 1rem;
+      color: var(--white);
+      background: var(--red);
+      font-weight: 900;
+    }
+
+    @media (max-width: 800px) {
+      .intro { grid-template-columns: 1fr; }
+      .card { grid-column: 1 / -1; }
+      .final-grid, .evidence-grid { grid-template-columns: 1fr; }
+      .evidence-grid .field-wide { grid-column: auto; }
+    }
+    @media (max-width: 520px) {
+      .target-grid, .result-grid, .allocation-summary { grid-template-columns: 1fr; }
+      .masthead-row { align-items: flex-start; }
+      .case-label { max-width: 13rem; }
+      .card { padding: 1.1rem; box-shadow: 5px 6px 0 rgba(10, 10, 10, .12); }
+    }
+    @media print {
+      body { background: var(--white); }
+      .masthead, footer { color: var(--ink); background: var(--white); }
+      .warning-banner { color: var(--ink); background: var(--white); border: 5px solid var(--red); }
+      .button-row { display: none; }
+      .card { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#calculator">Skip to calculator</a>
+
+  <header class="masthead">
+    <div class="masthead-row">
+      <p class="wordmark">FRP<span>.</span></p>
+      <span class="case-label">Local launch arithmetic / case file 001</span>
+    </div>
+  </header>
+
+  <div class="warning-banner" role="alert">
+    <p>Calculator only — verify every number on-chain before acting.</p>
+    <small>No wallet connection. No signing. No transactions. No network calls. No claim of an actual lock or launch.</small>
+  </div>
+
+  <noscript><p class="noscript">JavaScript is required for local arithmetic. This file does not contact a network.</p></noscript>
+
+  <main id="calculator">
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">Launch<br>Checker</h1>
+      <p class="intro-copy"><strong>Use live on-chain numbers.</strong> This page calculates allocation arithmetic only. Amounts are handled as decimal integers with exact <code>BigInt</code> comparisons—never binary floating-point status checks.</p>
+    </section>
+
+    <div class="section-grid">
+      <section class="card card-wide" aria-labelledby="supply-title">
+        <div class="card-number"><span>01 / Source number</span><span>Required first</span></div>
+        <h2 id="supply-title">Actual total supply</h2>
+        <p class="card-deck">Enter the total token supply shown on-chain. Do not assume one billion.</p>
+        <div class="field">
+          <label for="total-supply">Total FRP supply</label>
+          <input class="numeric-input" id="total-supply" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Example: 1,000,000,000" aria-describedby="supply-hint supply-status">
+          <small class="field-hint" id="supply-hint">Non-negative decimal notation only; commas are allowed. Maximum 18 decimal places.</small>
+        </div>
+        <dl class="target-grid">
+          <div class="datum"><dt>Exact 1.00%</dt><dd><output id="target-100">—</output></dd></div>
+          <div class="datum"><dt>Exact 0.99%</dt><dd><output id="target-099">—</output></dd></div>
+          <div class="datum"><dt>Exact 2.00%</dt><dd><output id="target-200">—</output></dd></div>
+          <div class="datum"><dt>Exact 1.98%</dt><dd><output id="target-198">—</output></dd></div>
+        </dl>
+        <p class="status" id="supply-status" data-state="waiting" aria-live="polite">Waiting for actual total supply.</p>
+      </section>
+
+      <section class="card" aria-labelledby="dev-title">
+        <div class="card-number"><span>02 / Temporary holding</span><span>Target 1.98%–2.00%</span></div>
+        <h2 id="dev-title">Dev buy checker</h2>
+        <p class="card-deck">Check the Dev / Deployer balance immediately after the initial buy.</p>
+        <div class="field">
+          <label for="dev-buy-balance">Actual dev balance</label>
+          <input class="numeric-input" id="dev-buy-balance" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Enter live token balance" aria-describedby="dev-status">
+        </div>
+        <dl class="result-grid">
+          <div class="datum"><dt>Token balance</dt><dd><output id="dev-balance-output">—</output></dd></div>
+          <div class="datum"><dt>Supply percentage</dt><dd><output id="dev-percent-output">—</output></dd></div>
+        </dl>
+        <p class="status" id="dev-status" data-state="waiting" aria-live="polite">Enter supply and dev balance.</p>
+        <div class="wallet-strip"><strong>Dev / Deployer</strong><code>3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2</code></div>
+      </section>
+
+      <section class="card card-dark" aria-labelledby="transfer-title">
+        <div class="card-number"><span>03 / Transfer arithmetic</span><span>Dev remainder 0</span></div>
+        <h2 id="transfer-title">Treasury transfers</h2>
+        <p class="card-deck">Uses the dev balance above. A balance inside 1.98%–2.00% is split evenly; exactly 2.00% produces two exact 1.00% transfers.</p>
+        <dl class="result-grid">
+          <div class="datum"><dt>Operational transfer</dt><dd><output id="operational-transfer">—</output></dd></div>
+          <div class="datum"><dt>Secondary transfer</dt><dd><output id="secondary-transfer">—</output></dd></div>
+          <div class="datum"><dt>Expected dev remainder</dt><dd><output id="dev-remainder">—</output></dd></div>
+          <div class="datum"><dt>Minimum total required</dt><dd><output id="minimum-dev-required">—</output></dd></div>
+        </dl>
+        <p class="status" id="transfer-status" data-state="waiting" aria-live="polite">Enter supply and dev balance.</p>
+      </section>
+
+      <section class="card" aria-labelledby="personal-title">
+        <div class="card-number"><span>04 / Personal cap</span><span>Never above 1.00%</span></div>
+        <h2 id="personal-title">Personal wallet checker</h2>
+        <p class="card-deck">Check the published Personal / Trading wallet. Any amount above 1.00% is a hard stop.</p>
+        <div class="field">
+          <label for="personal-check-balance">Actual personal balance</label>
+          <input class="numeric-input" id="personal-check-balance" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Enter live token balance" aria-describedby="personal-status">
+        </div>
+        <dl class="result-grid">
+          <div class="datum"><dt>Token balance</dt><dd><output id="personal-balance-output">—</output></dd></div>
+          <div class="datum"><dt>Supply percentage</dt><dd><output id="personal-percent-output">—</output></dd></div>
+        </dl>
+        <p class="status" id="personal-status" data-state="waiting" aria-live="polite">Enter supply and personal balance.</p>
+        <div class="wallet-strip"><strong>Personal / Trading</strong><code>9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V</code></div>
+      </section>
+
+      <section class="card card-wide" aria-labelledby="final-title">
+        <div class="card-number"><span>05 / Final allocation</span><span>Check all four wallets</span></div>
+        <h2 id="final-title">Final balance check</h2>
+        <p class="card-deck">Enter balances only after the treasury transfers. Final dev must be exactly zero; each remaining project wallet must be 0.99%–1.00%.</p>
+        <div class="final-grid">
+          <div class="balance-panel">
+            <div class="field"><label for="final-dev">Dev final balance</label><input class="numeric-input final-input" id="final-dev" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Expected: 0"></div>
+            <output class="balance-result" id="final-dev-result" data-state="waiting">Waiting for balance.</output>
+          </div>
+          <div class="balance-panel">
+            <div class="field"><label for="final-personal">Personal balance</label><input class="numeric-input final-input" id="final-personal" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Target: 0.99%–1.00%"></div>
+            <output class="balance-result" id="final-personal-result" data-state="waiting">Waiting for balance.</output>
+          </div>
+          <div class="balance-panel">
+            <div class="field"><label for="final-operational">Operational Treasury balance</label><input class="numeric-input final-input" id="final-operational" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Target: 0.99%–1.00%"></div>
+            <output class="balance-result" id="final-operational-result" data-state="waiting">Waiting for balance.</output>
+          </div>
+          <div class="balance-panel">
+            <div class="field"><label for="final-secondary">Secondary Treasury balance</label><input class="numeric-input final-input" id="final-secondary" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Target: 0.99%–1.00%"></div>
+            <output class="balance-result" id="final-secondary-result" data-state="waiting">Waiting for balance.</output>
+          </div>
+        </div>
+        <dl class="allocation-summary">
+          <div class="datum"><dt>Combined project-controlled</dt><dd><output id="project-total">—</output></dd></div>
+          <div class="datum"><dt>Estimated public</dt><dd><output id="public-total">—</output></dd></div>
+        </dl>
+        <p class="status" id="allocation-status" data-state="waiting" aria-live="polite">Enter supply and all four final balances.</p>
+      </section>
+
+      <section class="card card-wide card-dark" aria-labelledby="lock-title">
+        <div class="card-number"><span>06 / Manual lock record</span><span>No automatic verification</span></div>
+        <h2 id="lock-title">Lock checklist</h2>
+        <p class="card-deck">Tick a box only after you personally verify the corresponding 90-day lock on-chain. A checkbox is a manual record, not proof created by this tool.</p>
+        <div class="checklist">
+          <div class="check-row"><input id="operational-lock" type="checkbox"><label for="operational-lock">Operational Treasury 90-day lock verified</label></div>
+          <div class="check-row"><input id="secondary-lock" type="checkbox"><label for="secondary-lock">Secondary Treasury 90-day lock verified</label></div>
+        </div>
+        <p class="status" id="verification-status" data-state="waiting" aria-live="assertive">Final verification blocked — allocation and both manual lock checks are required.</p>
+      </section>
+
+      <section class="card card-wide" aria-labelledby="evidence-title">
+        <div class="card-number"><span>07 / Evidence record</span><span>Manual entry only</span></div>
+        <h2 id="evidence-title">Launch evidence</h2>
+        <p class="card-deck">Paste public addresses, transaction signatures, and timestamps for the record. This page does not look them up, validate them, or save them.</p>
+        <div class="evidence-grid">
+          <div class="field field-wide"><label for="mint-address">Mint address</label><input id="mint-address" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="creation-transaction">Creation transaction signature</label><input id="creation-transaction" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="dev-buy-transaction">Dev buy transaction</label><input id="dev-buy-transaction" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="operational-transfer-transaction">Operational Treasury transfer transaction</label><input id="operational-transfer-transaction" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="secondary-transfer-transaction">Secondary Treasury transfer transaction</label><input id="secondary-transfer-transaction" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="personal-buy-transaction">Personal buy transaction</label><input id="personal-buy-transaction" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="operational-lock-transaction">Operational lock transaction</label><input id="operational-lock-transaction" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="secondary-lock-transaction">Secondary lock transaction</label><input id="secondary-lock-transaction" type="text" autocomplete="off" spellcheck="false"></div>
+          <div class="field"><label for="operational-unlock-timestamp">Operational unlock timestamp</label><input id="operational-unlock-timestamp" type="text" autocomplete="off" spellcheck="false" placeholder="Use timezone / UTC"></div>
+          <div class="field"><label for="secondary-unlock-timestamp">Secondary unlock timestamp</label><input id="secondary-unlock-timestamp" type="text" autocomplete="off" spellcheck="false" placeholder="Use timezone / UTC"></div>
+        </div>
+        <div class="button-row">
+          <button class="button" id="copy-summary" type="button">Copy summary</button>
+          <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
+        </div>
+        <label class="field-label" for="summary-output">Plain-text launch verification summary</label>
+        <textarea id="summary-output" readonly spellcheck="false" aria-label="Plain-text launch verification summary"></textarea>
+      </section>
+    </div>
+  </main>
+
+  <footer><strong>Don't trust the dev. Verify the dev.</strong> This local file performs arithmetic only. Always compare its output with live on-chain balances before acting.</footer>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const TEN = 10n;
+      const ZERO = Object.freeze({ n: 0n, d: 1n });
+
+      function gcd(a, b) {
+        a = a < 0n ? -a : a;
+        b = b < 0n ? -b : b;
+        while (b !== 0n) {
+          const next = a % b;
+          a = b;
+          b = next;
+        }
+        return a;
+      }
+
+      function rational(n, d = 1n) {
+        if (d === 0n) throw new Error("Division by zero.");
+        if (d < 0n) { n = -n; d = -d; }
+        if (n === 0n) return ZERO;
+        const divisor = gcd(n, d);
+        return { n: n / divisor, d: d / divisor };
+      }
+
+      function parseAmount(value) {
+        const cleaned = String(value).trim().replace(/[,_\s]/g, "");
+        if (!cleaned) return null;
+        if (!/^\d+(?:\.\d+)?$/.test(cleaned)) {
+          throw new Error("Use non-negative decimal digits only.");
+        }
+        const [whole, fraction = ""] = cleaned.split(".");
+        if (fraction.length > 18) throw new Error("Use no more than 18 decimal places.");
+        const denominator = TEN ** BigInt(fraction.length);
+        const numerator = BigInt(whole + fraction);
+        return rational(numerator, denominator);
+      }
+
+      function add(a, b) { return rational(a.n * b.d + b.n * a.d, a.d * b.d); }
+      function subtract(a, b) { return rational(a.n * b.d - b.n * a.d, a.d * b.d); }
+      function compare(a, b) {
+        const difference = a.n * b.d - b.n * a.d;
+        return difference < 0n ? -1 : difference > 0n ? 1 : 0;
+      }
+      function percentAmount(supply, basisPoints) {
+        return rational(supply.n * BigInt(basisPoints), supply.d * 10000n);
+      }
+      function compareBasisPoints(amount, supply, basisPoints) {
+        const left = amount.n * supply.d * 10000n;
+        const right = supply.n * amount.d * BigInt(basisPoints);
+        return left < right ? -1 : left > right ? 1 : 0;
+      }
+      function percentRatio(amount, supply) {
+        return rational(amount.n * supply.d * 100n, amount.d * supply.n);
+      }
+
+      function groupInteger(text) {
+        const sign = text.startsWith("-") ? "-" : "";
+        const digits = sign ? text.slice(1) : text;
+        return sign + digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function formatAmount(value, maxDecimals = 30) {
+        if (!value) return "—";
+        const negative = value.n < 0n;
+        let numerator = negative ? -value.n : value.n;
+        const whole = numerator / value.d;
+        let remainder = numerator % value.d;
+        let decimals = "";
+        let places = 0;
+        while (remainder !== 0n && places < maxDecimals) {
+          remainder *= TEN;
+          decimals += String(remainder / value.d);
+          remainder %= value.d;
+          places += 1;
+        }
+        decimals = decimals.replace(/0+$/, "");
+        const prefix = negative ? "-" : "";
+        return prefix + groupInteger(String(whole)) + (decimals ? "." + decimals : "") + (remainder ? "…" : "");
+      }
+
+      function formatPercent(amount, supply, places = 6) {
+        const value = percentRatio(amount, supply);
+        const negative = value.n < 0n;
+        const numerator = negative ? -value.n : value.n;
+        const scale = TEN ** BigInt(places);
+        let scaled = numerator * scale / value.d;
+        const remainder = numerator * scale % value.d;
+        if (remainder * 2n >= value.d) scaled += 1n;
+        const digits = String(scaled).padStart(places + 1, "0");
+        const split = digits.length - places;
+        return (negative ? "-" : "") + digits.slice(0, split) + "." + digits.slice(split) + "%";
+      }
+
+      function transferPlan(devBalance, supply) {
+        const minimumTotal = percentAmount(supply, 198);
+        const exactTwoPercent = percentAmount(supply, 200);
+        const exactOnePercent = percentAmount(supply, 100);
+        if (compare(devBalance, minimumTotal) < 0) {
+          return {
+            state: "insufficient",
+            operational: null,
+            secondary: null,
+            remainder: devBalance,
+            minimumTotal,
+            shortfall: subtract(minimumTotal, devBalance)
+          };
+        }
+        if (compare(devBalance, exactTwoPercent) <= 0) {
+          const half = rational(devBalance.n, devBalance.d * 2n);
+          return {
+            state: "pass",
+            operational: half,
+            secondary: half,
+            remainder: ZERO,
+            minimumTotal,
+            shortfall: ZERO
+          };
+        }
+        return {
+          state: "excess",
+          operational: exactOnePercent,
+          secondary: exactOnePercent,
+          remainder: subtract(devBalance, exactTwoPercent),
+          minimumTotal,
+          shortfall: ZERO
+        };
+      }
+
+      function isInBasisPointRange(amount, supply, minimumBasisPoints, maximumBasisPoints) {
+        return compareBasisPoints(amount, supply, minimumBasisPoints) >= 0 && compareBasisPoints(amount, supply, maximumBasisPoints) <= 0;
+      }
+
+      function finalAllocationCheck(balances, supply) {
+        const project = add(add(balances.dev, balances.personal), add(balances.operational, balances.secondary));
+        const publicAmount = subtract(supply, project);
+        const walletChecks = {
+          dev: balances.dev.n === 0n,
+          personal: isInBasisPointRange(balances.personal, supply, 99, 100),
+          operational: isInBasisPointRange(balances.operational, supply, 99, 100),
+          secondary: isInBasisPointRange(balances.secondary, supply, 99, 100)
+        };
+        const projectRange = isInBasisPointRange(project, supply, 297, 300);
+        const publicRange = isInBasisPointRange(publicAmount, supply, 9700, 9703);
+        return {
+          pass: Object.values(walletChecks).every(Boolean) && projectRange && publicRange,
+          walletChecks,
+          projectRange,
+          publicRange,
+          project,
+          publicAmount
+        };
+      }
+
+      function verificationReady(allocationChecksPass, operationalLockChecked, secondaryLockChecked) {
+        return Boolean(allocationChecksPass && operationalLockChecked && secondaryLockChecked);
+      }
+
+      const core = Object.freeze({
+        parseAmount,
+        rational,
+        add,
+        subtract,
+        compare,
+        percentAmount,
+        compareBasisPoints,
+        percentRatio,
+        formatAmount,
+        formatPercent,
+        transferPlan,
+        isInBasisPointRange,
+        finalAllocationCheck,
+        verificationReady
+      });
+      globalThis.FKRPCalculatorCore = core;
+      if (typeof document === "undefined") return;
+
+      const byId = (id) => document.getElementById(id);
+      let allocationPass = false;
+
+      function setText(id, value) { byId(id).textContent = value; }
+      function setStatus(id, state, text) {
+        const element = byId(id);
+        element.dataset.state = state;
+        element.textContent = text;
+      }
+      function readAmount(id) { return parseAmount(byId(id).value); }
+      function resetOutputs(ids) { ids.forEach((id) => setText(id, "—")); }
+      function inRange(amount, supply, minimumBasisPoints, maximumBasisPoints) {
+        return isInBasisPointRange(amount, supply, minimumBasisPoints, maximumBasisPoints);
+      }
+
+      function getSupply() {
+        const supply = readAmount("total-supply");
+        if (!supply) return null;
+        if (supply.n <= 0n) throw new Error("Total supply must be greater than zero.");
+        return supply;
+      }
+
+      function renderSupply(supply, error) {
+        if (error) {
+          resetOutputs(["target-100", "target-099", "target-200", "target-198"]);
+          setStatus("supply-status", "stop", "STOP — " + error.message);
+          return;
+        }
+        if (!supply) {
+          resetOutputs(["target-100", "target-099", "target-200", "target-198"]);
+          setStatus("supply-status", "waiting", "Waiting for actual total supply.");
+          return;
+        }
+        setText("target-100", formatAmount(percentAmount(supply, 100)));
+        setText("target-099", formatAmount(percentAmount(supply, 99)));
+        setText("target-200", formatAmount(percentAmount(supply, 200)));
+        setText("target-198", formatAmount(percentAmount(supply, 198)));
+        setStatus("supply-status", "pass", "Supply accepted for local calculation: " + formatAmount(supply) + " FRP.");
+      }
+
+      function renderDev(supply) {
+        resetOutputs(["dev-balance-output", "dev-percent-output"]);
+        if (!supply) {
+          setStatus("dev-status", "waiting", "Enter a valid supply first.");
+          return null;
+        }
+        try {
+          const balance = readAmount("dev-buy-balance");
+          if (!balance) {
+            setStatus("dev-status", "waiting", "Enter the actual dev balance.");
+            return null;
+          }
+          setText("dev-balance-output", formatAmount(balance));
+          setText("dev-percent-output", formatPercent(balance, supply));
+          if (compareBasisPoints(balance, supply, 198) < 0) {
+            setStatus("dev-status", "warn", "UNDERSHOOT — below 1.98%. Do not continue with treasury transfers.");
+          } else if (compareBasisPoints(balance, supply, 200) > 0) {
+            setStatus("dev-status", "stop", "OVERSHOOT — above 2.00%. Stop and verify the allocation.");
+          } else {
+            setStatus("dev-status", "pass", "PASS — dev balance is inside 1.98%–2.00%.");
+          }
+          return balance;
+        } catch (error) {
+          setStatus("dev-status", "stop", "STOP — " + error.message);
+          return null;
+        }
+      }
+
+      function renderTransfers(supply, devBalance) {
+        resetOutputs(["operational-transfer", "secondary-transfer", "dev-remainder", "minimum-dev-required"]);
+        if (!supply || !devBalance) {
+          setStatus("transfer-status", "waiting", "Enter a valid supply and dev balance.");
+          return;
+        }
+        const plan = transferPlan(devBalance, supply);
+        setText("minimum-dev-required", formatAmount(plan.minimumTotal));
+        if (plan.state === "insufficient") {
+          setStatus("transfer-status", "stop", "STOP — dev cannot fund both treasuries to at least 0.99%. Shortfall: " + formatAmount(plan.shortfall) + " FRP.");
+          return;
+        }
+        if (plan.state === "excess") {
+          setStatus("transfer-status", "stop", "STOP — dev is above 2.00%. No valid two-treasury transfer plan can use the full balance while keeping both treasuries at or below 1.00%. Excess: " + formatAmount(plan.remainder) + " FRP.");
+          return;
+        }
+        setText("operational-transfer", formatAmount(plan.operational));
+        setText("secondary-transfer", formatAmount(plan.secondary));
+        setText("dev-remainder", formatAmount(plan.remainder));
+        const targetNote = compareBasisPoints(devBalance, supply, 200) === 0
+          ? "Two exact 1.00% transfers; expected dev remainder is 0."
+          : "Even split keeps both treasuries inside 0.99%–1.00%; expected dev remainder is 0.";
+        setStatus("transfer-status", "pass", "PASS — " + targetNote);
+      }
+
+      function renderPersonal(supply) {
+        resetOutputs(["personal-balance-output", "personal-percent-output"]);
+        if (!supply) {
+          setStatus("personal-status", "waiting", "Enter a valid supply first.");
+          return;
+        }
+        try {
+          const balance = readAmount("personal-check-balance");
+          if (!balance) {
+            setStatus("personal-status", "waiting", "Enter the actual personal balance.");
+            return;
+          }
+          setText("personal-balance-output", formatAmount(balance));
+          setText("personal-percent-output", formatPercent(balance, supply));
+          if (compareBasisPoints(balance, supply, 99) < 0) {
+            setStatus("personal-status", "warn", "UNDERSHOOT — below 0.99%.");
+          } else if (compareBasisPoints(balance, supply, 100) > 0) {
+            setStatus("personal-status", "stop", "STOP / OVERSHOOT — personal wallet is above the absolute 1.00% cap.");
+          } else {
+            setStatus("personal-status", "pass", "PASS — personal balance is inside 0.99%–1.00%.");
+          }
+        } catch (error) {
+          setStatus("personal-status", "stop", "STOP — " + error.message);
+        }
+      }
+
+      function setBalanceResult(id, state, text) {
+        const output = byId(id);
+        output.dataset.state = state;
+        output.textContent = text;
+      }
+
+      function renderFinal(supply) {
+        allocationPass = false;
+        setText("project-total", "—");
+        setText("public-total", "—");
+        const definitions = [
+          { input: "final-dev", output: "final-dev-result", label: "Dev", kind: "zero" },
+          { input: "final-personal", output: "final-personal-result", label: "Personal", kind: "range" },
+          { input: "final-operational", output: "final-operational-result", label: "Operational", kind: "range" },
+          { input: "final-secondary", output: "final-secondary-result", label: "Secondary", kind: "range" }
+        ];
+        if (!supply) {
+          definitions.forEach((item) => setBalanceResult(item.output, "waiting", "Waiting for valid supply."));
+          setStatus("allocation-status", "waiting", "Enter a valid supply and all four final balances.");
+          return;
+        }
+        const values = [];
+        try {
+          for (const item of definitions) {
+            const value = readAmount(item.input);
+            if (!value) {
+              definitions.forEach((definition) => setBalanceResult(definition.output, "waiting", "Waiting for all four balances."));
+              setStatus("allocation-status", "waiting", "Enter all four final balances.");
+              return;
+            }
+            values.push({ ...item, value });
+          }
+        } catch (error) {
+          definitions.forEach((item) => setBalanceResult(item.output, "stop", "Check numeric input."));
+          setStatus("allocation-status", "stop", "STOP — " + error.message);
+          return;
+        }
+
+        const balances = {
+          dev: values[0].value,
+          personal: values[1].value,
+          operational: values[2].value,
+          secondary: values[3].value
+        };
+        const check = finalAllocationCheck(balances, supply);
+        for (const item of values) {
+          const percentage = formatPercent(item.value, supply);
+          const passes = item.kind === "zero" ? check.walletChecks.dev : check.walletChecks[item.label.toLowerCase()];
+          const expectation = item.kind === "zero" ? "must be exactly 0%" : "must be 0.99%–1.00%";
+          setBalanceResult(item.output, passes ? "pass" : "stop", (passes ? "PASS" : "STOP") + " — " + percentage + (passes ? "" : "; " + expectation + "."));
+        }
+
+        setText("project-total", formatAmount(check.project) + " / " + formatPercent(check.project, supply));
+        setText("public-total", formatAmount(check.publicAmount) + " / " + formatPercent(check.publicAmount, supply));
+        allocationPass = check.pass;
+        if (allocationPass) {
+          setStatus("allocation-status", "pass", "READY TO PROCEED TO LOCKING");
+        } else {
+          setStatus("allocation-status", "stop", "STOP — FIX ALLOCATION BEFORE LOCKING");
+        }
+      }
+
+      function renderLockStatus() {
+        const operationalLock = byId("operational-lock").checked;
+        const secondaryLock = byId("secondary-lock").checked;
+        if (verificationReady(allocationPass, operationalLock, secondaryLock)) {
+          setStatus("verification-status", "pass", "READY FOR FINAL ON-CHAIN VERIFICATION");
+        } else if (!allocationPass) {
+          setStatus("verification-status", "stop", "Final verification blocked — allocation checks must pass first.");
+        } else {
+          setStatus("verification-status", "warn", "Final verification blocked — manually verify and check both 90-day locks.");
+        }
+      }
+
+      function renderAll() {
+        let supply = null;
+        let supplyError = null;
+        try { supply = getSupply(); } catch (error) { supplyError = error; }
+        renderSupply(supply, supplyError);
+        const devBalance = supply ? renderDev(supply) : (renderDev(null), null);
+        renderTransfers(supply, devBalance);
+        renderPersonal(supply);
+        renderFinal(supply);
+        renderLockStatus();
+      }
+
+      function valueOrNotEntered(id) {
+        const value = byId(id).value.trim();
+        return value || "NOT ENTERED";
+      }
+
+      function statusText(id) { return byId(id).textContent.trim(); }
+
+      function buildSummary() {
+        renderAll();
+        const evidence = [
+          ["Mint address", "mint-address"],
+          ["Creation transaction signature", "creation-transaction"],
+          ["Dev buy transaction", "dev-buy-transaction"],
+          ["Operational Treasury transfer transaction", "operational-transfer-transaction"],
+          ["Secondary Treasury transfer transaction", "secondary-transfer-transaction"],
+          ["Personal buy transaction", "personal-buy-transaction"],
+          ["Operational lock transaction", "operational-lock-transaction"],
+          ["Secondary lock transaction", "secondary-lock-transaction"],
+          ["Operational unlock timestamp", "operational-unlock-timestamp"],
+          ["Secondary unlock timestamp", "secondary-unlock-timestamp"]
+        ];
+        const lines = [
+          "FK RUG PULLS — LAUNCH VERIFICATION SUMMARY",
+          "CALCULATOR ONLY — VERIFY EVERY NUMBER ON-CHAIN BEFORE ACTING.",
+          "",
+          "TOTAL SUPPLY",
+          "Actual total supply: " + valueOrNotEntered("total-supply"),
+          "Exact 1.00%: " + statusText("target-100"),
+          "Exact 0.99%: " + statusText("target-099"),
+          "Exact 2.00%: " + statusText("target-200"),
+          "Exact 1.98%: " + statusText("target-198"),
+          "",
+          "DEV BUY CHECK",
+          "Dev wallet: 3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
+          "Entered balance: " + valueOrNotEntered("dev-buy-balance"),
+          "Calculated percentage: " + statusText("dev-percent-output"),
+          "Result: " + statusText("dev-status"),
+          "",
+          "TREASURY TRANSFER CALCULATION",
+          "Operational wallet: 8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn",
+          "Suggested Operational transfer: " + statusText("operational-transfer"),
+          "Secondary wallet: 9auPy6qFFd41jirxw1Qo4BaZdEzo5EYyc52tQDZrJvQk",
+          "Suggested Secondary transfer: " + statusText("secondary-transfer"),
+          "Expected dev remainder: " + statusText("dev-remainder"),
+          "Result: " + statusText("transfer-status"),
+          "",
+          "PERSONAL WALLET CHECK",
+          "Personal wallet: 9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
+          "Entered balance: " + valueOrNotEntered("personal-check-balance"),
+          "Calculated percentage: " + statusText("personal-percent-output"),
+          "Result: " + statusText("personal-status"),
+          "",
+          "FINAL BALANCES",
+          "Dev: " + valueOrNotEntered("final-dev") + " / " + statusText("final-dev-result"),
+          "Personal: " + valueOrNotEntered("final-personal") + " / " + statusText("final-personal-result"),
+          "Operational Treasury: " + valueOrNotEntered("final-operational") + " / " + statusText("final-operational-result"),
+          "Secondary Treasury: " + valueOrNotEntered("final-secondary") + " / " + statusText("final-secondary-result"),
+          "Project-controlled total: " + statusText("project-total"),
+          "Estimated public total: " + statusText("public-total"),
+          "Allocation result: " + statusText("allocation-status"),
+          "",
+          "MANUAL LOCK CHECKLIST",
+          "Operational Treasury 90-day lock verified: " + (byId("operational-lock").checked ? "YES" : "NO"),
+          "Secondary Treasury 90-day lock verified: " + (byId("secondary-lock").checked ? "YES" : "NO"),
+          "Final verification status: " + statusText("verification-status"),
+          "",
+          "EVIDENCE"
+        ];
+        evidence.forEach(([label, id]) => lines.push(label + ": " + valueOrNotEntered(id)));
+        lines.push("", "This summary is a manual record. It is not automatic on-chain verification and does not prove that any lock or transaction occurred.");
+        return lines.join("\n");
+      }
+
+      async function copySummary() {
+        const summary = buildSummary();
+        const output = byId("summary-output");
+        const feedback = byId("copy-feedback");
+        output.value = summary;
+        try {
+          if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("Clipboard API unavailable");
+          await navigator.clipboard.writeText(summary);
+          feedback.textContent = "Summary copied. Paste it into the launch record after checking every line.";
+        } catch (error) {
+          output.focus();
+          output.select();
+          let copied = false;
+          try { copied = document.execCommand("copy"); } catch (ignored) { copied = false; }
+          feedback.textContent = copied
+            ? "Summary copied. Paste it into the launch record after checking every line."
+            : "Clipboard access was blocked. The summary is selected below; press Command-C to copy it.";
+        }
+      }
+
+      document.querySelectorAll(".numeric-input").forEach((input) => input.addEventListener("input", renderAll));
+      byId("operational-lock").addEventListener("change", renderAll);
+      byId("secondary-lock").addEventListener("change", renderAll);
+      byId("copy-summary").addEventListener("click", copySummary);
+      renderAll();
+      byId("summary-output").value = buildSummary();
+    })();
+  </script>
+</body>
+</html>
