@@ -4,7 +4,7 @@
 >
 > There is no official FRP mint address yet.
 
-FK RUG PULLS is a pre-launch Solana memecoin project built around public creator wallets, visible rules, and post-deployment verification. This repository contains the static website, machine-readable launch information, and transparency documentation.
+FK RUG PULLS is a pre-launch Solana memecoin project built around public project wallets, visible allocation rules, and post-deployment verification. This repository contains the static website, machine-readable launch information, and transparency documentation.
 
 No token deployment, wallet connection, signing, or transaction code is included.
 
@@ -25,18 +25,27 @@ Open `index.html` directly, or serve the folder with any static web server. All 
 
 | Role | Address | Permission |
 | --- | --- | --- |
-| Deployer | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token; not used for normal creator trading |
-| Creator trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for creator FRP activity; total creator beneficial ownership must never exceed 2% of total FRP supply |
+| Personal/trading | `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V` | Published wallet for personal FRP activity; capped at 1% of total FRP supply |
+| Operational treasury | `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn` | Primary project operations and treasury wallet; capped at 1% of total FRP supply |
+| Dev/deployer + secondary treasury | `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2` | Creates the token and also serves as the secondary treasury; capped at 1% of total FRP supply |
 
 The same addresses and rules are recorded in [`wallets.json`](wallets.json) and [`launch-manifest.json`](launch-manifest.json).
 
-The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through the published creator trading wallet.
+There are exactly three project wallets. The dev/deployer and secondary treasury are two roles performed by the same wallet, not separate wallets or allocation buckets. The secondary-treasury role receives no allocation beyond that wallet's 1% cap.
 
-### Finalized creator beneficial-ownership cap
+The project must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control a project allocation. Personal FRP activity is intended to occur through the published personal/trading wallet.
 
-The creator beneficial-ownership cap is a finalized project rule, permanently locked at exactly 2% of total FRP supply. Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements must never exceed 2% of total FRP supply.
+### Finalized token allocation structure
 
-This specific cap does not need to be re-decided before deployment. Compliance must still be verified before deployment and after launch. Only this rule is finalized; the other launch settings below remain planned.
+| Allocation bucket | Finalized share or cap |
+| --- | ---: |
+| Personal/trading wallet | Maximum 1% |
+| Operational treasury wallet | Maximum 1% |
+| Dev/deployer + secondary treasury wallet | Maximum 1% |
+| Public | 97% |
+| **Total** | **100%** |
+
+Project-controlled allocation totals exactly 3%. Public allocation is 97%. This structure does not need to be re-decided before deployment, but compliance must still be verified before deployment and after launch. Only this allocation structure is finalized; the other launch settings below remain planned.
 
 ## Planned launch settings
 

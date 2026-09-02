@@ -3,44 +3,80 @@
   "ticker": "FRP",
   "network": "Solana",
   "deploymentStatus": "NOT_DEPLOYED",
-  "creatorBeneficialOwnershipCap": {
-    "maximumPercentOfTotalFrpSupply": 2,
+  "allocationStructure": {
     "status": "FINALIZED_LOCKED",
-    "scope": "Total creator beneficial ownership across all wallets, custodians, nominees, accounts, or other arrangements.",
+    "projectControlledPercentOfTotalFrpSupply": 3,
+    "publicPercentOfTotalFrpSupply": 97,
+    "totalPercentOfTotalFrpSupply": 100,
     "requiresRedecisionBeforeDeployment": false,
     "complianceVerificationRequired": [
       "BEFORE_LAUNCH",
       "AFTER_LAUNCH"
+    ],
+    "buckets": [
+      {
+        "role": "Personal/trading wallet",
+        "maximumPercentOfTotalFrpSupply": 1,
+        "projectControlled": true
+      },
+      {
+        "role": "Operational treasury wallet",
+        "maximumPercentOfTotalFrpSupply": 1,
+        "projectControlled": true
+      },
+      {
+        "role": "Dev/deployer wallet and secondary treasury",
+        "maximumPercentOfTotalFrpSupply": 1,
+        "projectControlled": true,
+        "singleWalletForBothRoles": true
+      },
+      {
+        "role": "Public",
+        "percentOfTotalFrpSupply": 97,
+        "projectControlled": false
+      }
     ]
   },
   "wallets": [
     {
-      "label": "Deployer wallet",
-      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
-      "purpose": "Creates the token at an authorized launch and provides a public record of deployment activity.",
-      "tradingPermissions": {
-        "mayCreateToken": true,
-        "mayPerformNormalCreatorTrading": false,
-        "notes": "This wallet is reserved for deployment activity and is not used for normal creator buys or sells."
+      "label": "Personal/trading wallet",
+      "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
+      "purpose": "The published wallet for personal FRP buying, holding, receiving, selling, transferring, and other beneficial control.",
+      "maximumPercentOfTotalFrpSupply": 1,
+      "permissions": {
+        "mayCreateToken": false,
+        "mayBuy": true,
+        "maySell": true
       }
     },
     {
-      "label": "Creator trading wallet",
-      "address": "9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V",
-      "purpose": "The published wallet intended for creator FRP buying, holding, receiving, selling, transferring, and other beneficial control.",
-      "tradingPermissions": {
+      "label": "Operational treasury wallet",
+      "address": "8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn",
+      "purpose": "The published primary wallet for project operations and treasury activity.",
+      "maximumPercentOfTotalFrpSupply": 1,
+      "permissions": {
         "mayCreateToken": false,
-        "mayBuy": true,
-        "maySell": true,
-        "maximumCreatorBeneficialOwnershipPercentOfTotalFrpSupply": 2,
-        "notes": "The creator must not use or control any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP. Creator FRP activity is intended to occur through this published wallet."
+        "mayFundProjectOperations": true
+      }
+    },
+    {
+      "label": "Dev/deployer wallet and secondary treasury",
+      "address": "3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2",
+      "purpose": "Creates the token at an authorized launch and also serves as the secondary treasury.",
+      "maximumPercentOfTotalFrpSupply": 1,
+      "singleWalletForBothRoles": true,
+      "additionalAllocationForSecondaryTreasuryRole": false,
+      "permissions": {
+        "mayCreateToken": true,
+        "mayFundProjectOperations": true,
+        "mayPerformNormalPersonalTrading": false
       }
     }
   ],
   "rules": {
-    "creatorUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false,
-    "presale": false,
-    "reservedCreatorAllocation": false,
-    "privateTeamAllocation": false
+    "projectWalletCount": 3,
+    "deployerAndSecondaryTreasuryAreOneWallet": true,
+    "projectUseOrControlOfUndeclaredWalletAccountCustodianNomineeOrOtherArrangementForFrpPermitted": false,
+    "presale": false
   }
 }

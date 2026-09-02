@@ -35,31 +35,47 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 - Record the program ID and whether the mint uses the original Token Program or Token-2022.
 - Review any enabled extensions before making claims about token behaviour.
 
-## 6. Deployer holdings
-
-- Inspect `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2`.
-- Record all FRP token accounts and balances connected to it.
-- Confirm it has not been used for normal creator trading.
-
-## 7. Creator trading holdings
+## 6. Personal/trading wallet holdings
 
 - Inspect `9SHNnrmBnFALbNQatNUjduFK4THPKvpBYAimUqNn1k5V`.
 - Record its FRP balance and percentage of total supply.
-- Confirm the creator has not used or controlled any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control FRP.
-- Confirm creator FRP activity occurred through the published creator trading wallet.
-- Confirm total creator beneficial ownership across all arrangements never exceeds 2% of total FRP supply.
-- Review buys, holdings, receipts, sells, transfers, and linked accounts for evidence of undeclared control.
+- Confirm the wallet never exceeds 1% of total FRP supply.
+- Confirm personal FRP activity occurred through this published personal/trading wallet.
 
-## 8. Pump.fun configuration
+## 7. Operational treasury wallet holdings
+
+- Inspect `8sBiyo1KURrM6UpHKyCFZao6wj8FEu2RBxr9rPKgZzEn`.
+- Record all FRP token accounts and balances connected to it.
+- Confirm the wallet never exceeds 1% of total FRP supply.
+- Review treasury receipts, transfers, and linked accounts for evidence of undeclared control.
+
+## 8. Dev/deployer + secondary treasury wallet holdings
+
+- Inspect `3tUzFchu7RrRhk9HP27jQGhiXC8KTtP6Ht3V5KQ4hCo2`.
+- Confirm this same address signed the creation transaction and serves as the secondary treasury.
+- Record all FRP token accounts and balances connected to it.
+- Confirm the wallet never exceeds 1% of total FRP supply.
+- Confirm no separate allocation was added for its secondary-treasury role.
+
+## 9. Allocation structure
+
+- Confirm exactly three project wallets are documented and inspect all three addresses character by character.
+- Confirm the dev/deployer and secondary treasury are one shared wallet and one shared allocation bucket.
+- Confirm each project-controlled wallet is capped at 1% of total FRP supply.
+- Confirm project-controlled allocation totals 3% and public allocation is 97%.
+- Confirm the complete calculation is 1% + 1% + 1% + 97% = 100%.
+- Confirm the project has not used or controlled any undeclared wallet, account, custodian, nominee, or other arrangement to buy, hold, receive, sell, transfer, or otherwise beneficially control a project allocation.
+
+## 10. Pump.fun configuration
 
 - Confirm the token was created through the expected Pump.fun flow.
 - Verify pair: SOL.
 - Verify Cash Back: ON.
 - Verify Mayhem Mode: OFF.
-- Confirm there was no presale or private allocation.
+- Confirm there was no presale.
 - Save public evidence for every configuration claim.
 
-## 9. Creation transaction
+## 11. Creation transaction
 
 - Publish a direct link to the creation transaction.
 - Record the signer, timestamp, slot, instructions, fees, and resulting accounts.
@@ -75,7 +91,9 @@ No official FRP mint address exists yet. Run these checks only after a real, sep
 | Mint authority | Pending deployment | — | — |
 | Freeze authority | Pending deployment | — | — |
 | Token program | Pending deployment | — | — |
-| Deployer holdings | Pending deployment | — | — |
-| Creator trading holdings | Pending deployment | — | — |
+| Personal/trading wallet holdings | Pending deployment | — | — |
+| Operational treasury wallet holdings | Pending deployment | — | — |
+| Dev/deployer + secondary treasury wallet holdings | Pending deployment | — | — |
+| Allocation structure | Pending deployment | — | — |
 | Pump.fun configuration | Pending deployment | — | — |
 | Creation transaction | Pending deployment | — | — |
