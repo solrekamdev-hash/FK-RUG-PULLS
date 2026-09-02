@@ -1,0 +1,529 @@
+:root {
+  color-scheme: light;
+  --desk: #e9e6df;
+  --desk-deep: #d8d3c9;
+  --stage-rule: #d5d0c5;
+  --paper: #ccc7ba;
+  --paper-edge: #c4beb1;
+  --paper-edge-deep: #b8b1a3;
+  --cover: #141416;
+  --ink: #272521;
+  --muted: #6c675e;
+  --red: #8c1d1d;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  min-width: 1030px;
+  margin: 0;
+  background: var(--desk);
+}
+
+body {
+  color: var(--ink);
+  font-family: "IBM Plex Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+.lab {
+  width: 980px;
+  margin: 0 auto;
+  padding: 24px 0 40px;
+}
+
+.lab-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 1px 18px;
+  border-bottom: 1px solid var(--stage-rule);
+}
+
+.lab-header h1,
+.lab-header p,
+.specimen h2,
+.artwork-toggle,
+.reference-mode-control,
+.reference-opacity-control {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  line-height: 1;
+}
+
+.lab-header p {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.dev-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+  color: var(--muted);
+}
+
+.reference-mode-control,
+.reference-opacity-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.reference-mode-control select {
+  height: 24px;
+  padding: 0 22px 0 7px;
+  border: 1px solid #bdb7ac;
+  border-radius: 2px;
+  background: #ece8e0;
+  color: #4f4b44;
+  font: inherit;
+  letter-spacing: .08em;
+}
+
+.reference-opacity-control input {
+  width: 74px;
+  accent-color: var(--red);
+}
+
+.reference-opacity-control output {
+  width: 31px;
+  color: var(--red);
+  text-align: right;
+}
+
+.artwork-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--red);
+  cursor: pointer;
+  user-select: none;
+}
+
+.artwork-toggle input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+}
+
+.artwork-toggle span {
+  position: relative;
+  width: 26px;
+  height: 13px;
+  border: 1px solid #aaa398;
+  border-radius: 8px;
+  background: #ddd9d1;
+}
+
+.artwork-toggle span::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8b867c;
+}
+
+.artwork-toggle input:checked + span {
+  border-color: rgba(140, 29, 29, .55);
+  background: rgba(140, 29, 29, .12);
+}
+
+.artwork-toggle input:checked + span::after {
+  left: 15px;
+  background: var(--red);
+}
+
+.artwork-toggle input:focus-visible + span {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.specimen { padding-top: 24px; }
+
+.specimen h2 {
+  padding: 0 1px 12px;
+  color: var(--red);
+}
+
+.stage {
+  position: relative;
+  width: 980px;
+  height: 600px;
+  overflow: hidden;
+  border: 1px solid var(--stage-rule);
+  border-radius: 3px;
+  background: radial-gradient(120% 90% at 50% 30%, #f1eee7, #e2ded5 70%, var(--desk-deep));
+  perspective: 2300px;
+  perspective-origin: 50% 46%;
+}
+
+.ground-shadow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 590px;
+  height: 84px;
+  margin: 169px 0 0 -295px;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(30, 27, 22, .20), rgba(30, 27, 22, .065) 56%, rgba(30, 27, 22, 0) 80%);
+  filter: blur(19px);
+  opacity: .43;
+}
+
+.book-anchor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.book-tilt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform: rotateX(7deg);
+  transform-style: preserve-3d;
+}
+
+/* The approved open-state shell keeps the cover face back-facing. Only the
+   narrow physical binding and page block exist behind the two page faces. */
+.spine-block {
+  position: absolute;
+  left: -17px;
+  top: -243px;
+  width: 34px;
+  height: 486px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #050506, #1f1f23 30%, #2a2a2e 50%, #1c1c20 68%, #090909);
+  box-shadow: 0 0 18px rgba(0, 0, 0, .22), inset 2px 0 3px rgba(255, 255, 255, .05), inset -2px 0 3px rgba(255, 255, 255, .05);
+  transform: rotateY(90deg);
+}
+
+.spine-edge {
+  position: absolute;
+  left: -1.1px;
+  top: -243px;
+  width: 2.2px;
+  height: 486px;
+  background: linear-gradient(180deg, rgba(150, 140, 120, .22), rgba(150, 140, 120, .10) 50%, rgba(150, 140, 120, .18));
+  opacity: .42;
+  transform: rotateY(90deg) translateZ(16.9px);
+}
+
+.leaf {
+  position: absolute;
+  top: -235px;
+  width: 340px;
+  height: 470px;
+  transform-style: preserve-3d;
+}
+
+.leaf-left {
+  left: -340px;
+  z-index: 3;
+  transform-origin: right center;
+  transform: rotateY(1.15deg);
+}
+
+.leaf-right {
+  left: 0;
+  z-index: 1;
+  transform-origin: left center;
+  transform: rotateY(-1.15deg);
+}
+
+/* Claude's open leaf is a real stack: matte cover, a narrow contact layer,
+   sheet block, then the page face raised at the original 7.5px depth. */
+.cover-board {
+  position: absolute;
+  top: -6px;
+  width: 347px;
+  height: 483px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: radial-gradient(125% 85% at 32% 10%, #2b2b2e, #17171a 52%, #0b0b0c);
+  box-shadow: inset 0 0 0 1px rgba(207, 199, 184, .105), inset 0 -24px 46px rgba(0, 0, 0, .38);
+  opacity: .28;
+  transform: translateZ(-8px);
+}
+
+.cover-board::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(55% 32% at 24% 5%, rgba(255, 255, 255, .025), transparent 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, .018), transparent 14%, transparent 86%, rgba(0, 0, 0, .09));
+}
+
+.leaf-left .cover-board { left: -7px; }
+.leaf-right .cover-board { left: 0; }
+
+.cover-contact {
+  position: absolute;
+  top: -5.3px;
+  width: 345.3px;
+  height: 480.6px;
+  border-radius: 7px;
+  background: rgba(35, 31, 26, .05);
+  filter: blur(2.4px);
+  transform: translateZ(-4.5px);
+}
+
+.leaf-left .cover-contact { left: -5.3px; }
+.leaf-right .cover-contact { left: 0; }
+
+.page-block {
+  position: absolute;
+  top: -5px;
+  width: 345px;
+  height: 480px;
+  overflow: hidden;
+  border: 1px solid rgba(98, 88, 69, .024);
+  border-radius: 7px;
+  background: linear-gradient(180deg, #c8c2b5, #c5beb1 52%, #c1baac);
+  transform: translateZ(-.8px);
+}
+
+.leaf-left .page-block { left: -5px; }
+.leaf-right .page-block { left: 0; }
+
+.stack-edge {
+  position: absolute;
+  display: block;
+  opacity: .2;
+}
+
+.stack-fore {
+  top: 3px;
+  bottom: 3px;
+  width: 5px;
+  background: linear-gradient(90deg, rgba(139, 130, 113, .16), rgba(213, 207, 195, .25), rgba(143, 133, 115, .11));
+}
+
+.leaf-left .stack-fore { left: 0; }
+.leaf-right .stack-fore { right: 0; }
+
+.stack-head,
+.stack-tail {
+  left: 3px;
+  right: 3px;
+  height: 5px;
+  background: linear-gradient(180deg, rgba(140, 131, 114, .12), rgba(213, 207, 195, .22), rgba(139, 129, 112, .1));
+}
+
+.stack-head { top: 0; }
+.stack-tail { bottom: 0; }
+
+.paper-contact {
+  position: absolute;
+  top: -1.5px;
+  width: 341.5px;
+  height: 473px;
+  border-radius: 7px;
+  background: rgba(56, 50, 41, .04);
+  filter: blur(2.4px);
+  transform: translateZ(3.2px);
+}
+
+.leaf-left .paper-contact { left: -1.5px; }
+.leaf-right .paper-contact { left: 0; }
+
+.page-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--paper);
+  backface-visibility: hidden;
+  transform: translateZ(7.5px);
+}
+
+.paper-left {
+  border-radius: 7px 2px 2px 6px;
+  clip-path: polygon(.5px .6px, 38% .18px, 72% 0, calc(100% - .45px) .25px, 100% .6px, 100% calc(100% - .55px), 78% calc(100% - .2px), 43% 100%, .55px calc(100% - .35px), 0 calc(100% - .65px), .35px 79%, 0 63%, .3px 39%, 0 20%, .5px .8px);
+}
+
+.paper-right {
+  border-radius: 2px 7px 6px 2px;
+  clip-path: polygon(.45px .25px, 31% 0, 69% .2px, calc(100% - .5px) .6px, calc(100% - .5px) .8px, 100% 20%, calc(100% - .3px) 39%, 100% 63%, calc(100% - .35px) 79%, 100% calc(100% - .65px), calc(100% - .55px) calc(100% - .35px), 73% 100%, 37% calc(100% - .2px), .55px 100%, 0 calc(100% - .55px), 0 .6px);
+}
+
+.paper-texture,
+.surface-light,
+.artwork,
+.artwork img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.paper-texture {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.surface-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.paper-left .surface-light {
+  background: linear-gradient(90deg, rgba(255, 252, 244, .016), transparent 45%, rgba(74, 65, 52, .009) 83%, rgba(55, 49, 41, .022));
+}
+
+.paper-right .surface-light {
+  background: linear-gradient(270deg, rgba(255, 252, 244, .016), transparent 45%, rgba(74, 65, 52, .01) 83%, rgba(55, 49, 41, .025));
+}
+
+.artwork { overflow: hidden; }
+
+.artwork img {
+  display: block;
+  max-width: none;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  user-select: none;
+}
+
+html:not(.show-artwork) .artwork { display: none; }
+
+.edge {
+  position: absolute;
+  background-color: var(--paper-edge);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  backface-visibility: hidden;
+}
+
+.edge-head {
+  left: 0;
+  top: -7.5px;
+  width: 340px;
+  height: 15px;
+  transform: rotateX(90deg);
+}
+
+.edge-tail {
+  left: 0;
+  top: 462.5px;
+  width: 340px;
+  height: 15px;
+  transform: rotateX(-90deg);
+}
+
+.edge-fore {
+  top: 0;
+  width: 15px;
+  height: 470px;
+  border-radius: 1px;
+  transform: rotateY(90deg);
+}
+
+.leaf-left .edge-fore { left: -7.5px; }
+.leaf-right .edge-fore { left: 332.5px; }
+
+.gutter {
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gutter::before,
+.gutter::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.gutter-left {
+  right: 0;
+  background: linear-gradient(270deg, rgba(57, 51, 42, .024), rgba(70, 62, 50, .007) 66%, transparent);
+}
+
+.gutter-left::before {
+  right: 0;
+  width: 7px;
+  background: linear-gradient(270deg, rgba(47, 42, 35, .064), rgba(59, 51, 41, .018) 76%, transparent);
+}
+
+.gutter-left::after {
+  right: 7px;
+  width: 4px;
+  background: linear-gradient(270deg, rgba(246, 239, 224, .024), transparent);
+}
+
+.gutter-right {
+  left: 0;
+  background: linear-gradient(90deg, rgba(57, 51, 42, .027), rgba(70, 62, 50, .008) 63%, transparent);
+}
+
+.gutter-right::before {
+  left: 0;
+  width: 7px;
+  background: linear-gradient(90deg, rgba(47, 42, 35, .071), rgba(59, 51, 41, .02) 73%, transparent);
+}
+
+.gutter-right::after {
+  left: 7px;
+  width: 4px;
+  background: linear-gradient(90deg, rgba(246, 239, 224, .026), transparent);
+}
+
+.binding-crease {
+  position: absolute;
+  left: -6px;
+  top: -235px;
+  width: 12px;
+  height: 470px;
+  background: linear-gradient(90deg, transparent, rgba(47, 42, 35, .038) 35%, rgba(38, 34, 29, .075) 49%, rgba(47, 42, 35, .05) 64%, transparent);
+  filter: blur(2.4px);
+  opacity: .68;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .9), #000 17%, rgba(0, 0, 0, .95) 43%, #000 68%, rgba(0, 0, 0, .88));
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, .9), #000 17%, rgba(0, 0, 0, .95) 43%, #000 68%, rgba(0, 0, 0, .88));
+  pointer-events: none;
+  transform: translateZ(8.8px);
+}
+
+.reference-overlay {
+  --reference-opacity: .5;
+  position: absolute;
+  z-index: 20;
+  left: 33.21px;
+  top: 64.32px;
+  width: 913.57px;
+  height: 541.27px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reference-overlay img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+.stage[data-reference-mode="reference"] .reference-overlay { opacity: 1; }
+.stage[data-reference-mode="overlay"] .reference-overlay { opacity: var(--reference-opacity); }

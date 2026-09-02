@@ -24,3 +24,7 @@ coverage/
 
 # Local backup archives
 *.zip
+
+# Python bytecode caches
+__pycache__/
+*.py[cod]

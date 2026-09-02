@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Journal Visual Lab — Approved Claude Paper</title>
+  <link rel="stylesheet" href="./journal-visual-lab/lab.css">
+</head>
+<body>
+  <main class="lab" aria-labelledby="lab-title">
+    <header class="lab-header">
+      <div>
+        <h1 id="lab-title">JOURNAL VISUAL LAB</h1>
+        <p>ENTRY 001 · PAGES 2–3 · ISOLATED STATIC MATERIAL TEST</p>
+      </div>
+
+      <div class="dev-controls" aria-label="Development comparison controls">
+        <label class="reference-mode-control">
+          REFERENCE
+          <select id="reference-mode">
+            <option value="current">D BLANK</option>
+            <option value="reference">CLAUDE</option>
+            <option value="overlay">OVERLAY</option>
+          </select>
+        </label>
+
+        <label class="reference-opacity-control">
+          OPACITY
+          <input id="reference-opacity" type="range" min="0" max="100" value="50">
+          <output id="reference-opacity-output" for="reference-opacity">50%</output>
+        </label>
+
+        <label class="artwork-toggle">
+          <input id="show-artwork" type="checkbox">
+          <span aria-hidden="true"></span>
+          SHOW ARTWORK
+        </label>
+      </div>
+    </header>
+
+    <section class="specimen" aria-labelledby="specimen-label">
+      <h2 id="specimen-label">D — EXTRACTED INK / APPROVED CLAUDE PAPER</h2>
+
+      <div class="stage">
+        <div class="ground-shadow" aria-hidden="true"></div>
+
+        <div class="book-anchor">
+          <div class="book-tilt">
+            <div class="spine-block" aria-hidden="true"></div>
+            <div class="spine-edge" aria-hidden="true"></div>
+
+            <div class="leaf leaf-left">
+              <div class="cover-board" aria-hidden="true"></div>
+              <div class="cover-contact" aria-hidden="true"></div>
+              <div class="page-block" aria-hidden="true">
+                <span class="stack-edge stack-fore"></span>
+                <span class="stack-edge stack-head"></span>
+                <span class="stack-edge stack-tail"></span>
+              </div>
+              <div class="paper-contact" aria-hidden="true"></div>
+              <div class="page-face paper-left">
+                <div class="paper-texture" aria-hidden="true"></div>
+                <div class="surface-light" aria-hidden="true"></div>
+                <div class="artwork">
+                  <img src="./journal-visual-lab/assets/entry-001-page-02-ink.png" alt="Entry 001 page 2 extracted ink">
+                </div>
+                <div class="gutter gutter-left" aria-hidden="true"></div>
+              </div>
+              <div class="edge edge-fore" aria-hidden="true"></div>
+              <div class="edge edge-head" aria-hidden="true"></div>
+              <div class="edge edge-tail" aria-hidden="true"></div>
+            </div>
+
+            <div class="leaf leaf-right">
+              <div class="cover-board" aria-hidden="true"></div>
+              <div class="cover-contact" aria-hidden="true"></div>
+              <div class="page-block" aria-hidden="true">
+                <span class="stack-edge stack-fore"></span>
+                <span class="stack-edge stack-head"></span>
+                <span class="stack-edge stack-tail"></span>
+              </div>
+              <div class="paper-contact" aria-hidden="true"></div>
+              <div class="page-face paper-right">
+                <div class="paper-texture" aria-hidden="true"></div>
+                <div class="surface-light" aria-hidden="true"></div>
+                <div class="artwork">
+                  <img src="./journal-visual-lab/assets/entry-001-page-03-ink.png" alt="Entry 001 page 3 extracted ink">
+                </div>
+                <div class="gutter gutter-right" aria-hidden="true"></div>
+              </div>
+              <div class="edge edge-fore" aria-hidden="true"></div>
+              <div class="edge edge-head" aria-hidden="true"></div>
+              <div class="edge edge-tail" aria-hidden="true"></div>
+            </div>
+
+            <div class="binding-crease" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="reference-overlay" aria-hidden="true">
+          <img src="./journal-visual-lab/assets/claude-paper-real.png" alt="">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./journal-visual-lab/claude-materials.js"></script>
+</body>
+</html>

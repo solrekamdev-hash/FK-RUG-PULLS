@@ -1,0 +1,89 @@
+{
+  "purpose": "isolated visual proof of concept; not production journal output",
+  "claude_paper_rgb": [
+    241,
+    233,
+    214
+  ],
+  "parameters": {
+    "background_colour_space": "CIE L*a*b* (D65)",
+    "probable_paper_classifier": "soft L*, red-excess, and local-change weighting",
+    "paper_field_estimator": "masked normalized Gaussian convolution",
+    "background_radius_px": 78,
+    "local_detail_radius_px": 2.4,
+    "shared_surface_crop": [
+      36,
+      30,
+      960,
+      1564
+    ],
+    "red_signal": "sqrt(max(a*-background_a*-3,0) * max(R-max(G,B)-18,0))",
+    "edge_suppression": "smoothstep(distance_to_crop_edge, 2px, 34px)",
+    "normalized_treatment": {
+      "dark_alpha": "smoothstep(background_L*-L*, 2, 28)",
+      "fine_alpha": "0.62 * smoothstep(local_blur_L*-L*, 1, 8)",
+      "red_alpha": "smoothstep(red_signal, 8, 32)",
+      "support": "maximum of 9x9 local density, 25x3 horizontal density at 0.68 weight, and strong-core alpha",
+      "alpha_floor": 0.035
+    },
+    "ink_treatment": {
+      "candidate": "max(smoothstep(dark,6,31), 0.84*smoothstep(fine,2.8,10.5), smoothstep(red,12,35))",
+      "core": "max(smoothstep(dark,8.5,33), smoothstep(fine,3.5,11), smoothstep(red,15,38))",
+      "support": "5x5 core dilation * 9x9 candidate-density smoothstep(0.07,0.25) * 3x3 core support",
+      "alpha_floor": 0.055
+    },
+    "pigments": "neutral graphite/black plus reconstructed dark red; paper chroma is never emitted"
+  },
+  "pages": {
+    "page-02.webp": {
+      "source_sha256": "71f9484cad8dcb1c0abd8b658673c3f81b2dd6308182385f486b83cd25e78ffc",
+      "normalized_asset": "entry-001-page-02-normalized.png",
+      "normalized_sha256": "24ae5e49a0d0c5c9d54d3e19a7965de530db9a08e5631073209b53e057b9b7ec",
+      "ink_asset": "entry-001-page-02-ink.png",
+      "ink_sha256": "b4e498fe2ab8e651ca32fca8ee796194cbf7a631800beab25a81ea5ff780ba07",
+      "source_size": [
+        987,
+        1594
+      ],
+      "surface_crop": [
+        36,
+        30,
+        960,
+        1564
+      ],
+      "output_size": [
+        924,
+        1534
+      ],
+      "normalized_nonzero_alpha_fraction": 0.159947,
+      "extracted_nonzero_alpha_fraction": 0.084271,
+      "normalized_mean_alpha": 0.089039,
+      "extracted_mean_alpha": 0.071168
+    },
+    "page-03.webp": {
+      "source_sha256": "2d5a6774c8aa99658d3f6807f6b8a273af3cb92d30b1b3af4ecff051a8dfa19c",
+      "normalized_asset": "entry-001-page-03-normalized.png",
+      "normalized_sha256": "854d12ae7de6e4f833e33d7ada5ebec5b942ccc6b4b37d59fe34114d64e4d28f",
+      "ink_asset": "entry-001-page-03-ink.png",
+      "ink_sha256": "7288ac2f2c59e5420ac89b11220138999b028ce687c7cf4537826f6e842af18e",
+      "source_size": [
+        987,
+        1594
+      ],
+      "surface_crop": [
+        36,
+        30,
+        960,
+        1564
+      ],
+      "output_size": [
+        924,
+        1534
+      ],
+      "normalized_nonzero_alpha_fraction": 0.155604,
+      "extracted_nonzero_alpha_fraction": 0.10032,
+      "normalized_mean_alpha": 0.099644,
+      "extracted_mean_alpha": 0.086568
+    }
+  }
+}
