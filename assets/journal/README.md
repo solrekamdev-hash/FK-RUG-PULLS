@@ -24,21 +24,11 @@ The manifest always exposes slots for these four roles. When an optional asset i
 
 Run `powershell -File tools/build-journal.ps1` after adding or removing journal artwork. Interior `page-NN` images are placed between the designed inside-front and inside-back states. An entry with no interior page images keeps its exact generated Markdown content between those same notebook states.
 
-## Derived render assets
+When a page has an approved transparent artwork layer, store the frozen file at
+`assets/journal/NNN/artwork/page-NN.png`. The build selects that byte-preserved
+artwork over the photographed source for the same page number, allowing the
+production viewer to supply the approved paper material without modifying the
+source or the extracted artwork.
 
-Approved source artwork remains protected in the entry directory. When an entry
-contains a `rendered/` directory, the build uses its `page-NN` files in preference
-to the protected source files. This keeps paper/background normalisation separate
-and reproducible.
-
-Entry 001 is rendered locally with:
-
-```text
-python tools/render-journal-pages.py
-```
-
-The script verifies the four approved source SHA-256 hashes before and after,
-estimates the low-frequency photographed paper field, retains neutral and
-chromatic mark density without a hard colour key, and composites the marks onto
-a quiet warm-ivory substrate. Its deterministic outputs and method report are
-written to `assets/journal/001/rendered/`.
+Artwork-only pages are discovered directly from the `artwork` directory; a
+redundant photographed or flattened source page is not required.

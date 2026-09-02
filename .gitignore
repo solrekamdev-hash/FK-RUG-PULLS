@@ -21,3 +21,6 @@ temp/
 node_modules/
 dist/
 coverage/
+
+# Local backup archives
+*.zip

@@ -59,14 +59,7 @@ function Get-EntryPagePaths([string]$Number) {
   $entryAssetDirectory = Join-Path $journalAssetsDirectory $Number
   if (-not (Test-Path -LiteralPath $entryAssetDirectory)) { return @() }
 
-  $renderedAssetDirectory = Join-Path $entryAssetDirectory "rendered"
-  $pageAssetDirectory = if (Test-Path -LiteralPath $renderedAssetDirectory -PathType Container) {
-    $renderedAssetDirectory
-  } else {
-    $entryAssetDirectory
-  }
-
-  $pageFiles = @(Get-ChildItem -LiteralPath $pageAssetDirectory -File | Where-Object {
+  $pageFiles = @(Get-ChildItem -LiteralPath $entryAssetDirectory -File | Where-Object {
     $_.BaseName -match '^page-(\d+)$' -and $_.Extension.ToLowerInvariant() -in @('.png', '.webp', '.jpg', '.jpeg', '.avif')
   } | Sort-Object @{ Expression = { [int][regex]::Match($_.BaseName, '\d+$').Value } }, Name)
 
@@ -75,8 +68,34 @@ function Get-EntryPagePaths([string]$Number) {
     throw "Entry $Number has multiple assets for page number(s): $($duplicateNumbers.Name -join ', ')"
   }
 
-  $relativeDirectory = if ($pageAssetDirectory -eq $renderedAssetDirectory) { "$Number/rendered" } else { $Number }
-  return @($pageFiles | ForEach-Object { "../../assets/journal/$relativeDirectory/$($_.Name)" })
+  $artworkDirectory = Join-Path $entryAssetDirectory "artwork"
+  $artworkFiles = if (Test-Path -LiteralPath $artworkDirectory -PathType Container) {
+    @(Get-ChildItem -LiteralPath $artworkDirectory -File | Where-Object {
+      $_.BaseName -match '^page-(\d+)$' -and $_.Extension.ToLowerInvariant() -in @('.png', '.webp', '.jpg', '.jpeg', '.avif')
+    })
+  } else {
+    @()
+  }
+
+  $duplicateArtworkNumbers = @($artworkFiles | Group-Object { [int][regex]::Match($_.BaseName, '\d+$').Value } | Where-Object Count -gt 1)
+  if ($duplicateArtworkNumbers.Count -gt 0) {
+    throw "Entry $Number has multiple frozen artwork assets for page number(s): $($duplicateArtworkNumbers.Name -join ', ')"
+  }
+
+  $pageNumbers = @(($pageFiles + $artworkFiles) | ForEach-Object {
+    [int][regex]::Match($_.BaseName, '\d+$').Value
+  } | Sort-Object -Unique)
+
+  return @($pageNumbers | ForEach-Object {
+    $pageNumber = [int]$_
+    $artworkFile = $artworkFiles | Where-Object { [int][regex]::Match($_.BaseName, '\d+$').Value -eq $pageNumber } | Select-Object -First 1
+    if ($null -ne $artworkFile) {
+      "../../assets/journal/$Number/artwork/$($artworkFile.Name)"
+    } else {
+      $pageFile = $pageFiles | Where-Object { [int][regex]::Match($_.BaseName, '\d+$').Value -eq $pageNumber } | Select-Object -First 1
+      "../../assets/journal/$Number/$($pageFile.Name)"
+    }
+  })
 }
 
 function Get-OptionalEntryAsset([string]$Number, [string]$Stem) {

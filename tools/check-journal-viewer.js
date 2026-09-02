@@ -43,9 +43,13 @@ assert.deepEqual(mobileStates.slice(2, 6).map((state) => state.pageIndexes[0]), 
 assert.equal(mobileStates.filter((state) => state.kind === "surface" && state.surface?.type === "page").length, 4);
 
 assert.equal(logic.stateIndexFromHash(desktopImageStates, "", 4), 0);
+assert.equal(logic.stateIndexFromHash(desktopImageStates, "#inside-front", 4), 1);
 assert.equal(logic.stateIndexFromHash(desktopImageStates, "#page-1", 4), 1, "Legacy page 1 deep link should open the first spread");
 assert.equal(logic.stateIndexFromHash(desktopImageStates, "#page-4", 4), 3, "Page 4 deep link should open the final spread");
+assert.equal(logic.stateIndexFromHash(desktopImageStates, "#inside-back", 4), 3);
 assert.equal(logic.stateIndexFromHash(desktopImageStates, "#back-cover", 4), 4);
+assert.equal(logic.stateIndexFromHash(mobileStates, "#inside-front", 4), 1);
+assert.equal(logic.stateIndexFromHash(mobileStates, "#inside-back", 4), 6);
 assert.equal(logic.stateIndexFromHash(desktopFallbackStates, "#content", 0), 2);
 assert.equal(logic.stateHash(desktopImageStates[0]), "");
 assert.equal(logic.stateHash(desktopImageStates[1]), "#inside-front");

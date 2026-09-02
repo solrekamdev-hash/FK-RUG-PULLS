@@ -7,10 +7,10 @@ window.FRP_JOURNAL = {
                                 "subtitle":  "FK RUG PULLS — JOURNAL ENTRY 001",
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-001.md",
                                 "pages":  [
-                                              "../../assets/journal/001/rendered/page-01.webp",
-                                              "../../assets/journal/001/rendered/page-02.webp",
-                                              "../../assets/journal/001/rendered/page-03.webp",
-                                              "../../assets/journal/001/rendered/page-04.webp"
+                                              "../../assets/journal/001/artwork/page-01.png",
+                                              "../../assets/journal/001/artwork/page-02.png",
+                                              "../../assets/journal/001/artwork/page-03.png",
+                                              "../../assets/journal/001/artwork/page-04.png"
                                           ],
                                 "assets":  {
                                                "coverFront":  null,
@@ -25,13 +25,16 @@ window.FRP_JOURNAL = {
                                 "subtitle":  "FK RUG PULLS — JOURNAL ENTRY 002",
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-002.md",
                                 "pages":  [
-
+                                              "../../assets/journal/002/artwork/page-01.png?v=20260828-2",
+                                              "../../assets/journal/002/artwork/page-02.png?v=20260828-2",
+                                              "../../assets/journal/002/artwork/page-03.png?v=20260828-2",
+                                              "../../assets/journal/002/artwork/page-04.png?v=20260828-2"
                                           ],
                                 "assets":  {
                                                "coverFront":  null,
                                                "coverBack":  null,
-                                               "insideFront":  null,
-                                               "insideBack":  null
+                                               "insideFront":  "../../assets/journal/002/inside-front.png?v=20260828-2",
+                                               "insideBack":  "../../assets/journal/002/inside-back.png?v=20260828-2"
                                            }
                             },
                     "003":  {
@@ -40,13 +43,16 @@ window.FRP_JOURNAL = {
                                 "subtitle":  "FK RUG PULLS — JOURNAL ENTRY 003",
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-003.md",
                                 "pages":  [
-
+                                              "../../assets/journal/003/artwork/page-01.png",
+                                              "../../assets/journal/003/artwork/page-02.png",
+                                              "../../assets/journal/003/artwork/page-03.png",
+                                              "../../assets/journal/003/artwork/page-04.png"
                                           ],
                                 "assets":  {
                                                "coverFront":  null,
                                                "coverBack":  null,
-                                               "insideFront":  null,
-                                               "insideBack":  null
+                                               "insideFront":  "../../assets/journal/003/inside-front.png",
+                                               "insideBack":  "../../assets/journal/003/inside-back.png"
                                            }
                             },
                     "004":  {
@@ -55,13 +61,16 @@ window.FRP_JOURNAL = {
                                 "subtitle":  "FK RUG PULLS — JOURNAL ENTRY 004",
                                 "markdown":  "../../Content/Journal/FK-RUG-PULLS-JOURNAL-ENTRY-004.md",
                                 "pages":  [
-
+                                                "../../assets/journal/004/artwork/page-01.png",
+                                                "../../assets/journal/004/artwork/page-02.png",
+                                                "../../assets/journal/004/artwork/page-03.png",
+                                                "../../assets/journal/004/artwork/page-04.png"
                                           ],
                                 "assets":  {
                                                "coverFront":  null,
                                                "coverBack":  null,
-                                               "insideFront":  null,
-                                               "insideBack":  null
+                                               "insideFront":  "../../assets/journal/004/inside-front.png",
+                                               "insideBack":  "../../assets/journal/004/inside-back.png"
                                            }
                             },
                     "005":  {
